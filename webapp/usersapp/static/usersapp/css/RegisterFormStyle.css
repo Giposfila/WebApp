@@ -1,0 +1,81 @@
+/* Основные стили */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff; /* Белый фон */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333; /* Темно-серый цвет текста */
+}
+
+/* Контейнер формы */
+.register-form {
+    background-color: #ffffff; /* Белый фон */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень */
+    width: 350px;
+    text-align: center;
+}
+
+/* Заголовок формы */
+.register-form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #ff6f00; /* Оранжевый акцент */
+}
+
+/* Поля ввода */
+.register-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd; /* Светлая граница */
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.register-form input:focus {
+    border-color: #ff6f00; /* Оранжевая граница при фокусе */
+    outline: none;
+}
+
+/* Кнопка */
+.register-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff6f00; /* Оранжевый цвет */
+    color: #fff; /* Белый текст */
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-form button:hover {
+    background-color: #e65c00; /* Темно-оранжевый при наведении */
+}
+
+/* Сообщение об ошибке */
+.error {
+    color: #ff0000; /* Красный цвет для ошибок */
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Ссылки (если есть) */
+.register-form a {
+    color: #ff6f00; /* Оранжевый цвет для ссылок */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.register-form a:hover {
+    color: #e65c00; /* Темно-оранжевый при наведении */
+}

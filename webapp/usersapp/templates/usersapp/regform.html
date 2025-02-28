@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+ <!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <!-- Подключение CSS -->
+    {% load static %}
+     <link rel="stylesheet", href="static/usersapp/css/RegisterFormStyle.css">
 </head>
 <body>
-$END$
+    <div class="register-form">
+        <h2>Регистрация</h2>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <form method="post" >
+            {% csrf_token %}
+            {{form}}
+            <sp>{{error}}</sp>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+        <p>Уже есть аккаунт? <a href="#">Войдите</a></p>
+    </div>
 </body>
 </html>
