@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'usersapp/css/mainstyle.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Tasks</title>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <h1>E-Tasks</h1>
+        <div class="search-container">
+            <input type="text" placeholder="Поиск задач..." class="search-input">
+        </div>
+        <div class="profile-container">
+            <button class="profile-button">
+                <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Профиль" class="profile-icon">
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="groups">
+            <h3>Группы</h3>
+            <div class="group-item">Команда 1</div>
+            <div class="group-item">Проект Х</div>
+            <button>Создать группу</button>
+        </div>
+
+        <div class="filters">
+            <h3>Фильтры</h3>
+            <div class="filter-item">Активные</div>
+            <div class="filter-item">Завершенные</div>
+            <div class="filter-item">Просроченные</div>
+        </div>
+    </div>
+  {%block content%} {%endblock%}
+</div>
+</body>
+</html>
