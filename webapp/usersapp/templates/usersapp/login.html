@@ -1,0 +1,28 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'usersapp/css/loginstyle.css' %}">
+    <title>Вход</title>
+</head>
+<body>
+    <div class="login-form">
+        <h2>Войти на сайт</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Электронная почта" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            {% if form.errors %}
+                <div class="error">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+            <button type="submit">Войти</button>
+        </form>
+        <p>
+            Забыли пароль? <button>Восстановить</button>
+        </p>
+    </div>
+</body>
+</html>

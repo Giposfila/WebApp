@@ -6,7 +6,7 @@
     <title>Регистрация</title>
     <!-- Подключение CSS -->
     {% load static %}
-     <link rel="stylesheet", href="static/usersapp/css/RegisterFormStyle.css">
+     <link rel="stylesheet", href="{% static 'usersapp/css/RegisterFormStyle.css'%}">
 </head>
 <body>
     <div class="register-form">
@@ -20,7 +20,7 @@
             <sp>{{error}}</sp>
             <button type="submit">Зарегистрироваться</button>
         </form>
-        <p>Уже есть аккаунт? <a href="#">Войдите</a></p>
+        <p>Уже есть аккаунт? <a href="login">Войдите</a></p>
     </div>
 </body>
 </html>
