@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import UsersForm
+from django.contrib.auth.models import User
 def MainMenu(request):
-    return render(request,'usersapp/main.html')
+    users=User.objects.all()
+    data={'users':users}
+    return render(request,'usersapp/main.html',data)
 def RegForm_Func(request):
     error=''
     if request.method=='POST':

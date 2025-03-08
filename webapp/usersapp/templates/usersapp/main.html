@@ -1,4 +1,6 @@
 {%extends 'usersapp/base.html'%}
 {%block content%}
-1
+{%for el in users%}
+{{el.email}}
+{%endfor%}
 {%endblock%}
