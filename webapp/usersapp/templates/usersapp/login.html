@@ -11,8 +11,7 @@
         <h2>Войти на сайт</h2>
         <form method="post">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="Электронная почта" required>
-            <input type="password" name="password" placeholder="Пароль" required>
+            {{form}}
             {% if form.errors %}
                 <div class="error">
                     {{ form.errors }}
@@ -21,7 +20,7 @@
             <button type="submit">Войти</button>
         </form>
         <p>
-            Забыли пароль? <button>Восстановить</button>
+            Забыли пароль? <a href="forgotpassword/"><button>Восстановить</button></a>
         </p>
     </div>
 </body>

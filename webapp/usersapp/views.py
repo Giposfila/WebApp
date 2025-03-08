@@ -3,6 +3,8 @@ from django.contrib.auth import login
 from .forms import LoginForm
 from .forms import UsersForm
 from django.contrib.auth.models import User
+def BlankFunc(request):
+    return redirect('/registration/')
 def MainMenu(request):
     users=User.objects.all()
     data={'users':users}
@@ -30,3 +32,7 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
+def forgot_password_view(request):
+    return render(request, 'usersapp/forgotpassword.html')
+def Profile_view(request):
+    return render(request, 'usersapp/profile.html')
