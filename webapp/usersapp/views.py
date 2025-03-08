@@ -3,12 +3,14 @@ from django.contrib.auth import login
 from .forms import LoginForm
 from .forms import UsersForm
 from django.contrib.auth.models import User
+
 def BlankFunc(request):
     return redirect('/registration/')
 def MainMenu(request):
     users=User.objects.all()
     data={'users':users}
     return render(request,'usersapp/main.html',data)
+
 def RegForm_Func(request):
     error=''
     if request.method=='POST':
@@ -32,7 +34,13 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
+
 def forgot_password_view(request):
     return render(request, 'usersapp/forgotpassword.html')
+
 def Profile_view(request):
-    return render(request, 'usersapp/profile.html')
+    data={
+        'username':request.user.username,
+        "email":request.user.email
+          }
+    return render(request, 'usersapp/profile.html',data)

@@ -12,12 +12,12 @@
     <div class="profile-container">
         <h2>Мой профиль</h2>
         <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar">
-        <p class="profile-email">ivan@example.com</p>
+        <p class="profile-email">{{email}}</p>
 
         <div class="profile-info">
             <div class="info-item">
-                <span class="info-label">Имя:</span>
-                <span class="info-value">Иван</span>
+                <span class="info-label">Логин:</span>
+                <span class="info-value">{{username}}</span>
             </div>
             <div class="info-item">
                 <span class="info-label">Фамилия:</span>
@@ -25,17 +25,17 @@
             </div>
             <div class="info-item">
                 <span class="info-label">Дата рождения:</span>
-                <span class="info-value">01.01.1990</span>
+                <span class="info-value">???</span>
             </div>
             <div class="info-item">
                 <span class="info-label">Город:</span>
-                <span class="info-value">Москва</span>
+                <span class="info-value">???</span>
             </div>
         </div>
 
         <div class="profile-actions">
-            <a class="button">Редактировать профиль</a>
-            <a class="button">Сменить пароль</a>
+           <button> <a class="button">Редактировать профиль</a></button>
+            <button> <a class="button">Сменить пароль</a></button>
         </div>
     </div>
 </body>

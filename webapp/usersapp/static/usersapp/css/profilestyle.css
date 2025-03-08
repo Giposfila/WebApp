@@ -1,74 +1,36 @@
-/* Общие стили */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f4f6f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.profile-container {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    padding: 30px;
-    text-align: center;
-}
-
-.profile-container h2 {
-    color: #34495e;
-    margin-bottom: 20px;
-    font-size: 2em;
-    font-weight: bold;
-}
-
-.profile-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 15px;
-    border: 2px solid #3498db;
-}
-
-.profile-email {
-    font-size: 0.9em;
-    color: #6c757d;
-    margin-bottom: 20px;
-}
-
-.profile-info {
+/* Стили для формы редактирования */
+.profile-edit-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     margin-top: 20px;
-    text-align: left;
 }
 
 .info-item {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    text-align: left;
 }
 
-.info-label {
+.info-item label {
     font-weight: bold;
     color: #34495e;
+    margin-bottom: 5px;
 }
 
-.info-value {
-    color: #6c757d;
+.info-item input,
+.info-item select {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s;
 }
 
-.profile-actions {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.info-item input:focus,
+.info-item select:focus {
+    border-color: #3498db;
+    outline: none;
 }
 
 button {
@@ -93,21 +55,4 @@ button:hover {
     border-radius: 8px;
     margin-bottom: 15px;
     border: 1px solid #f5c6cb;
-}
-
-p {
-    margin-top: 20px;
-    font-size: 0.9em;
-    color: #6c757d;
-}
-
-p a {
-    color: #3498db;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-p a:hover {
-    color: #2980b9;
 }
