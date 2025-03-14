@@ -220,3 +220,81 @@ header h1 {
 .project-info button:hover {
     background: #2980b9;
 }
+/* Общий контейнер для всех досок */
+.boards-container {
+    display: flex;
+    flex-wrap: wrap; /* Перенос карточек на новую строку */
+    gap: 20px; /* Расстояние между карточками */
+    padding: 20px;
+    justify-content: center; /* Центрирование карточек */
+}
+
+/* Стиль для каждой карточки доски */
+.board-card {
+    background-color: #ffffff; /* Белый фон */
+    border: 2px solid #e0e0e0; /* Граница */
+    border-radius: 15px; /* Закругленные углы */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
+    padding: 20px; /* Внутренний отступ */
+    width: 300px; /* Ширина карточки */
+    text-align: center; /* Выравнивание текста по центру */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Плавные переходы */
+}
+
+/* Эффект при наведении на карточку */
+.board-card:hover {
+    transform: translateY(-10px); /* Поднятие карточки */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* Усиление тени */
+    border-color: #007bff; /* Изменение цвета границы */
+}
+
+/* Анимация при клике */
+.board-card:active {
+    transform: scale(0.98); /* Небольшое уменьшение размера */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ослабление тени */
+}
+
+/* Заголовок карточки */
+.board-title {
+    font-size: 1.5rem; /* Размер шрифта заголовка */
+    margin-bottom: 10px; /* Отступ под заголовком */
+    color: #333; /* Цвет текста */
+    font-weight: bold; /* Жирный шрифт */
+}
+
+/* Описание карточки */
+.board-description {
+    font-size: 1rem; /* Размер шрифта описания */
+    color: #666; /* Цвет текста */
+    line-height: 1.5; /* Межстрочный интервал */
+    margin-bottom: 15px; /* Отступ под описанием */
+}
+
+/* Кнопки действий */
+.board-actions {
+    display: flex;
+    justify-content: space-around; /* Равномерное распределение кнопок */
+}
+
+.btn {
+    background-color: #007bff; /* Цвет фона кнопки */
+    color: white; /* Цвет текста */
+    border: none; /* Без границ */
+    border-radius: 5px; /* Закругленные углы */
+    padding: 8px 16px; /* Внутренний отступ */
+    cursor: pointer; /* Курсор "рука" */
+    transition: background-color 0.3s ease; /* Плавный переход */
+    text-decoration: none; /* Убрать подчеркивание ссылок */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Темнее при наведении */
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Красная кнопка */
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a; /* Темнее при наведении */
+}

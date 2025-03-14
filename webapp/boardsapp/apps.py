@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 
 
-class UsersappConfig(AppConfig):
+class BoardsappConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'usersapp'
-
+    name = 'boardsapp'

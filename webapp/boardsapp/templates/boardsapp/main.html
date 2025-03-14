@@ -1,0 +1,11 @@
+{%extends 'boardsapp/base.html'%}
+{%block content%}
+<div class="boards-container">
+    {% for el in boards %}
+    <div class="board-card">
+        <h2 class="board-title">{{ el.title }}</h2>
+        <p class="board-description">{{ el.description }}</p>
+    </div>
+    {% endfor %}
+</div>
+{%endblock%}
