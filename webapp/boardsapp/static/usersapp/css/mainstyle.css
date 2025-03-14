@@ -224,77 +224,76 @@ header h1 {
 .boards-container {
     display: flex;
     flex-wrap: wrap; /* Перенос карточек на новую строку */
-    gap: 20px; /* Расстояние между карточками */
-    padding: 20px;
+    gap: 15px; /* Меньшее расстояние между карточками */
+    padding: 15px;
     justify-content: center; /* Центрирование карточек */
 }
 
 /* Стиль для каждой карточки доски */
 .board-card {
     background-color: #ffffff; /* Белый фон */
-    border: 2px solid #e0e0e0; /* Граница */
-    border-radius: 15px; /* Закругленные углы */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Легкая тень */
-    padding: 20px; /* Внутренний отступ */
-    width: 300px; /* Ширина карточки */
+    border: 1px solid #e0e0e0; /* Тонкая граница */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
+    padding: 10px; /* Меньший внутренний отступ */
+    width: 200px; /* Уменьшенная ширина карточки */
     text-align: center; /* Выравнивание текста по центру */
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Плавные переходы */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Плавные переходы */
 }
 
 /* Эффект при наведении на карточку */
 .board-card:hover {
-    transform: translateY(-10px); /* Поднятие карточки */
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* Усиление тени */
-    border-color: #007bff; /* Изменение цвета границы */
+    transform: translateY(-5px); /* Поднятие карточки */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Усиление тени */
 }
 
 /* Анимация при клике */
 .board-card:active {
     transform: scale(0.98); /* Небольшое уменьшение размера */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ослабление тени */
 }
 
 /* Заголовок карточки */
 .board-title {
-    font-size: 1.5rem; /* Размер шрифта заголовка */
-    margin-bottom: 10px; /* Отступ под заголовком */
+    font-size: 1rem; /* Меньший размер шрифта заголовка */
+    margin-bottom: 5px; /* Меньший отступ под заголовком */
     color: #333; /* Цвет текста */
     font-weight: bold; /* Жирный шрифт */
+    white-space: nowrap; /* Запрет переноса текста */
+    overflow: hidden; /* Скрыть текст, который не помещается */
+    text-overflow: ellipsis; /* Добавить многоточие для длинного текста */
 }
 
 /* Описание карточки */
 .board-description {
-    font-size: 1rem; /* Размер шрифта описания */
+    font-size: 0.8rem; /* Меньший размер шрифта описания */
     color: #666; /* Цвет текста */
-    line-height: 1.5; /* Межстрочный интервал */
-    margin-bottom: 15px; /* Отступ под описанием */
+    line-height: 1.2; /* Меньший межстрочный интервал */
+    margin-bottom: 10px; /* Меньший отступ под описанием */
 }
 
 /* Кнопки действий */
 .board-actions {
     display: flex;
-    justify-content: space-around; /* Равномерное распределение кнопок */
+    justify-content: center; /* Центрирование кнопки */
 }
 
-.btn {
-    background-color: #007bff; /* Цвет фона кнопки */
-    color: white; /* Цвет текста */
+.btn-view {
+    background-color: #28a745; /* Зеленый цвет фона */
+    color: white; /* Белый текст */
     border: none; /* Без границ */
     border-radius: 5px; /* Закругленные углы */
-    padding: 8px 16px; /* Внутренний отступ */
+    padding: 5px 10px; /* Меньший внутренний отступ */
     cursor: pointer; /* Курсор "рука" */
-    transition: background-color 0.3s ease; /* Плавный переход */
     text-decoration: none; /* Убрать подчеркивание ссылок */
+    font-size: 0.8rem; /* Меньший размер шрифта */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавные переходы */
 }
 
-.btn:hover {
-    background-color: #0056b3; /* Темнее при наведении */
+.btn-view:hover {
+    background-color: #218838; /* Темнее при наведении */
+    transform: scale(1.05); /* Небольшое увеличение */
 }
 
-.btn-danger {
-    background-color: #dc3545; /* Красная кнопка */
-}
-
-.btn-danger:hover {
-    background-color: #a71d2a; /* Темнее при наведении */
+.btn-view:active {
+    transform: scale(0.98); /* Небольшое уменьшение при клике */
 }

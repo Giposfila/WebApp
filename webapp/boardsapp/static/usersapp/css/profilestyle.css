@@ -111,3 +111,54 @@ button a.button {
         padding: 8px;
     }
 }
+/* Стиль для формы */
+.profile-form {
+    text-align: left;
+}
+
+.info-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.info-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Кнопка "Сохранить изменения" */
+.save-button {
+    background-color: #28a745; /* Зеленый цвет */
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 100%;
+}
+
+.save-button:hover {
+    background-color: #218838;
+}
+
+/* Кнопка "Отмена" */
+.cancel-button {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.cancel-button:hover {
+    color: #0056b3;
+}

@@ -1,4 +1,9 @@
 {%extends 'boardsapp/base.html'%}
+{%block boards%}
+    {%for el in boards%}
+        <div class="group-item">{{el.title}}</div>
+    {%endfor%}
+{%endblock%}
 {%block content%}
 <div class="boards-container">
     {% for el in boards %}

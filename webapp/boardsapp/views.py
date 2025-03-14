@@ -10,3 +10,9 @@ def Profile_view(request):
         "email":request.user.email
           }
     return render(request, 'boardsapp/profile.html',data)
+def ProfileEdit_view(request):
+    data = {
+        'username': request.user.username,
+        "email": request.user.email
+    }
+    return render(request, 'boardsapp/profile_edit.html', data)

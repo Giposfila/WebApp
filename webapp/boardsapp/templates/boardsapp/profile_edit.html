@@ -1,13 +1,36 @@
-<!doctype html>
+<!-- templates/profile_edit.html -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование профиля</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'usersapp/css/profilestyle.css' %}">
 </head>
 <body>
+    <div class="profile-container">
+        <h2>Редактировать профиль</h2>
+        <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar">
 
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+            <div class="profile-info">
+                <div class="info-item">
+                    <span class="info-label">Логин:</span>
+                    <input type="text" name="username" value="{{ username }}" class="info-input">
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email:</span>
+                    <input type="email" name="email" value="{{ email }}" class="info-input">
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="save-button">Сохранить изменения</button>
+                <a href="{% url 'profile' %}" class="cancel-button">Отмена</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
