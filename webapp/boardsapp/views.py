@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from .models import Board
+from .models import Board, Task
 def MainMenu(request):
     boards=Board.objects.all()
-    data={'boards':boards}
+    tasks = Task.objects.all()
+    data={'boards':boards,
+          'tasks':tasks
+          }
     return render(request,'boardsapp/main.html',data)
 def Profile_view(request):
     data={

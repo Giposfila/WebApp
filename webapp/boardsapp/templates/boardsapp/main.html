@@ -6,7 +6,7 @@
 {%endblock%}
 {%block content%}
 <div class="boards-container">
-    {% for el in boards %}
+    {% for el in tasks %}
     <div class="board-card">
         <h2 class="board-title">{{ el.title }}</h2>
         <p class="board-description">{{ el.description }}</p>
