@@ -30,8 +30,9 @@
     <div class="sidebar">
         <div class="groups">
             <h3>Доски</h3>
-            {%block boards%}
-            {%endblock%}
+                {%for el in boards%}
+                    <div class="group-item">{{el.title}}</div>
+                {%endfor%}
             <button>Создать доску</button>
         </div>
 

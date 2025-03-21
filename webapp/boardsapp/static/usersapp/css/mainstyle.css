@@ -235,10 +235,15 @@ header h1 {
     border: 1px solid #e0e0e0; /* Тонкая граница */
     border-radius: 10px; /* Закругленные углы */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
-    padding: 10px; /* Меньший внутренний отступ */
-    width: 200px; /* Уменьшенная ширина карточки */
+    padding: 10px; /* Внутренний отступ */
+    width: 200px; /* Фиксированная ширина карточки */
     text-align: center; /* Выравнивание текста по центру */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Плавные переходы */
+
+    /* Ограничение высоты и скрытие текста */
+    min-height:200px;
+    max-height: 200px; /* Максимальная высота карточки */
+    overflow: hidden; /* Скрываем всё, что выходит за пределы */
 }
 
 /* Эффект при наведении на карточку */
@@ -296,4 +301,41 @@ header h1 {
 
 .btn-view:active {
     transform: scale(0.98); /* Небольшое уменьшение при клике */
+}
+/* Стиль для контейнера задачи */
+.task-container {
+    background-color: #ffffff; /* Белый фон */
+    border: 1px solid #e0e0e0; /* Легкая граница */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
+    padding: 20px; /* Внутренний отступ */
+    margin: 20px 0; /* Отступы сверху и снизу */
+    width: 80%; /* Ширина контейнера */
+    max-width: 600px; /* Максимальная ширина */
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
+}
+
+/* Стиль для заголовка задачи */
+.task-title {
+    font-size: 24px; /* Размер шрифта */
+    font-weight: bold; /* Жирный текст */
+    margin-bottom: 10px; /* Отступ под заголовком */
+    color: #333333; /* Темно-серый цвет текста */
+    text-align: center; /* Выравнивание по центру */
+}
+
+/* Стиль для описания задачи */
+.task-description {
+    font-size: 16px; /* Размер шрифта */
+    color: #555555; /* Серый цвет текста */
+    line-height: 1.5; /* Интервал между строк */
+    text-align: justify; /* Выравнивание текста по ширине */
+    overflow: hidden; /* Скр
+
+/* Более специфичный селектор */
+.header-container h1 a.header-title-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    font-weight: inherit !important;
 }

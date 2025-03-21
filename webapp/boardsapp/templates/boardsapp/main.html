@@ -1,16 +1,13 @@
 {%extends 'boardsapp/base.html'%}
-{%block boards%}
-    {%for el in boards%}
-        <div class="group-item">{{el.title}}</div>
-    {%endfor%}
-{%endblock%}
 {%block content%}
 <div class="boards-container">
     {% for el in tasks %}
+     <a href="{%url 'task-detail' el.id%}" style="text-decoration: none;">
     <div class="board-card">
         <h2 class="board-title">{{ el.title }}</h2>
         <p class="board-description">{{ el.description }}</p>
     </div>
+     </a>
     {% endfor %}
 </div>
 {%endblock%}
