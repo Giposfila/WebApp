@@ -6,5 +6,5 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('forgotpassword/', views.forgot_password_view, name='forgotpassword'),
     path('registration/main/', include('boardsapp.urls')),
-    path('registration/login/main/', include('boardsapp.urls')),
+    path('login/main/', include('boardsapp.urls')),
 ]
