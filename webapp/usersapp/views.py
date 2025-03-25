@@ -25,7 +25,7 @@ def login_view(request):
         if form.is_valid():
             user = form.cleaned_data['user']
             login(request, user)  # Создаем сессию для пользователя
-            return redirect('main/')  # Перенаправляем на главную страницу
+            return redirect('main')  # Перенаправляем на главную страницу
     else:
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
