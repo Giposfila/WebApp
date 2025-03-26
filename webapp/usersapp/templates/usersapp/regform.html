@@ -11,13 +11,12 @@
 <body>
     <div class="register-form">
         <h2>Регистрация</h2>
-        {% if error %}
-            <div class="error">{{ error }}</div>
-        {% endif %}
         <form method="post" >
             {% csrf_token %}
             {{form}}
-            <sp>{{error}}</sp>
+                    {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
             <button type="submit">Зарегистрироваться</button>
         </form>
         <p>Уже есть аккаунт? <a href="{%url 'login'%}">Войдите</a></p>

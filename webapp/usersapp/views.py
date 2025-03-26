@@ -7,17 +7,18 @@ from django.contrib.auth.models import User
 def BlankFunc(request):
     return redirect('/registration/')
 def RegForm_Func(request):
-    error=''
-    if request.method=='POST':
-        form=UsersForm(request.POST)
+    if request.method == 'POST':
+        form = UsersForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('main/')
-        else:
-            error='Форма была неверной'
-    form=UsersForm()
-    data={'form':form, 'error': error}
-    return render(request, 'usersapp/regform.html', data)
+            # Сохраняем пользователя и получаем объект
+            user = form.save()
+            # Авторизуем пользователя
+            login(request, user)
+            return redirect('main')  # Перенаправляем на главную страницу
+    else:
+        form = UsersForm()
+
+    return render(request, 'usersapp/regform.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':

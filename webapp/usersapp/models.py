@@ -9,7 +9,7 @@ class Profile(models.Model):
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
-        return f'Profile of {self.user.username}'
+        return f'Профиль {self.user.username}'
 
     # models.py (продолжение)
     @receiver(post_save, sender=User)

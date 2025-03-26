@@ -12,11 +12,6 @@
         <form method="post">
             {% csrf_token %}
             {{form}}
-            {% if form.errors %}
-                <div class="error">
-                    {{ form.errors }}
-                </div>
-            {% endif %}
             <button type="submit">Войти</button>
         </form>
         <p>
