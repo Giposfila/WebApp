@@ -11,7 +11,11 @@
 <body>
     <div class="profile-container">
         <h2>Мой профиль</h2>
-        <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar">
+               {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+        {% else %}
+            <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar"> <!-- Замените на путь к дефолтной аватарке -->
+        {% endif %}
         <p class="profile-email">{{email}}</p>
 
         <div class="profile-info">

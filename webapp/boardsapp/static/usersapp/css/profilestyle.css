@@ -162,3 +162,9 @@ button a.button {
 .cancel-button:hover {
     color: #0056b3;
 }
+        .avatar {
+            border-radius: 50%; /* Делает изображение круглым */
+            width: 150px;       /* Ширина аватарки */
+            height: 150px;      /* Высота аватарки */
+            object-fit: cover;  /* Обрезает изображение, чтобы оно заполнило контейнер */
+        }

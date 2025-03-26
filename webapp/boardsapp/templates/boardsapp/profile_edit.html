@@ -1,36 +1,78 @@
-<!-- templates/profile_edit.html -->
+<!-- templates/edit_profile.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Редактирование профиля</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'usersapp/css/profilestyle.css' %}">
+    <meta charset="UTF-8">
+    <title>Редактировать профиль</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkgreen;
+        }
+        img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-    <div class="profile-container">
-        <h2>Редактировать профиль</h2>
-        <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar">
+    <h2>Редактировать профиль</h2>
 
-        <form method="post" class="profile-form">
-            {% csrf_token %}
-            <div class="profile-info">
-                <div class="info-item">
-                    <span class="info-label">Логин:</span>
-                    <input type="text" name="username" value="{{ username }}" class="info-input">
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Email:</span>
-                    <input type="email" name="email" value="{{ email }}" class="info-input">
-                </div>
-            </div>
-
-            <div class="profile-actions">
-                <button type="submit" class="save-button">Сохранить изменения</button>
-                <a href="{% url 'profile' %}" class="cancel-button">Отмена</a>
-            </div>
-        </form>
+    <div class="form-group">
+        {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-icon">
+        {% else %}
+            <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon"> <!-- Замените на путь к дефолтной аватарке -->
+        {% endif %}
     </div>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ user_form.username.label_tag }}
+            {{ user_form.username }}
+        </div>
+
+        <div class="form-group">
+            {{ user_form.email.label_tag }}
+            {{ user_form.email }}
+        </div>
+
+        <div class="form-group">
+            {{ profile_form.avatar.label_tag }}
+            {{ profile_form.avatar }}
+        </div>
+
+        <button type="submit">Сохранить изменения</button>
+    </form>
 </body>
 </html>
