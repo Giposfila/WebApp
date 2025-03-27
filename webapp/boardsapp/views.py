@@ -19,6 +19,7 @@ class TaskShow(DetailView):
     context_object_name = 'task'
 
 
+
 def BoardCreate_view(request):
     if request.method == 'POST':
         form = CreateBoardForm(request.POST)
@@ -27,4 +28,4 @@ def BoardCreate_view(request):
             return redirect('main')  # Перенаправляем на список задач
     else:
         form = CreateBoardForm()
-    return render(request, 'boardsapp/boardcreate.html', {'form': form})
+    return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})
