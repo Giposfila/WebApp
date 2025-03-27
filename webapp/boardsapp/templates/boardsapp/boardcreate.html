@@ -1,0 +1,11 @@
+{%extends 'boardsapp/base.html'%}
+{%block content%}
+<div class="form-container">
+    <h2 class="form-title">Создание новой доски</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-submit">Создать доску</button>
+    </form>
+</div>
+{%endblock%}
