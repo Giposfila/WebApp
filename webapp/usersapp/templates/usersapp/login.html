@@ -1,27 +1,30 @@
-<!-- templates/login.html -->
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'usersapp/css/loginstyle.css' %}">
     <title>Вход</title>
+    <link rel="stylesheet" href="{% static 'usersapp/css/loginstyle.css' %}">
 </head>
 <body>
-    <div class="login-form">
-        <h2>Войти на сайт</h2>
-        <form method="post">
+    <div class="login-container">
+        <h2 class="login-title">Вход</h2>
+        <form method="post" class="login-form">
             {% csrf_token %}
-            {{form}}
-            {% if form.errors %}
-                <div class="error">
-                    {{ form.errors }}
+            {% for field in form %}
+                <div class="form-group-login">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error-message-login">{{ field.errors }}</div>
+                    {% endif %}
                 </div>
-            {% endif %}
-            <button type="submit">Войти</button>
+            {% endfor %}
+            <button type="submit" class="login-button">Войти</button>
         </form>
-        <p>
-            Забыли пароль? <a href="forgotpassword/"><button>Восстановить</button></a>
-        </p>
+        <div class="login-links">
+            <a href="{% url 'regform' %}">Нет аккаунта? Зарегистрируйтесь</a>
+            <a href="{% url 'forgotpassword' %}">Забыли пароль?</a>
+        </div>
     </div>
 </body>
 </html>
