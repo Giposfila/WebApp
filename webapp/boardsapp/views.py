@@ -1,12 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView
+from .forms import *
 
 from .models import Board, Task
 def MainMenu(request):
-    boards=Board.objects.all()
+    boards=request.user.boards.all()
     tasks = Task.objects.all()
     data={'boards':boards,
-          'tasks':tasks
+          'tasks':tasks,
+          "profile": request.user.profile
           }
     return render(request,'boardsapp/main.html',data)
 
@@ -16,15 +18,14 @@ class TaskShow(DetailView):
     template_name = 'boardsapp/task.html'
     context_object_name = 'task'
 
-def Profile_view(request):
-    data={
-        'username':request.user.username,
-        "email":request.user.email
-          }
-    return render(request, 'boardsapp/profile.html',data)
-def ProfileEdit_view(request):
-    data = {
-        'username': request.user.username,
-        "email": request.user.email
-    }
-    return render(request, 'boardsapp/profile_edit.html', data)
+
+
+def BoardCreate_view(request):
+    if request.method == 'POST':
+        form = CreateBoardForm(request.POST)
+        if form.is_valid():
+            form.save(user=request.user)  # Передаем текущего пользователя
+            return redirect('main')  # Перенаправляем на список задач
+    else:
+        form = CreateBoardForm()
+    return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})

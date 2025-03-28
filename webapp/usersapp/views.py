@@ -1,23 +1,24 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
-from .forms import LoginForm
-from .forms import UsersForm
+from django.contrib.auth.decorators import login_required
+from .forms import *
 from django.contrib.auth.models import User
 
 def BlankFunc(request):
     return redirect('/registration/')
 def RegForm_Func(request):
-    error=''
-    if request.method=='POST':
-        form=UsersForm(request.POST)
+    if request.method == 'POST':
+        form = UsersForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('main/')
-        else:
-            error='Форма была неверной'
-    form=UsersForm()
-    data={'form':form, 'error': error}
-    return render(request, 'usersapp/regform.html', data)
+            # Сохраняем пользователя и получаем объект
+            user = form.save()
+            # Авторизуем пользователя
+            login(request, user)
+            return redirect('main')  # Перенаправляем на главную страницу
+    else:
+        form = UsersForm()
+
+    return render(request, 'usersapp/regform.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
@@ -32,3 +33,33 @@ def login_view(request):
 
 def forgot_password_view(request):
     return render(request, 'usersapp/forgotpassword.html')
+def Profile_view(request):
+    data={
+        'username':request.user.username,
+        "email":request.user.email,
+        "profile": request.user.profile
+          }
+    return render(request, 'boardsapp/profile.html',data)
+@login_required
+def ProfileEdit_view(request):
+    user = request.user
+    profile = user.profile  # Получаем связанный профиль
+
+    if request.method == 'POST':
+        user_form = ChangeUserForm(request.POST, instance=user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')  # Перенаправляем на страницу профиля после сохранения
+    else:
+        user_form = ChangeUserForm(instance=user)
+        profile_form = ProfileForm(instance=profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'profile':user.profile
+    }
+    return render(request, 'boardsapp/profile_edit.html', context)

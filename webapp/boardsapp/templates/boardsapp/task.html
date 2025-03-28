@@ -1,8 +1,31 @@
-{%extends 'boardsapp/base.html'%}
+{% extends 'boardsapp/base.html' %}
 
 {% block content %}
 <div class="task-container">
     <h1 class="task-title">{{ task.title }}</h1>
     <p class="task-description">{{ task.description }}</p>
+
+    <!-- Кнопка возвращения на главную страницу -->
+    <div class="task-actions">
+        <a href="{% url 'main' %}" class="btn-back"><button>Вернуться на главную</button></a>
+    </div>
 </div>
 {% endblock %}
+<style>/* Стиль для кнопки возвращения */
+.task-actions {
+    margin-top: 20px; /* Отступ сверху */
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db; /* Цвет фона */
+    color: white; /* Цвет текста */
+    text-decoration: none; /* Убрать подчеркивание */
+    border-radius: 5px; /* Закругленные углы */
+    transition: background-color 0.3s; /* Плавный переход */
+}
+
+.btn-back:hover {
+    background-color: #2980b9; /* Темнее при наведении */
+}</style>

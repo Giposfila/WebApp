@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'usersapp/css/mainstyle.css' %}">
+    <link rel="stylesheet" href="{% static 'boardsapp/css/mainstyle.css' %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Tasks</title>
@@ -18,7 +18,11 @@
         <div class="profile-container">
             <button class="profile-button">
                 <a href="{%url 'profile'%}">
-                <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Профиль" class="profile-icon">
+                       {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-icon">
+        {% else %}
+            <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon"> <!-- Замените на путь к дефолтной аватарке -->
+        {% endif %}
                 </a>
             </button>
         </div>
@@ -33,7 +37,7 @@
                 {%for el in boards%}
                     <div class="group-item">{{el.title}}</div>
                 {%endfor%}
-            <button>Создать доску</button>
+                 <a href="{%url 'boardcreate'%}">  <button>Создать доску</button></a>
         </div>
 
         <div class="filters">

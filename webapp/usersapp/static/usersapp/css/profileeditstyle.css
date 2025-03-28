@@ -1,0 +1,101 @@
+/* Общие стили */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #444;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Контейнер формы */
+form {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль для аватара */
+.profile-icon {
+    width: 150px; /* Размер аватара */
+    height: 150px; /* Размер аватара */
+    border-radius: 50%; /* Делает изображение круглым */
+    object-fit: cover; /* Обрезает изображение, чтобы оно заполнило контейнер */
+    border: 2px solid #ddd; /* Граница вокруг аватара */
+    display: block; /* Убирает лишние отступы */
+    margin: 0 auto 20px; /* Центрирует аватар и добавляет отступ снизу */
+}
+
+/* Стиль для меток полей */
+label {
+    font-weight: bold;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Стиль для полей ввода */
+input[type="text"],
+input[type="email"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="file"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Кнопка "Сохранить изменения" */
+button[type="submit"] {
+    background-color: #28a745; /* Зеленый цвет */
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .profile-icon {
+        width: 120px;
+        height: 120px;
+    }
+
+    button[type="submit"] {
+        font-size: 14px;
+        padding: 8px;
+    }
+}

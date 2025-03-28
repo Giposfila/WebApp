@@ -11,20 +11,31 @@
 <body>
     <div class="profile-container">
         <h2>Мой профиль</h2>
-        <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar">
-        <p class="profile-email">{{email}}</p>
+        {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+        {% else %}
+            <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-avatar">
+        {% endif %}
+        <p class="profile-email">{{ email }}</p>
 
         <div class="profile-info">
             <div class="info-item">
                 <span class="info-label">Логин:</span>
-                <span class="info-value">{{username}}</span>
+                <span class="info-value">{{ username }}</span>
             </div>
-
         </div>
 
         <div class="profile-actions">
-           <button> <a href="{%url 'profile_edit'%}" class="button">Редактировать профиль</a></button>
-            <button> <a class="button">Сменить пароль</a></button>
+            <button>
+                <a href="{% url 'profile_edit' %}" class="button">Редактировать профиль</a>
+            </button>
+            <button>
+                <a href="#" class="button">Сменить пароль</a>
+            </button>
+            <!-- Добавляем кнопку "Вернуться на главную" -->
+            <button>
+                <a href="{% url 'main' %}" class="button">Вернуться на главную</a>
+            </button>
         </div>
     </div>
 </body>
