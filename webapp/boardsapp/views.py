@@ -18,6 +18,11 @@ class TaskShow(DetailView):
     template_name = 'boardsapp/task.html'
     context_object_name = 'task'
 
+class BoardShow(DetailView):
+    model = Board
+    boards=Board.objects.all()
+    template_name = 'boardsapp/board.html'
+    context_object_name = 'board'
 
 
 def BoardCreate_view(request):

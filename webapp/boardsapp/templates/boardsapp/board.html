@@ -1,27 +1,94 @@
-{% extends 'base.html' %}
-
+{% extends 'boardsapp/base.html' %}
+{% load static %}
 {% block content %}
-<div class="main-content">
+    <link rel="stylesheet" href="{% static 'boardsapp/css/board.css' %}">
+<div class="board-container">
+    <!-- Верхнее меню -->
     <div class="board-header">
-        <h2>Доска задач</h2>
-        <button class="add-task-btn">+ Создать задачу</button>
+        <a href="{% url 'main' %}" class="back-btn">&#8592; Назад к доскам</a>
+        <h2>{{ board.title }}</h2>
+        <div class="board-actions">
+            <form class="filter-form">
+                <select name="filter" id="filter">
+                    <option value="all">Все задачи</option>
+                    <option value="completed">Выполненные</option>
+                    <option value="due">С дедлайном</option>
+                </select>
+            </form>
+            <button class="btn btn-create" onclick="toggleModal()">Создать задачу<br>(В разработке)</button>
+        </div>
     </div>
-    
-    <div class="task-board">
-        <div class="task-column">
-            <h3>В процессе</h3>
-            <div class="task-card">
-                <div class="task-title">Название задачи</div>
-                <div class="task-description">Описание задачи...</div>
-            </div>
+
+    <!-- Кнопка для показа/скрытия описания -->
+<div class="description-toggle">
+    {% if board.description %}
+        <a href="#" onclick="toggleDescription()">Показать описание</a>
+    {% else %}
+        <a href="#" onclick="toggleDescription()">Показать описание</a>
+    {% endif %}
+</div>
+
+    <!-- Описание доски (скрыто по умолчанию) -->
+    <div class="board-description" id="board-description" style="display: none;">
+        <h4>Описание:</h4>
+        <div class="description-text">
+            {{ board.description|default:"Описание отсутствует"|linebreaksbr }}
         </div>
-        <div class="task-column">
-            <h3>Готово</h3>
-            <div class="task-card">
-                <div class="task-title">Название задачи</div>
-                <div class="task-description">Описание задачи...</div>
+    </div>
+
+    <!-- Карточки задач -->
+    <div class="task-list">
+        {% for task in tasks %}
+        <div class="task-card {% if task.is_completed %}completed{% endif %}">
+            <h3>{{ task.title }}</h3>
+            <div class="task-description">
+                {{ task.description|default:"Нет описания"|linebreaksbr }}
             </div>
+            <div class="task-info">
+                <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
+                <span>Статус: {% if task.is_completed %}Выполнено{% else %}В работе{% endif %}</span>
+            </div>
+            <button class="btn btn-edit">Изменить</button>
         </div>
+        {% empty %}
+        <p>Задачи не найдены</p>
+        {% endfor %}
+    </div>
+
+    <!-- Модальное окно для создания задачи -->
+    <div id="task-modal" class="modal">
+        <form class="modal-content" onsubmit="createTask(event)">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Создать задачу (Выхода нет, нужно создать задачу)</h3>
+            <input type="text" placeholder="Название задачи" required>
+            <textarea placeholder="Описание (Enter для переноса строки)"></textarea>
+            <input type="datetime-local" name="deadline">
+            <button type="submit" class="btn btn-submit">Создать</button>
+        </form>
     </div>
 </div>
+
+<script>
+function toggleDescription() {
+    const description = document.getElementById('board-description');
+    description.style.display = description.style.display === 'none' ? 'block' : 'none';
+    const btnText = document.querySelector('.description-toggle a');
+    btnText.textContent = description.style.display === 'block' ? 'Скрыть описание' : 'Показать описание';
+}
+
+function toggleModal() {
+    document.getElementById('task-modal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('task-modal').style.display = 'none';
+}
+
+// Пример функции для создания задачи (для демонстрации)
+function createTask(e) {
+    e.preventDefault();
+    // Логика создания задачи (AJAX или перенаправление)
+    closeModal();
+}
+</script>
 {% endblock %}

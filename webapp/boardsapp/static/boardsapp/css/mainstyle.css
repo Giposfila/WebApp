@@ -359,3 +359,28 @@ header h1 {
 .btn-back:hover {
     background-color: #c0392b; /* Темнее при наведении */
 }
+/* Добавьте это в ваши CSS-файлы */
+.back-btn {
+    display: inline-block;
+    margin-right: 20px;
+    text-decoration: none;
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.board-description {
+    background: #f0f8ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.board-description h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.board-description p {
+    margin: 10px 0 0;
+    color: #666;
+}

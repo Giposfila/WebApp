@@ -35,7 +35,9 @@
         <div class="groups">
             <h3>Доски</h3>
                 {%for el in boards%}
+             <a href="{%url 'board-detail' el.id%}" style="text-decoration: none;">
                     <div class="group-item">{{el.title}}</div>
+                 </a>
                 {%endfor%}
                  <a href="{%url 'boardcreate'%}">  <button>Создать доску</button></a>
         </div>
