@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main-content">
+    <div class="board-header">
+        <h2>Доска задач</h2>
+        <button class="add-task-btn">+ Создать задачу</button>
+    </div>
+    
+    <div class="task-board">
+        <div class="task-column">
+            <h3>В процессе</h3>
+            <div class="task-card">
+                <div class="task-title">Название задачи</div>
+                <div class="task-description">Описание задачи...</div>
+            </div>
+        </div>
+        <div class="task-column">
+            <h3>Готово</h3>
+            <div class="task-card">
+                <div class="task-title">Название задачи</div>
+                <div class="task-description">Описание задачи...</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
