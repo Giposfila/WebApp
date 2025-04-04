@@ -15,6 +15,11 @@
         <div class="search-container">
             <input type="text" placeholder="Поиск..." class="search-input">
         </div>
+
+        <div class="about-container">
+            <button class="about-button" onclick="toggleAboutModal()"> Описание сайта</button>
+        </div>
+
         <div class="profile-container">
             <button class="profile-button">
                 <a href="{%url 'profile'%}">
@@ -51,5 +56,120 @@
     </div>
   {%block content%} {%endblock%}
 </div>
+
+<!-- Модальное окно "О сайте" -->
+<div id="about-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeAboutModal()">&times;</span>
+        <h2>E-Tasks - система управления задачами от СФУ</h2>
+        <div class="about-content">
+            <p>E-Tasks - это современная система управления проектами и задачами, разработанная специально для студентов и сотрудников Сибирского федерального университета.</p>
+
+            <h3>Основные возможности:</h3>
+            <ul>
+                <li><strong>Доски проектов</strong> - создавайте отдельные пространства для каждого проекта или учебного курса</li>
+                <li><strong>Гибкое управление задачами</strong> - распределяйте задания, устанавливайте сроки и отслеживайте прогресс</li>
+                <li><strong>Коллаборация</strong> - работайте вместе с одногруппниками или коллегами над общими проектами</li>
+                <li><strong>Интеграция с учебным процессом</strong> - связывайте задачи с учебными курсами и дисциплинами СФУ</li>
+                <li><strong>Умные уведомления</strong> - никогда не пропускайте дедлайны и важные события</li>
+            </ul>
+
+            <h3>Для кого этот сервис?</h3>
+            <p>E-Tasks идеально подходит для:</p>
+            <ul>
+                <li>Студентов, работающих над курсовыми и дипломными проектами</li>
+                <li>Учебных групп, организующих совместную работу</li>
+                <li>Преподавателей, распределяющих задания среди студентов</li>
+                <li>Научных сотрудников, управляющих исследовательскими проектами</li>
+                <li>Административных подразделений университета</li>
+            </ul>
+
+            <p>Разработано в <strong>Сибирском федеральном университете</strong> с ❤️ для цифровизации учебного процесса.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    background-color: #f8f9fa;
+    margin: 5% auto;
+    padding: 25px;
+    border-radius: 10px;
+    width: 70%;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.about-content {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.about-content h3 {
+    margin-top: 20px;
+    color: #2c3e50;
+}
+
+.about-content ul {
+    margin-left: 20px;
+}
+
+.about-button {
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.about-button:hover {
+    background-color: #2980b9;
+}
+</style>
+
+<script>
+// Функции для управления модальным окном
+function toggleAboutModal() {
+    const modal = document.getElementById('about-modal');
+    modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+}
+
+function closeAboutModal() {
+    document.getElementById('about-modal').style.display = 'none';
+}
+
+// Закрытие при клике вне окна
+window.onclick = function(event) {
+    const modal = document.getElementById('about-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
 </body>
 </html>
