@@ -45,7 +45,24 @@
             <button>
                 <a href="{% url 'main' %}" class="button">Вернуться на главную</a>
             </button>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Выйти из аккаунта</button>
+            </form>
         </div>
     </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutForm = document.querySelector('form[action="{% url 'logout' %}"]');
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', function(e) {
+            if (!confirm('Вы уверены, что хотите выйти?')) {
+                e.preventDefault();
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>

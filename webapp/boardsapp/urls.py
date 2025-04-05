@@ -9,4 +9,5 @@ urlpatterns = [
     path('boards/<int:pk>', views.BoardShow.as_view(), name='board-detail'),
     path('boardcreate/', views.BoardCreate_view, name='boardcreate'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='regform'), name='logout'),
 ]
