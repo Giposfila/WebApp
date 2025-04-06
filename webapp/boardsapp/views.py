@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from .forms import *
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 from .models import Board, Task
 def MainMenu(request):
@@ -34,3 +36,7 @@ def BoardCreate_view(request):
     else:
         form = CreateBoardForm()
     return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})
+
+class ChangePasswordView(PasswordChangeView):
+    template_name = 'boardsapp/change_password.html'
+    success_url = reverse_lazy('profile')
