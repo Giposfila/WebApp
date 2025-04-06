@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from .models import Board, Task
 def MainMenu(request):
     boards=request.user.boards.all()
-    tasks = Task.objects.all()
+    tasks = request.user.tasks_to_do.all()
     data={'boards':boards,
           'tasks':tasks,
           "profile": request.user.profile
@@ -25,6 +25,10 @@ class BoardShow(DetailView):
     boards=Board.objects.all()
     template_name = 'boardsapp/board.html'
     context_object_name = 'board'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = self.object.tasks.all()
+        return context
 
 
 def BoardCreate_view(request):
