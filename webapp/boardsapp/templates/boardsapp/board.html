@@ -39,7 +39,7 @@
     <!-- Карточки задач -->
     <div class="task-list">
         {% for task in tasks %}
-        <div class="task-card {% if task.is_completed %}completed{% endif %}">
+        <div class="task-card {% if task.is_completed %}completed{% endif %}" onclick="window.location.href='{% url 'task-detail' task.id %}'" style="cursor: pointer;">
             <h3>{{ task.title }}</h3>
             <div class="task-description">
                 {{ task.description|default:"Нет описания"|linebreaksbr }}
@@ -48,11 +48,12 @@
                 <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
                 <span>Статус: {% if task.is_completed %}Выполнено{% else %}В работе{% endif %}</span>
             </div>
-            <button class="btn btn-edit">Изменить</button>
+            <button class="btn btn-edit">Кнопка</button>
         </div>
         {% empty %}
         <p>Задачи не найдены</p>
         {% endfor %}
+        </a>
     </div>
 
     <!-- Модальное окно для создания задачи -->

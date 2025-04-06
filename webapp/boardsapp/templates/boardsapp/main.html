@@ -9,6 +9,8 @@
         <p class="board-title">{{ el.deadline }}</p>
     </div>
      </a>
+    {% empty %}
+        <p>Нет задач.</p>
     {% endfor %}
 </div>
 {%endblock%}
