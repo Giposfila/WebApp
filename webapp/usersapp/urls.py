@@ -10,6 +10,7 @@ urlpatterns = [
     path('main/', include('boardsapp.urls'), name='main'),
     path('profile/', views.Profile_view, name='profile'),
     path('profile_edit/', views.ProfileEdit_view, name='profile_edit'),
+    path('captcha/', include('captcha.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
