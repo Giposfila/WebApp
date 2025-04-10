@@ -24,6 +24,7 @@ class BoardShow(DetailView):
     model = Board
     template_name = 'boardsapp/board.html'
     context_object_name = 'board'
+    pk_url_kwarg = 'board_id'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tasks'] = self.object.tasks.all()
@@ -40,6 +41,37 @@ def BoardCreate_view(request):
     else:
         form = CreateBoardForm()
     return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})
+
+
+from django.shortcuts import get_object_or_404, redirect
+from .models import Task, Board
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def create_task(request, board_id):
+    board = get_object_or_404(Board, id=board_id)
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        deadline = request.POST.get('deadline')
+        created_to = request.POST.getlist('created_to')  # Список ID пользователей
+
+        # Создаем задачу
+        task = Task.objects.create(
+            title=title,
+            description=description,
+            board=board,
+            created_by=request.user,
+            deadline=deadline if deadline else None
+        )
+
+        # Назначаем исполнителей
+        task.created_to.add(*created_to)
+
+        return redirect('board-detail', board_id=board.id)
+
+    return redirect('board-detail', board_id=board.id)
 
 class ChangePasswordView(PasswordChangeView):
     template_name = 'boardsapp/change_password.html'

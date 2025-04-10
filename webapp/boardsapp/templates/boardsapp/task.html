@@ -10,7 +10,7 @@
 
     <!-- Кнопка возвращения на главную страницу -->
     <div class="task-actions">
-        <a href="{% url 'main' %}" class="btn-back"><button>Вернуться на главную</button></a>
+        <a href="{% url 'board-detail' board_id=task.board.id%}" class="btn-back"><button>Вернуться к доске</button></a>
     </div>
 </div>
 {% endblock %}

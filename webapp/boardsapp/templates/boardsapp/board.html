@@ -51,6 +51,55 @@
 .fas.fa-crown, .you-name {
     margin-left: 8px; /* Отступ от имени */
 }
+    .assignees {
+    margin: 15px 0;
+}
+
+.assignees label {
+    display: block;
+    margin: 5px 0;
+}
+
+.assignees input[type="checkbox"] {
+    margin-right: 8px;
+}
+    /* Контейнер с прокруткой */
+.scrollable-checkboxes {
+    max-height: 200px; /* Максимальная высота списка */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+    border: 1px solid #ddd; /* Опционально: рамка */
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Стили для чекбоксов */
+.checkbox-item {
+    display: block;
+    padding: 5px;
+}
+
+.checkbox-item input {
+    margin-right: 8px;
+}
+
+/* Убираем горизонтальную прокрутку */
+.scrollable-checkboxes::-webkit-scrollbar {
+    width: 8px; /* Ширина полосы прокрутки */
+}
+
+.scrollable-checkboxes::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollable-checkboxes::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.scrollable-checkboxes::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 </style>
 
 <div class="container">
@@ -94,7 +143,7 @@
                         <option value="due">С дедлайном</option>
                     </select>
                 </form>
-                <button class="btn btn-create" onclick="toggleModal()">Создать задачу<br>(В разработке)</button>
+                <button class="btn btn-create" onclick="toggleModal()">Создать задачу</button>
             </div>
         </div>
 
@@ -135,16 +184,42 @@
         </div>
 
         <!-- Модальное окно для создания задачи -->
-        <div id="task-modal" class="modal">
-            <form class="modal-content" onsubmit="createTask(event)">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h3>Создать задачу (Выхода нет, нужно создать задачу)</h3>
-                <input type="text" placeholder="Название задачи" required>
-                <textarea placeholder="Описание (Enter для переноса строки)"></textarea>
-                <input type="datetime-local" name="deadline">
-                <button type="submit" class="btn btn-submit">Создать</button>
-            </form>
+      <div id="task-modal" class="modal">
+    <form class="modal-content" method="POST" action="{% url 'create-task' board.id %}">
+        {% csrf_token %}
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Создать задачу</h3>
+
+        <!-- Название задачи -->
+        <input type="text" name="title" placeholder="Название задачи" required>
+
+        <!-- Описание -->
+        <textarea name="description" placeholder="Описание (Enter для переноса строки)"></textarea>
+
+        <!-- Дедлайн -->
+    <div class="form-group">
+        <label for="deadline">Дедлайн:</label>
+        <input type="datetime-local" name="deadline" id="deadline">
+    </div>
+        <!-- Выбор исполнителей -->
+       <div class="assignees">
+            <h4>Назначить:</h4>
+            <div class="scrollable-checkboxes">
+                {% for member in members %}
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="created_to" value="{{ member.id }}">
+                        {{ member.username }}
+                    </label>
+                {% endfor %}
+            </div>
         </div>
+
+        <!-- Скрытое поле для связи с доской -->
+        <input type="hidden" name="board_id" value="{{ board.id }}">
+
+        <button type="submit" class="btn btn-submit">Создать</button>
+    </form>
+</div>
     </div>
 </div>
 
@@ -167,8 +242,25 @@ function closeModal() {
 // Пример функции для создания задачи (для демонстрации)
 function createTask(e) {
     e.preventDefault();
-    // Логика создания задачи (AJAX или перенаправление)
-    closeModal();
+    const form = e.target;
+    const formData = new FormData(form);
+
+    // Отправка данных на сервер
+    fetch(form.action, {
+        method: form.method,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}' // Если не работает, добавьте токен
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            closeModal();
+            location.reload(); // Обновить список задач
+        }
+    })
+    .catch(error => console.error('Ошибка:', error));
 }
 </script>
 {% endblock %}
