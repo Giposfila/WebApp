@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'boardsapp/css/mainstyle.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Tasks</title>
@@ -35,15 +36,23 @@
 </header>
 
 <div class="container">
+    {% if boards is not none%}
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="groups">
             <h3>Доски</h3>
-                {%for el in boards%}
-             <a href="{%url 'board-detail' el.id%}" style="text-decoration: none;">
-                    <div class="group-item">{{el.title}}</div>
-                 </a>
-                {%endfor%}
+               {% for el in boards %}
+                    <a href="{% url 'board-detail' el.id %}" style="text-decoration: none;">
+                        <div class="group-item {% if user == el.created_by %}created-by-user{% endif %}">
+                            <div class="board-title">
+                                {{ el.title }}
+                                {% if user == el.created_by %}
+                                    <i class="fas fa-crown"></i> <!-- Иконка короны -->
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
                  <a href="{%url 'boardcreate'%}">  <button>Создать доску</button></a>
         </div>
 
@@ -53,10 +62,10 @@
             <div class="filter-item">Завершенные</div>
             <div class="filter-item">Просроченные</div>
         </div>
+                {%endif%}
     </div>
   {%block content%} {%endblock%}
 </div>
-
 <!-- Модальное окно "О сайте" -->
 <div id="about-modal" class="modal" style="display: none;">
     <div class="modal-content">
@@ -150,6 +159,7 @@
 .about-button:hover {
     background-color: #2980b9;
 }
+
 </style>
 
 <script>

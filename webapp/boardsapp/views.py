@@ -10,19 +10,18 @@ def MainMenu(request):
     tasks = request.user.tasks_to_do.all()
     data={'boards':boards,
           'tasks':tasks,
-          "profile": request.user.profile
+          "profile": request.user.profile,
+          'user':request.user
           }
     return render(request,'boardsapp/main.html',data)
 
 class TaskShow(DetailView):
     model = Task
-    boards=Board.objects.all()
     template_name = 'boardsapp/task.html'
     context_object_name = 'task'
 
 class BoardShow(DetailView):
     model = Board
-    boards=Board.objects.all()
     template_name = 'boardsapp/board.html'
     context_object_name = 'board'
     def get_context_data(self, **kwargs):
