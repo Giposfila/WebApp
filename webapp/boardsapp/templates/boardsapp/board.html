@@ -1,71 +1,150 @@
 {% extends 'boardsapp/base.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" href="{% static 'boardsapp/css/board.css' %}">
-<div class="board-container">
-    <!-- Верхнее меню -->
-    <div class="board-header">
-        <a href="{% url 'main' %}" class="back-btn">&#8592; Назад к доскам</a>
-        <h2>{{ board.title }}</h2>
-        <div class="board-actions">
-            <form class="filter-form">
-                <select name="filter" id="filter">
-                    <option value="all">Все задачи</option>
-                    <option value="completed">Выполненные</option>
-                    <option value="due">С дедлайном</option>
-                </select>
+<link rel="stylesheet" href="{% static 'boardsapp/css/board.css' %}">
+
+<style>
+    .member-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+/* Для аватарки */
+.member-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Опционально: сделать круглую аватарку */
+}
+    .member-name {
+        font-size: 16px;
+        text-align: left;
+        flex: 1; /* Занимает оставшееся пространство */
+        margin-right: 8px; /* Отступ перед иконками */
+    }
+   .you-name {
+        font-size: 14px;
+         color: gray;
+    }
+    .member-item:last-child {
+        border-bottom: none;
+    }
+    .add-member-btn {
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    .add-member-btn:hover {
+        background-color: #0056b3;
+    }
+    .board-title {
+    display: flex;
+    align-items: center; /* Вертикальное выравнивание */
+    gap: 8px; /* Пространство между элементами */
+    padding: 6px 0; /* Вертикальный отступ для разделения участников */
+}
+    /* Иконки короны и "Вы" */
+.fas.fa-crown, .you-name {
+    margin-left: 8px; /* Отступ от имени */
+}
+</style>
+
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="groups">
+            <h3>Участники</h3>
+            <div class="members-list">
+                {% for member in members %}
+                    <div class="member-item">
+                        <div class="board-title">
+                            <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
+                            <span class="member-name">{{ member.username }}</span>
+                            {% if  board.created_by == member %}
+                                <i class="fas fa-crown"></i> <!-- Иконка короны -->
+                            {% endif %}
+                            {% if  user == member %}
+                                <span class="you-name">Вы</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'boardcreate' %}">
+                <button class="add-member-btn">Добавить участника</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="board-container">
+        <!-- Верхнее меню -->
+        <div class="board-header">
+            <a href="{% url 'main' %}" class="back-btn">&#8592; Назад к доскам</a>
+            <h2>{{ board.title }}</h2>
+            <div class="board-actions">
+                <form class="filter-form">
+                    <select name="filter" id="filter">
+                        <option value="all">Все задачи</option>
+                        <option value="completed">Выполненные</option>
+                        <option value="due">С дедлайном</option>
+                    </select>
+                </form>
+                <button class="btn btn-create" onclick="toggleModal()">Создать задачу<br>(В разработке)</button>
+            </div>
+        </div>
+
+        <!-- Кнопка для показа/скрытия описания -->
+        <div class="description-toggle">
+            {% if board.description %}
+                <a href="#" onclick="toggleDescription()">Показать описание</a>
+            {% else %}
+                <a href="#" onclick="toggleDescription()">Показать описание</a>
+            {% endif %}
+        </div>
+
+        <!-- Описание доски (скрыто по умолчанию) -->
+        <div class="board-description" id="board-description" style="display: none;">
+            <h4>Описание:</h4>
+            <div class="description-text">
+                {{ board.description|default:"Описание отсутствует"|linebreaksbr }}
+            </div>
+        </div>
+
+        <!-- Карточки задач -->
+        <div class="task-list">
+            {% for task in tasks %}
+                <div class="task-card {% if task.is_completed %}completed{% endif %}" onclick="window.location.href='{% url 'task-detail' task.id %}'" style="cursor: pointer;">
+                    <h3>{{ task.title }}</h3>
+                    <div class="task-description">
+                        {{ task.description|default:"Нет описания"|linebreaksbr }}
+                    </div>
+                    <div class="task-info">
+                        <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
+                        <span>Статус: {% if task.is_completed %}Выполнено{% else %}В работе{% endif %}</span>
+                    </div>
+                    <button class="btn btn-edit">Кнопка</button>
+                </div>
+            {% empty %}
+                <p>Задачи не найдены</p>
+            {% endfor %}
+        </div>
+
+        <!-- Модальное окно для создания задачи -->
+        <div id="task-modal" class="modal">
+            <form class="modal-content" onsubmit="createTask(event)">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Создать задачу (Выхода нет, нужно создать задачу)</h3>
+                <input type="text" placeholder="Название задачи" required>
+                <textarea placeholder="Описание (Enter для переноса строки)"></textarea>
+                <input type="datetime-local" name="deadline">
+                <button type="submit" class="btn btn-submit">Создать</button>
             </form>
-            <button class="btn btn-create" onclick="toggleModal()">Создать задачу<br>(В разработке)</button>
         </div>
-    </div>
-
-    <!-- Кнопка для показа/скрытия описания -->
-<div class="description-toggle">
-    {% if board.description %}
-        <a href="#" onclick="toggleDescription()">Показать описание</a>
-    {% else %}
-        <a href="#" onclick="toggleDescription()">Показать описание</a>
-    {% endif %}
-</div>
-
-    <!-- Описание доски (скрыто по умолчанию) -->
-    <div class="board-description" id="board-description" style="display: none;">
-        <h4>Описание:</h4>
-        <div class="description-text">
-            {{ board.description|default:"Описание отсутствует"|linebreaksbr }}
-        </div>
-    </div>
-
-    <!-- Карточки задач -->
-    <div class="task-list">
-        {% for task in tasks %}
-        <div class="task-card {% if task.is_completed %}completed{% endif %}" onclick="window.location.href='{% url 'task-detail' task.id %}'" style="cursor: pointer;">
-            <h3>{{ task.title }}</h3>
-            <div class="task-description">
-                {{ task.description|default:"Нет описания"|linebreaksbr }}
-            </div>
-            <div class="task-info">
-                <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
-                <span>Статус: {% if task.is_completed %}Выполнено{% else %}В работе{% endif %}</span>
-            </div>
-            <button class="btn btn-edit">Кнопка</button>
-        </div>
-        {% empty %}
-        <p>Задачи не найдены</p>
-        {% endfor %}
-        </a>
-    </div>
-
-    <!-- Модальное окно для создания задачи -->
-    <div id="task-modal" class="modal">
-        <form class="modal-content" onsubmit="createTask(event)">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h3>Создать задачу (Выхода нет, нужно создать задачу)</h3>
-            <input type="text" placeholder="Название задачи" required>
-            <textarea placeholder="Описание (Enter для переноса строки)"></textarea>
-            <input type="datetime-local" name="deadline">
-            <button type="submit" class="btn btn-submit">Создать</button>
-        </form>
     </div>
 </div>
 

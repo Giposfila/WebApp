@@ -27,12 +27,13 @@ class BoardShow(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tasks'] = self.object.tasks.all()
+        context['members'] = self.object.members.all()
         return context
 
 
 def BoardCreate_view(request):
     if request.method == 'POST':
-        form = CreateBoardForm(request.POST)
+        form = CreateBoardForm(request.POST, user=request.user)
         if form.is_valid():
             form.save(user=request.user)  # Передаем текущего пользователя
             return redirect('main')  # Перенаправляем на список задач

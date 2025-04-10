@@ -12,20 +12,22 @@
 
 <header>
     <div class="header-container">
+                <div class="about-container">
+            <button class="about-button" onclick="toggleAboutModal()">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
         <h1>E-Tasks</h1>
         <div class="search-container">
             <input type="text" placeholder="Поиск..." class="search-input">
         </div>
 
-        <div class="about-container">
-            <button class="about-button" onclick="toggleAboutModal()"> Описание сайта</button>
-        </div>
 
         <div class="profile-container">
             <button class="profile-button">
                 <a href="{%url 'profile'%}">
-                       {% if profile.avatar %}
-            <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-icon">
+                       {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
         {% else %}
             <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon"> <!-- Замените на путь к дефолтной аватарке -->
         {% endif %}
