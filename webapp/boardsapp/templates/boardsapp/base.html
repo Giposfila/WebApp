@@ -22,7 +22,9 @@
             <input type="text" placeholder="Поиск..." class="search-input">
         </div>
 
-
+<!--            <button class="about-button" onclick="">-->
+<!--                <i class="fas fa-bell"></i>-->        <!-- КНОПКА УВЕДОМЛЕНИЙ-->
+<!--            </button>-->
         <div class="profile-container">
             <button class="profile-button">
                 <a href="{%url 'profile'%}">
@@ -149,17 +151,42 @@
 }
 
 .about-button {
-    padding: 8px 15px;
-    background-color: #3498db;
-    color: white;
+    /* Убираем фон */
+    background: transparent;
+
+    /* Убираем границы */
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+
+    /* Убираем отступы вокруг иконки */
+    padding: 10;
+
+    /* Убираем выделение при нажатии */
+    outline: none;
+
+    /* Убираем дефолтные стили браузера */
+    cursor: pointer; /* Оставляем указатель "курсор" */
+    transition: transform 0.2s ease; /* Анимация при наведении (опционально) */
 }
 
+/* Стилизация иконки внутри кнопки */
+.about-button .fas {
+    /* Указываем размер иконки */
+    font-size: 24px; /* Измените на нужный размер */
+
+    /* Цвет иконки */
+    color: white; /* Синий цвет по умолчанию */
+
+    /* Анимация при наведении */
+    transition: transform 0.2s ease;
+}
+
+/* Эффект при наведении (опционально) */
 .about-button:hover {
-    background-color: #2980b9;
+    transform: scale(1.1); /* Увеличение при наведении */
+}
+
+.about-button:hover .fas {
+    color: #20a8d8; /* Изменение цвета при наведении */
 }
 
 </style>
