@@ -1,9 +1,9 @@
-<!-- templates/login.html -->
 <!DOCTYPE html>
 <html>
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'usersapp/css/loginstyle.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Вход</title>
 </head>
 <body>
@@ -11,12 +11,47 @@
         <h2>Войти на сайт</h2>
         <form method="post">
             {% csrf_token %}
-            {{form}}
+            {{ form }}
             <button type="submit">Войти</button>
         </form>
         <p>
-            Забыли пароль? <a href="{%url 'forgotpassword'%}"><button>Восстановить</button></a>
+            Забыли пароль? <a href="{% url 'forgotpassword' %}"><button>Восстановить</button></a>
         </p>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.querySelector('input[name="password"]');
+            if (passwordField) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'password-wrapper';
+                wrapper.style.position = 'relative';
+
+                const toggle = document.createElement('i');
+                toggle.className = 'fas fa-eye password-toggle';
+                toggle.style.position = 'absolute';
+                toggle.style.right = '10px';
+                toggle.style.top = '50%';
+                toggle.style.transform = 'translateY(-50%)';
+                toggle.style.cursor = 'pointer';
+                toggle.style.color = '#6c757d';
+
+                passwordField.parentNode.insertBefore(wrapper, passwordField);
+                wrapper.appendChild(passwordField);
+                wrapper.appendChild(toggle);
+
+                toggle.addEventListener('click', function() {
+                    if (passwordField.type === 'password') {
+                        passwordField.type = 'text';
+                        toggle.classList.remove('fa-eye');
+                        toggle.classList.add('fa-eye-slash');
+                    } else {
+                        passwordField.type = 'password';
+                        toggle.classList.remove('fa-eye-slash');
+                        toggle.classList.add('fa-eye');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

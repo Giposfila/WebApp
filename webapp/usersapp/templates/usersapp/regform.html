@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -6,20 +6,56 @@
     <title>Регистрация</title>
     <!-- Подключение CSS -->
     {% load static %}
-     <link rel="stylesheet", href="{% static 'usersapp/css/RegisterFormStyle.css'%}">
+    <link rel="stylesheet" href="{% static 'usersapp/css/RegisterFormStyle.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="register-form">
         <h2>Регистрация</h2>
-        <form method="post" >
+        <form method="post">
             {% csrf_token %}
-            {{form}}
-                    {% if error %}
-            <div class="error">{{ error }}</div>
-        {% endif %}
+            {{ form }}
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
             <button type="submit">Зарегистрироваться</button>
         </form>
-        <p>Уже есть аккаунт? <a href="{%url 'login'%}">Войдите</a></p>
+        <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войдите</a></p>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordFields = document.querySelectorAll('input[type="password"]');
+            passwordFields.forEach(field => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'password-wrapper';
+                wrapper.style.position = 'relative';
+
+                const toggle = document.createElement('i');
+                toggle.className = 'fas fa-eye password-toggle';
+                toggle.style.position = 'absolute';
+                toggle.style.right = '10px';
+                toggle.style.top = '50%';
+                toggle.style.transform = 'translateY(-50%)';
+                toggle.style.cursor = 'pointer';
+                toggle.style.color = '#6c757d';
+
+                field.parentNode.insertBefore(wrapper, field);
+                wrapper.appendChild(field);
+                wrapper.appendChild(toggle);
+
+                toggle.addEventListener('click', function() {
+                    if (field.type === 'password') {
+                        field.type = 'text';
+                        toggle.classList.remove('fa-eye');
+                        toggle.classList.add('fa-eye-slash');
+                    } else {
+                        field.type = 'password';
+                        toggle.classList.remove('fa-eye-slash');
+                        toggle.classList.add('fa-eye');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

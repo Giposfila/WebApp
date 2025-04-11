@@ -92,3 +92,21 @@ p a {
 p a:hover {
     color: #2980b9;
 }
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+}
+
+input[type="password"],
+input[type="text"] {
+    padding-right: 35px !important;
+}
