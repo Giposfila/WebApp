@@ -53,5 +53,30 @@
             }
         });
     </script>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch('{% url "login" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '{% url "main" %}';
+        } else {
+            // Показываем ошибки
+            alert(data.error || 'Неверное имя пользователя или пароль');
+        }
+    });
+});
+</script>
 </body>
 </html>

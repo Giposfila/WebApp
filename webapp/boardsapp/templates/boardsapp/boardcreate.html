@@ -10,3 +10,29 @@
     <a href="{% url 'main' %}" class="btn-back"><button> Вернуться на главную</button></a>
 </div>
 {%endblock%}
+
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch('{% url "boardcreate" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '{% url "main" %}';
+        } else {
+            // Показываем ошибки
+            alert(data.error || 'Ошибка при создании доски');
+        }
+    });
+});
+</script>

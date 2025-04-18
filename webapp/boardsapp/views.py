@@ -3,6 +3,9 @@ from django.views.generic import DetailView
 from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET, require_POST
+from django.template.loader import render_to_string
 
 from .models import Board, Task
 def MainMenu(request):
@@ -36,10 +39,23 @@ def BoardCreate_view(request):
     if request.method == 'POST':
         form = CreateBoardForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save(user=request.user)  # Передаем текущего пользователя
-            return redirect('main')  # Перенаправляем на список задач
+            board = form.save(user=request.user)
+
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': True,
+                    'redirect_url': reverse('main')
+                })
+            return redirect('main')
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'error': form.errors.as_text()
+            }, status=400)
     else:
         form = CreateBoardForm()
+
     return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})
 
 
