@@ -21,7 +21,6 @@ def RegForm_Func(request):
 
     return render(request, 'usersapp/regform.html', {'form': form})
 
-
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -42,7 +41,6 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, 'usersapp/login.html', {'form': form})
-
 def forgot_password_view(request):
     return render(request, 'usersapp/forgotpassword.html')
 def Profile_view(request):
@@ -52,12 +50,10 @@ def Profile_view(request):
         "profile": request.user.profile
           }
     return render(request, 'boardsapp/profile.html',data)
-
-
 @login_required
 def ProfileEdit_view(request):
     user = request.user
-    profile = user.profile
+    profile = user.profile  # Получаем связанный профиль
 
     if request.method == 'POST':
         user_form = ChangeUserForm(request.POST, instance=user)
@@ -65,20 +61,8 @@ def ProfileEdit_view(request):
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile = profile_form.save()
-
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'avatar_url': profile.avatar.url if profile.avatar else ''
-                })
-            return redirect('profile')
-
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'error': 'Ошибка при сохранении'
-            }, status=400)
+            profile_form.save()
+            return redirect('profile')  # Перенаправляем на страницу профиля после сохранения
     else:
         user_form = ChangeUserForm(instance=user)
         profile_form = ProfileForm(instance=profile)
@@ -86,6 +70,6 @@ def ProfileEdit_view(request):
     context = {
         'user_form': user_form,
         'profile_form': profile_form,
-        'profile': user.profile
+        'profile':user.profile
     }
     return render(request, 'boardsapp/profile_edit.html', context)

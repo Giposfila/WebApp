@@ -3,9 +3,6 @@ from django.views.generic import DetailView
 from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET, require_POST
-from django.template.loader import render_to_string
 
 from .models import Board, Task
 def MainMenu(request):
@@ -57,7 +54,6 @@ def BoardCreate_view(request):
         form = CreateBoardForm()
 
     return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})
-
 
 from django.shortcuts import get_object_or_404, redirect
 from .models import Task, Board
