@@ -30,7 +30,6 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
-
 def forgot_password_view(request):
     return render(request, 'usersapp/forgotpassword.html')
 def Profile_view(request):
