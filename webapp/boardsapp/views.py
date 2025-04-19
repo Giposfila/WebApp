@@ -36,23 +36,10 @@ def BoardCreate_view(request):
     if request.method == 'POST':
         form = CreateBoardForm(request.POST, user=request.user)
         if form.is_valid():
-            board = form.save(user=request.user)
-
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'success': True,
-                    'redirect_url': reverse('main')
-                })
-            return redirect('main')
-
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'error': form.errors.as_text()
-            }, status=400)
+            form.save(user=request.user)  # Передаем текущего пользователя
+            return redirect('main')  # Перенаправляем на список задач
     else:
         form = CreateBoardForm()
-
     return render(request, 'boardsapp/boardcreate.html', {'form': form, "profile": request.user.profile})
 
 from django.shortcuts import get_object_or_404, redirect

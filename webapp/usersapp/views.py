@@ -3,7 +3,6 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from django.contrib.auth.models import User
-from django.http import JsonResponse
 
 def BlankFunc(request):
     return redirect('/registration/')
@@ -26,20 +25,10 @@ def login_view(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             user = form.cleaned_data['user']
-            login(request, user)
-
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'success': True})
-            return redirect('main')
-
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'error': 'Неверное имя пользователя или пароль'
-            }, status=400)
+            login(request, user)  # Создаем сессию для пользователя
+            return redirect('main')  # Перенаправляем на главную страницу
     else:
         form = LoginForm()
-
     return render(request, 'usersapp/login.html', {'form': form})
 def forgot_password_view(request):
     return render(request, 'usersapp/forgotpassword.html')
