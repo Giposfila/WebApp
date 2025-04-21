@@ -4,57 +4,24 @@
 <div class="task-container">
     <h1 class="task-title">{{ task.title }}</h1>
     <p class="task-description">{{ task.description }}</p>
-    <h4>Статус:
-        <span
-            {% if task.status == 'В процессе' %}
-                style="color: blue;"
-            {% elif task.status == 'completed' %}
-                style="color: lime;"
-            {% else %}
-                style="color: red;"
-            {% endif %}
-        >
-            {{ task.get_status_display }}
-        </span>
-    </h4>
-    <h4>Дедлайн: {{task.deadline}}</h4>
-    <h4>Задача для: {{task.created_to}}</h4>
-    <h4>Создана: {{task.created_by}}</h4>
-
-    <!-- Секция комментариев -->
-    <div class="comments-section">
-        <h3>Комментарии</h3>
-
-        {% if task.comments.all %}
-            <div class="comments-list">
-                {% for comment in task.comments.all %}
-                <div class="comment">
-                    <div class="comment-header">
-                        <strong>{{ comment.user.username }}</strong>
-                        <span class="comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
-                    </div>
-                    <div class="comment-content">
-                        {{ comment.content }}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+<h4>Статус:
+    <span
+        {% if task.status == 'В процессе' %}
+            style="color: blue;"
+        {% elif task.status == 'completed' %}
+            style="color: lime;"
         {% else %}
-            <p>Пока нет комментариев</p>
+            style="color: red;"
         {% endif %}
+    >
+        {{ task.get_status_display }}
+    </span>
+</h4>
+        <h4>Дедлайн: {{task.deadline}}</h4>
+        <h4>Задача для: {{task.created_to}}</h4>
+        <h4>Создана: {{task.created_by}}</h4>
 
-        <!-- Форма добавления комментария -->
-        <div class="add-comment">
-            <h4>Добавить комментарий</h4>
-            <form method="post" action="{% url 'add-comment' task.id %}">
-                {% csrf_token %}
-                <textarea name="content" rows="3" required></textarea>
-                <button type="submit" class="btn-comment">Отправить</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Кнопки действий -->
+    <!-- Кнопка возвращения на главную страницу -->
     <div class="task-actions">
         <a href="{% url 'board-detail' board_id=task.board.id%}" class="btn-back"><button>Вернуться к доске</button></a>
         {%if user in executors%}
@@ -62,78 +29,22 @@
         {%endif%}
     </div>
 </div>
-
-<style>
-/* Стили для комментариев */
-.comments-section {
-    margin-top: 30px;
-    padding: 20px;
-    background: #f5f5f5;
-    border-radius: 8px;
-}
-
-.comment {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: white;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.comment-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    color: #666;
-}
-
-.comment-date {
-    color: #999;
-}
-
-.comment-content {
-    padding: 5px 0;
-}
-
-.add-comment textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.btn-comment {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-comment:hover {
-    background-color: #45a049;
-}
-
-/* Стиль для кнопки возвращения */
+{% endblock %}
+<style>/* Стиль для кнопки возвращения */
 .task-actions {
-    margin-top: 20px;
+    margin-top: 20px; /* Отступ сверху */
 }
 
 .btn-back {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    background-color: #3498db; /* Цвет фона */
+    color: white; /* Цвет текста */
+    text-decoration: none; /* Убрать подчеркивание */
+    border-radius: 5px; /* Закругленные углы */
+    transition: background-color 0.3s; /* Плавный переход */
 }
 
 .btn-back:hover {
-    background-color: #2980b9;
-}
-</style>
-{% endblock %}
+    background-color: #2980b9; /* Темнее при наведении */
+}</style>
