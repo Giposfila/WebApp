@@ -4,6 +4,19 @@
 <div class="task-container">
     <h1 class="task-title">{{ task.title }}</h1>
     <p class="task-description">{{ task.description }}</p>
+<h4>Статус:
+    <span
+        {% if task.status == 'В процессе' %}
+            style="color: blue;"
+        {% elif task.status == 'completed' %}
+            style="color: lime;"
+        {% else %}
+            style="color: red;"
+        {% endif %}
+    >
+        {{ task.get_status_display }}
+    </span>
+</h4>
         <h4>Дедлайн: {{task.deadline}}</h4>
         <h4>Задача для: {{task.created_to}}</h4>
         <h4>Создана: {{task.created_by}}</h4>
@@ -11,6 +24,9 @@
     <!-- Кнопка возвращения на главную страницу -->
     <div class="task-actions">
         <a href="{% url 'board-detail' board_id=task.board.id%}" class="btn-back"><button>Вернуться к доске</button></a>
+        {%if user in executors%}
+        <button>Отчитаться о выполнении</button>
+        {%endif%}
     </div>
 </div>
 {% endblock %}
