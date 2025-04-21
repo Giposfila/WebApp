@@ -26,3 +26,14 @@ class Task(models.Model):
     status=models.CharField("Статус",max_length=20, choices=STATUS_CHOICES, default='В процессе')
     def __str__(self):
         return self.title
+class Attachment(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='attachments')
+    file_url = models.URLField()
+    uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attachments')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+class Comment(models.Model):
+    content = models.TextField()
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    created_at = models.DateTimeField(auto_now_add=True)
