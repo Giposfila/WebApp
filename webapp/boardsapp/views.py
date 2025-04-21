@@ -4,7 +4,7 @@ from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 
-from .models import Board, Task
+from .models import  *
 def MainMenu(request):
     boards=request.user.boards.all()
     tasks = request.user.tasks_to_do.all()
@@ -15,10 +15,15 @@ def MainMenu(request):
           }
     return render(request,'boardsapp/main.html',data)
 
+
 class TaskShow(DetailView):
     model = Task
     template_name = 'boardsapp/task.html'
     context_object_name = 'task'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['executors'] = self.object.created_to.all()
+        return context
 
 class BoardShow(DetailView):
     model = Board

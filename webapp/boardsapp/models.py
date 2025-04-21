@@ -11,6 +11,11 @@ class Board(models.Model):
     def __str__(self):
         return self.title
 class Task(models.Model):
+    STATUS_CHOICES = [
+        ('in_progress', 'В процессе'),
+        ('completed', 'Выполнено'),
+        ('overdue', 'Просрочено'),
+    ]
     title = models.CharField("Название", max_length=50)
     description = models.TextField('Описание')
     board=models.ForeignKey(Board, on_delete=models.CASCADE, related_name='tasks')
@@ -18,5 +23,6 @@ class Task(models.Model):
     created_to = models.ManyToManyField(User, related_name='tasks_to_do', blank=True)
     created_date = models.DateTimeField('Время создания', auto_now_add=True)
     deadline=models.DateTimeField('Дедлайн', blank=True, null=True)
+    status=models.CharField("Статус",max_length=20, choices=STATUS_CHOICES, default='В процессе')
     def __str__(self):
         return self.title
