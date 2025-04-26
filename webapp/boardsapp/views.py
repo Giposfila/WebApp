@@ -3,8 +3,11 @@ from django.views.generic import DetailView
 from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-
+from django.contrib import messages
 from .models import  *
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 def MainMenu(request):
     boards=request.user.boards.all()
     tasks = request.user.tasks_to_do.all()
@@ -80,3 +83,19 @@ def create_task(request, board_id):
 class ChangePasswordView(PasswordChangeView):
     template_name = 'boardsapp/change_password.html'
     success_url = reverse_lazy('profile')
+
+@login_required
+def add_comment(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(
+                content=content,
+                task=task,
+                user=request.user
+            )
+            messages.success(request, 'Комментарий добавлен')
+        else:
+            messages.error(request, 'Комментарий не может быть пустым')
+    return redirect('task-detail', pk=task_id)

@@ -33,7 +33,15 @@ class Attachment(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
-    content = models.TextField()
+    content = models.TextField('Содержание')
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return f'Комментарий от {self.user.username} к задаче {self.task.title}'
