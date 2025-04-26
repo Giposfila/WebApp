@@ -18,7 +18,7 @@ def MainMenu(request):
           }
     return render(request,'boardsapp/main.html',data)
 
-#a
+
 class TaskShow(DetailView):
     model = Task
     template_name = 'boardsapp/task.html'
