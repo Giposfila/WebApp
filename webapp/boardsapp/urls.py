@@ -11,4 +11,5 @@ urlpatterns = [
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
     path('logout/', auth_views.LogoutView.as_view(next_page='regform'), name='logout'),
     path('boards/<int:board_id>/create-task/', views.create_task, name='create-task'),
+    path('tasks/<int:task_id>/add-comment/', views.add_comment, name='add-comment'),
 ]

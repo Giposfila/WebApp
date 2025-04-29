@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from .forms import *
@@ -80,3 +81,20 @@ def create_task(request, board_id):
 class ChangePasswordView(PasswordChangeView):
     template_name = 'boardsapp/change_password.html'
     success_url = reverse_lazy('profile')
+
+
+@login_required
+def add_comment(request, task_id):
+     task = get_object_or_404(Task, id=task_id)
+     if request.method == 'POST':
+         content = request.POST.get('content')
+         if content:
+             Comment.objects.create(
+                 content=content,
+                 task=task,
+                 user=request.user
+             )
+             messages.success(request, 'Комментарий добавлен')
+         else:
+             messages.error(request, 'Комментарий не может быть пустым')
+     return redirect('task-detail', pk=task_id)
