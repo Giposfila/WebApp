@@ -1,9 +1,12 @@
+from datetime import timezone
+
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
+from django.utils import timezone
 
 from .models import  *
 def MainMenu(request):
@@ -12,7 +15,8 @@ def MainMenu(request):
     data={'boards':boards,
           'tasks':tasks,
           "profile": request.user.profile,
-          'user':request.user
+          'user':request.user,
+          'now':timezone.now()
           }
     return render(request,'boardsapp/main.html',data)
 
