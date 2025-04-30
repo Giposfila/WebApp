@@ -1,4 +1,5 @@
 /* Header */
+
 header {
     background: #2c3e50;
     color: white;
@@ -226,7 +227,7 @@ header h1 {
     flex-wrap: wrap; /* Перенос карточек на новую строку */
     gap: 15px; /* Меньшее расстояние между карточками */
     padding: 15px;
-    justify-content: center; /* Центрирование карточек */
+    justify-content: left; /* Центрирование карточек */
 }
 
 /* Стиль для каждой карточки доски */

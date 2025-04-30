@@ -18,7 +18,7 @@
         </span>
     </h4>
     <h4>Дедлайн: {{task.deadline}}</h4>
-    <h4>Задача для: {{task.created_to}}</h4>
+    <h4>Задача для: {%for el in executors%}{{el}}; {%endfor%}</h4>
     <h4>Создана: {{task.created_by}}</h4>
 
     <!-- Секция комментариев -->
@@ -65,8 +65,13 @@
 
 <style>
 /* Стили для комментариев */
+h3, p{
+    margin: 0;
+}
 .comments-section {
     margin-top: 30px;
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     background: #f5f5f5;
     border-radius: 8px;
@@ -98,10 +103,12 @@
 
 .add-comment textarea {
     width: 100%;
-    padding: 10px;
+    min-height: 100px;
+    padding: 1px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    resize: vertical;
 }
 
 .btn-comment {
