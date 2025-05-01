@@ -72,7 +72,6 @@ body {
 
 .container {
     display: flex;
-    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     gap: 20px;
@@ -260,13 +259,18 @@ header h1 {
 
 /* Заголовок карточки */
 .board-title {
+    max-width: 200px;
     font-size: 1rem; /* Меньший размер шрифта заголовка */
     margin-bottom: 5px; /* Меньший отступ под заголовком */
     color: #333; /* Цвет текста */
     font-weight: bold; /* Жирный шрифт */
-    white-space: nowrap; /* Запрет переноса текста */
     overflow: hidden; /* Скрыть текст, который не помещается */
     text-overflow: ellipsis; /* Добавить многоточие для длинного текста */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 /* Описание карточки */

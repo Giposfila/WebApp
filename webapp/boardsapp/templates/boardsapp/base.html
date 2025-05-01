@@ -48,7 +48,7 @@
                {% for el in boards %}
                     <a href="{% url 'board-detail' el.id %}" style="text-decoration: none;">
                         <div class="group-item {% if user == el.created_by %}created-by-user{% endif %}">
-                            <div class="board-title">
+                            <div class="board-title" title={{el.title}}>
                                 {{ el.title }}
                                 {% if user == el.created_by %}
                                     <i class="fas fa-crown"></i> <!-- Иконка короны -->

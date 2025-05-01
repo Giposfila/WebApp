@@ -1,19 +1,10 @@
 /* Основные стили формы */
-.form-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 20px;
-    background-color: #f5f7fa;
-}
-
-
 .form-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 30px;
+    margin: auto auto;
     width: 100%;
     max-width: 600px;
 }

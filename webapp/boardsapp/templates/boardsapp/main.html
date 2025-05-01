@@ -4,17 +4,25 @@
     {% for el in tasks %}
      <a href="{%url 'task-detail' el.id%}" style="text-decoration: none;">
     <div class="board-card">
-        {%if el.status == 'В процессе'%}
-                <i class="fas fa-circle" style="color: blue;display:flex; text-align: left;"></i>
-        {%elif el.status == 'completed'%}
-        <i class="fas fa-circle" style="color: green;display:flex; text-align:left;"></i>
-        {%else%}
-        <i class="fas fa-circle" style="color: red;display:flex; text-align:left;"></i>
-        {%endif%}
-        <p class="board-description" style="display:flex; text-align:left;">{{ el.status }}</p>
+<div style="display: flex; align-items: center; gap: 8px;">
+  <!-- Убираем display: flex из иконки -->
+  {% if el.status == 'В процессе' %}
+    <i class="fas fa-circle" style="color: blue;"></i>
+  {% elif el.status == 'Выполнено' %}
+    <i class="fas fa-circle" style="color: green;"></i>
+  {% else %}
+    <i class="fas fa-circle" style="color: red;"></i>
+  {% endif %}
+
+  <!-- Убираем display: flex из текста -->
+  <p class="board-description" style="margin: 0;">{{ el.status }}</p>
+</div>
         <h2 class="board-title">{{ el.title }}</h2>
         <p class="board-description">{{ el.description }}</p>
-        <p class="board-title">{{ el.deadline }}</p>
+        {%if el.deadline is not null%}
+        <p class="board-title" style="margin: 0 0 0;">Осталось:</p>
+        <p class="board-title" style="margin: 0 0 0;">{{ el.deadline|timeuntil }}</p>
+        {%endif%}
     </div>
      </a>
     {% empty %}

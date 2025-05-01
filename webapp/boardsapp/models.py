@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Board(models.Model):
-    title=models.CharField("Название", max_length=50)
+    title=models.CharField("Название", max_length=100)
     description=models.TextField('Описание')
     created_date=models.DateTimeField('Время создания',auto_created=True, auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_boards')
@@ -12,9 +12,10 @@ class Board(models.Model):
         return self.title
 class Task(models.Model):
     STATUS_CHOICES = [
-        ('in_progress', 'В процессе'),
-        ('completed', 'Выполнено'),
-        ('overdue', 'Просрочено'),
+        ('В процессе', 'В процессе'),
+        ('Выполнено', 'Выполнено'),
+        ('В Ожидании проверки', 'В Ожидании проверки'),
+        ('Просрочено', 'Просрочено'),
     ]
     title = models.CharField("Название", max_length=50)
     description = models.TextField('Описание')
@@ -33,7 +34,7 @@ class Attachment(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
-    content = models.TextField("Содержание")
+    content = models.TextField("Содержание", null=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     created_at = models.DateTimeField("Дата создания",auto_now_add=True)
