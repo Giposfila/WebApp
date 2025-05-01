@@ -174,7 +174,7 @@
                     </div>
                     <div class="task-info">
                         <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
-                        <span>Статус: {% if task.status == 'completed'%}Выполнено{% elif task.status == 'overdue'%}Просрочено{% else %}В работе{% endif %}</span>
+                        <span>Статус: {% if task.status == 'Выполнено'%}Выполнено{% elif task.status == 'Просрочено'%}Просрочено{% else %}В работе{% endif %}</span>
                     </div>
                     <button class="btn btn-edit">Кнопка</button>
                 </div>
