@@ -39,7 +39,26 @@ class BoardShow(DetailView):
         context = super().get_context_data(**kwargs)
         context['tasks'] = self.object.tasks.all()
         context['members'] = self.object.members.all()
+        context['form'] = CreateTaskForm(board=self.object)
         return context
+    def post(self, request, *args, **kwargs):
+        # Получаем объект доски
+        self.object = self.get_object()
+        # Инициализируем форму данными из запроса
+        form = CreateTaskForm(request.POST)
+
+        # Проверяем валидность формы
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.board = self.object  # Привязываем задачу к текущей доске
+            task.save()
+            form.save_m2m()
+            return redirect('board-detail', board_id=self.object.id)  # Перезагружаем страницу
+
+        # Если форма невалидна — возвращаем ту же страницу с формой и ошибками
+        context = self.get_context_data(object=self.object)
+        context['form'] = form
+        return self.render_to_response(context)
 
 
 def BoardCreate_view(request):
@@ -57,30 +76,6 @@ from .models import Task, Board
 from django.contrib.auth.decorators import login_required
 
 
-@login_required
-def create_task(request, board_id):
-    board = get_object_or_404(Board, id=board_id)
-    if request.method == "POST":
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        deadline = request.POST.get('deadline')
-        created_to = request.POST.getlist('created_to')  # Список ID пользователей
-
-        # Создаем задачу
-        task = Task.objects.create(
-            title=title,
-            description=description,
-            board=board,
-            created_by=request.user,
-            deadline=deadline if deadline else None
-        )
-
-        # Назначаем исполнителей
-        task.created_to.add(*created_to)
-
-        return redirect('board-detail', board_id=board.id)
-
-    return redirect('board-detail', board_id=board.id)
 
 class ChangePasswordView(PasswordChangeView):
     template_name = 'boardsapp/change_password.html'
