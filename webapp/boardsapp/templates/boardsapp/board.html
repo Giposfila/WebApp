@@ -176,7 +176,8 @@
                         <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
                         <span>Статус: {% if task.status == 'Выполнено'%}Выполнено{% elif task.status == 'Просрочено'%}Просрочено{% else %}В работе{% endif %}</span>
                     </div>
-                    <button class="btn btn-edit">Кнопка</button>
+                    <button class="btn btn-edit">Изменить</button>
+                    <button class="btn btn-delete">Удалить</button>
                 </div>
             {% empty %}
                 <p>Задачи не найдены</p>
