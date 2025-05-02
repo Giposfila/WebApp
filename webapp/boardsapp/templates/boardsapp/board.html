@@ -185,40 +185,17 @@
 
         <!-- Модальное окно для создания задачи -->
       <div id="task-modal" class="modal">
-    <form class="modal-content" method="POST" action="{% url 'create-task' board.id %}">
-        {% csrf_token %}
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h3>Создать задачу</h3>
+ <form class="modal-content" method="POST" action=""> <!-- Обрати внимание: action пустой -->
+    {% csrf_token %}
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3>Создать задачу</h3>
+    {{ form.as_p }}
 
-        <!-- Название задачи -->
-        <input type="text" name="title" placeholder="Название задачи" required>
+    <!-- Скрытое поле для связи с доской (если оно используется в форме) -->
+    <!-- Если ты не используешь board в форме — можно удалить -->
 
-        <!-- Описание -->
-        <textarea name="description" placeholder="Описание (Enter для переноса строки)"></textarea>
-
-        <!-- Дедлайн -->
-    <div class="form-group">
-        <label for="deadline">Дедлайн:</label>
-        <input type="datetime-local" name="deadline" id="deadline">
-    </div>
-        <!-- Выбор исполнителей -->
-       <div class="assignees">
-            <h4>Назначить:</h4>
-            <div class="scrollable-checkboxes">
-                {% for member in members %}
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="created_to" value="{{ member.id }}">
-                        {{ member.username }}
-                    </label>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Скрытое поле для связи с доской -->
-        <input type="hidden" name="board_id" value="{{ board.id }}">
-
-        <button type="submit" class="btn btn-submit">Создать</button>
-    </form>
+    <button type="submit" class="btn btn-submit">Создать</button>
+</form>
 </div>
     </div>
 </div>
