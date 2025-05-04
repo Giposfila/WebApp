@@ -56,7 +56,7 @@ class BoardShow(DetailView):
             form.save_m2m()
             return redirect('board-detail', board_id=self.object.id)  # Перезагружаем страницу
 
-        # Если форма невалидна — возвращаем ту же страницу с формой и ошибками
+        # 1Если форма невалидна — возвращаем ту же страницу с формой и ошибками
         context = self.get_context_data(object=self.object)
         context['form'] = form
         return self.render_to_response(context)
