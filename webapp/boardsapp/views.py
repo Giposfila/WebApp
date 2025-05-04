@@ -1,5 +1,6 @@
 from datetime import timezone
-
+from django.views.generic import UpdateView, DeleteView
+from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
@@ -97,3 +98,25 @@ def add_comment(request, task_id):
          else:
              messages.error(request, 'Комментарий не может быть пустым')
      return redirect('task-detail', pk=task_id)
+
+
+class TaskEdit(UpdateView):
+    model = Task
+    form_class = EditTaskForm
+    template_name = 'boardsapp/task_edit.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['board'] = self.get_object().board
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('task-detail', kwargs={'pk': self.object.pk})
+
+
+class TaskDelete(DeleteView):
+    model = Task
+    template_name = 'boardsapp/task_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('board-detail', kwargs={'board_id': self.object.board.id})

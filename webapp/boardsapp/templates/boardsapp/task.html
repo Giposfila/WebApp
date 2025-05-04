@@ -60,6 +60,10 @@
         {%if user in executors%}
         <button>Отчитаться о выполнении</button>
         {%endif%}
+         {% if user == task.created_by or user in task.board.members.all %}
+            <a href="{% url 'task-edit' task.id %}"><button>Редактировать</button></a>
+            <a href="{% url 'task-delete' task.id %}"><button class="btn-delete">Удалить</button></a>
+        {% endif %}
     </div>
 </div>
 
@@ -141,6 +145,19 @@ h3, p{
 
 .btn-back:hover {
     background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
 }
 </style>
 {% endblock %}
