@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    friends = models.ManyToManyField('self', blank=True, related_name='friends1', symmetrical=False)
 
     def __str__(self):
         return f'Профиль {self.user.username}'

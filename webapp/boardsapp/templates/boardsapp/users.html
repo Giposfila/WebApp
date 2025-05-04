@@ -1,0 +1,31 @@
+{% extends 'boardsapp/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'boardsapp/css/users.css' %}">
+<div class="container mt-4">
+     <a href={{request.META.HTTP_REFERER}} class="back-btn">&#8592; Назад к доскам</a>
+    <!-- Форма поиска -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="get" action="" class="input-group">
+                <input type="text" name="q" class="form-control" value="{{ query }}" placeholder="Поиск пользователей...">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Найти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Заголовок -->
+
+
+    <!-- Список пользователей -->
+
+</div>
+    <div class="user-list-container">
+        {%for user in users%}
+        <div class="user-card">
+         <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
+        {{user}}
+    </div>
+        {%endfor%}
+    </div>
+{% endblock %}

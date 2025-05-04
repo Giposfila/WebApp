@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+
+from . import models
 from .forms import *
 from django.contrib.auth.models import User
 
@@ -62,3 +64,9 @@ def ProfileEdit_view(request):
         'profile':user.profile
     }
     return render(request, 'boardsapp/profile_edit.html', context)
+def users_search(request):
+    data = {
+        'users': User.objects.all()
+    }
+
+    return render(request, 'boardsapp/users.html', data)
