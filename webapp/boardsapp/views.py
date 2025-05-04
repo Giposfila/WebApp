@@ -8,6 +8,7 @@ from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 from .models import  *
 def MainMenu(request):
@@ -26,9 +27,17 @@ class TaskShow(DetailView):
     model = Task
     template_name = 'boardsapp/task.html'
     context_object_name = 'task'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['executors'] = self.object.created_to.all()
+        task = self.object
+
+        # Проверяем, не просрочена ли задача
+        if task.deadline and task.deadline < timezone.now() and task.status == 'В процессе':
+            task.status = 'Просрочено'
+            task.save()
+
+        context['executors'] = task.created_to.all()
         return context
 
 class BoardShow(DetailView):
@@ -120,3 +129,34 @@ class TaskDelete(DeleteView):
 
     def get_success_url(self):
         return reverse('board-detail', kwargs={'board_id': self.object.board.id})
+
+
+@login_required
+def complete_task(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+
+    # Проверяем, что пользователь является исполнителем задачи
+    if request.user in task.created_to.all():
+        # Меняем статус на "В ожидании проверки"
+        task.status = 'В Ожидании проверки'
+        task.save()
+        messages.success(request, 'Задача отправлена на проверку!')
+    else:
+        messages.error(request, 'Вы не можете отчитаться по этой задаче')
+
+    return redirect('task-detail', pk=task.pk)
+
+
+@login_required
+def confirm_completion(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+
+    # Проверяем, что пользователь является создателем задачи
+    if request.user == task.created_by and task.status == 'В Ожидании проверки':
+        task.status = 'Выполнено'
+        task.save()
+        messages.success(request, 'Выполнение задачи подтверждено!')
+    else:
+        messages.error(request, 'Вы не можете подтвердить выполнение этой задачи')
+
+    return redirect('task-detail', pk=task.pk)

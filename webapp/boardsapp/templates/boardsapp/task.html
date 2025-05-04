@@ -57,10 +57,13 @@
     <!-- Кнопки действий -->
     <div class="task-actions">
         <a href="{% url 'board-detail' board_id=task.board.id%}"><button>Вернуться к доске</button></a>
-        {%if user in executors%}
-        <button>Отчитаться о выполнении</button>
-        {%endif%}
-         {% if user == task.created_by or user in task.board.members.all %}
+        {% if user in executors and task.status == 'В процессе' %}
+            <a href="{% url 'complete-task' task.id %}"><button class="btn-complete">Отчитаться о выполнении</button></a>
+        {% endif %}
+        {% if user == task.created_by and task.status == 'В Ожидании проверки' %}
+            <a href="{% url 'confirm-completion' task.id %}"><button class="btn-confirm">Подтвердить выполнение</button></a>
+        {% endif %}
+        {% if user == task.created_by or user in task.board.members.all %}
             <a href="{% url 'task-edit' task.id %}"><button>Редактировать</button></a>
             <a href="{% url 'task-delete' task.id %}"><button class="btn-delete">Удалить</button></a>
         {% endif %}
@@ -158,6 +161,42 @@ h3, p{
 
 .btn-delete:hover {
     background-color: #c0392b;
+}
+
+.btn-complete {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn-complete:hover {
+    background-color: #27ae60;
+}
+
+/* Обновляем стили для контейнера кнопок */
+.task-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-confirm {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn-confirm:hover {
+    background-color: #e67e22;
 }
 </style>
 {% endblock %}
