@@ -8,6 +8,7 @@ from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 
 from .models import  *
@@ -40,6 +41,28 @@ class TaskShow(DetailView):
         context['executors'] = task.created_to.all()
         return context
 
+
+@login_required
+def create_task(request, board_id):
+    board = get_object_or_404(Board, id=board_id)
+
+    if request.method == 'POST':
+        form = CreateTaskForm(request.POST, board=board, user=request.user)
+        if form.is_valid():
+            task = form.save(user=request.user,commit=False)
+            task.board = board
+            task.save()
+            form.save_m2m()  # Сохраняем ManyToMany поля (executors)
+            return redirect(reverse('board-detail', kwargs={'board_id': board.id}))
+    else:
+        form = CreateTaskForm(board=board, user=request.user)
+
+    return render(request, 'boardsapp/board.html', {
+        'form': form,
+        'board': board,
+        'user':request.user
+    })
+
 class BoardShow(DetailView):
     model = Board
     template_name = 'boardsapp/board.html'
@@ -69,6 +92,7 @@ class BoardShow(DetailView):
         context = self.get_context_data(object=self.object)
         context['form'] = form
         return self.render_to_response(context)
+
 
 
 def BoardCreate_view(request):

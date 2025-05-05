@@ -83,8 +83,6 @@ class CreateTaskForm(forms.ModelForm):
         instance = super().save(commit=False)
         if user:
             instance.created_by = user  # Присваиваем текущего пользователя
-            instance.save()  # Сохраняем экземпляр перед добавлением участников
-            self.save_m2m()
         if commit:
             instance.save()
             self.save_m2m()

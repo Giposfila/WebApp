@@ -1,0 +1,123 @@
+/* boardsapp/static/boardsapp/css/users.css */
+.user-card {
+    background-color: #ffffff;
+    border-left: 5px solid #3498db;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-card h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.user-card p.text-muted {
+    color: #7f8c8d;
+    margin: 5px 0 0;
+    font-size: 0.95rem;
+}
+
+.user-card .btn-success {
+    background-color: #27ae60;
+    border-color: #27ae60;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+}
+
+.user-card .btn-success:hover {
+    background-color: #219150;
+    border-color: #1e784a;
+}
+
+.user-card .text-success {
+    font-weight: 500;
+    color: #27ae60;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+/* Форма поиска */
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+
+}
+
+.form-control {
+    flex: 1 1 auto;
+    min-width: 500px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 4px 0 0 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border-radius: 16px 0 0 16px;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    border-radius: 0 16px 16px 0;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2573a6;
+}
+
+/* Контейнер для списка пользователей */
+.user-list-container {
+    margin-top: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    .input-group {
+        flex-direction: column;
+    }
+
+    .form-control {
+        border-radius: 4px 4px 0 0;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary {
+        border-radius: 0 0 4px 4px;
+        width: 100%;
+    }
+
+    .user-card {
+        padding: 15px;
+    }
+}
+.back-btn {
+    text-decoration: none;
+    color: #2196F3;
+    font-weight: bold;
+    margin-left: 20px;
+    margin-right:30px;
+}

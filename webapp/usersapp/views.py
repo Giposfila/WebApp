@@ -62,3 +62,9 @@ def ProfileEdit_view(request):
         'profile':user.profile
     }
     return render(request, 'boardsapp/profile_edit.html', context)
+def users_search(request):
+    data = {
+        'users': User.objects.all()
+    }
+
+    return render(request, 'boardsapp/users.html', data)
