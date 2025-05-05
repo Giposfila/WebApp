@@ -1,0 +1,71 @@
+{% extends 'boardsapp/base.html' %}
+
+{% block content %}
+<div class="delete-confirm-container">
+    <h2>Подтверждение удаления</h2>
+    <p>Вы уверены, что хотите удалить задачу "{{ object.title }}"?</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+            <a href="{% url 'task-detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<style>
+.delete-confirm-container {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.delete-confirm-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.delete-confirm-container p {
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+</style>
+{% endblock %}

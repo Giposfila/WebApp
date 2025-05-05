@@ -83,9 +83,29 @@ class CreateTaskForm(forms.ModelForm):
         instance = super().save(commit=False)
         if user:
             instance.created_by = user  # Присваиваем текущего пользователя
-            instance.save()  # Сохраняем экземпляр перед добавлением участников
-            self.save_m2m()
         if commit:
             instance.save()
             self.save_m2m()
         return instance
+
+
+class EditTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['title', 'description', 'deadline', 'status', 'created_to']
+
+        widgets = {
+            'deadline': forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'class': 'form-control',
+                }
+            ),
+            'created_to': forms.CheckboxSelectMultiple()
+        }
+
+    def __init__(self, *args, **kwargs):
+        board = kwargs.pop('board', None)
+        super().__init__(*args, **kwargs)
+        if board is not None:
+            self.fields['created_to'].queryset = board.members.all()

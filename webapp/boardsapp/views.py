@@ -1,5 +1,6 @@
 from datetime import timezone
-
+from django.views.generic import UpdateView, DeleteView
+from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
@@ -7,6 +8,8 @@ from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 
 from .models import  *
 def MainMenu(request):
@@ -25,10 +28,40 @@ class TaskShow(DetailView):
     model = Task
     template_name = 'boardsapp/task.html'
     context_object_name = 'task'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['executors'] = self.object.created_to.all()
+        task = self.object
+
+        # Проверяем, не просрочена ли задача
+        if task.deadline and task.deadline < timezone.now() and task.status == 'В процессе':
+            task.status = 'Просрочено'
+            task.save()
+
+        context['executors'] = task.created_to.all()
         return context
+
+
+@login_required
+def create_task(request, board_id):
+    board = get_object_or_404(Board, id=board_id)
+
+    if request.method == 'POST':
+        form = CreateTaskForm(request.POST, board=board, user=request.user)
+        if form.is_valid():
+            task = form.save(user=request.user,commit=False)
+            task.board = board
+            task.save()
+            form.save_m2m()  # Сохраняем ManyToMany поля (executors)
+            return redirect(reverse('board-detail', kwargs={'board_id': board.id}))
+    else:
+        form = CreateTaskForm(board=board, user=request.user)
+
+    return render(request, 'boardsapp/board.html', {
+        'form': form,
+        'board': board,
+        'user':request.user
+    })
 
 class BoardShow(DetailView):
     model = Board
@@ -55,10 +88,11 @@ class BoardShow(DetailView):
             form.save_m2m()
             return redirect('board-detail', board_id=self.object.id)  # Перезагружаем страницу
 
-        # Если форма невалидна — возвращаем ту же страницу с формой и ошибками
+        # 1Если форма невалидна — возвращаем ту же страницу с формой и ошибками
         context = self.get_context_data(object=self.object)
         context['form'] = form
         return self.render_to_response(context)
+
 
 
 def BoardCreate_view(request):
@@ -97,3 +131,56 @@ def add_comment(request, task_id):
          else:
              messages.error(request, 'Комментарий не может быть пустым')
      return redirect('task-detail', pk=task_id)
+
+
+class TaskEdit(UpdateView):
+    model = Task
+    form_class = EditTaskForm
+    template_name = 'boardsapp/task_edit.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['board'] = self.get_object().board
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('task-detail', kwargs={'pk': self.object.pk})
+
+
+class TaskDelete(DeleteView):
+    model = Task
+    template_name = 'boardsapp/task_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('board-detail', kwargs={'board_id': self.object.board.id})
+
+
+@login_required
+def complete_task(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+
+    # Проверяем, что пользователь является исполнителем задачи
+    if request.user in task.created_to.all():
+        # Меняем статус на "В ожидании проверки"
+        task.status = 'В Ожидании проверки'
+        task.save()
+        messages.success(request, 'Задача отправлена на проверку!')
+    else:
+        messages.error(request, 'Вы не можете отчитаться по этой задаче')
+
+    return redirect('task-detail', pk=task.pk)
+
+
+@login_required
+def confirm_completion(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+
+    # Проверяем, что пользователь является создателем задачи
+    if request.user == task.created_by and task.status == 'В Ожидании проверки':
+        task.status = 'Выполнено'
+        task.save()
+        messages.success(request, 'Выполнение задачи подтверждено!')
+    else:
+        messages.error(request, 'Вы не можете подтвердить выполнение этой задачи')
+
+    return redirect('task-detail', pk=task.pk)

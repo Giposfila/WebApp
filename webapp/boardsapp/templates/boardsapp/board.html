@@ -186,7 +186,7 @@
 
         <!-- Модальное окно для создания задачи -->
       <div id="task-modal" class="modal">
- <form class="modal-content" method="POST" action=""> <!-- Обрати внимание: action пустой -->
+ <form class="modal-content" method="POST" action="{% url 'create-task' board_id=board.id %}"> <!-- Обрати внимание: action пустой -->
     {% csrf_token %}
     <span class="close" onclick="closeModal()">&times;</span>
     <h3>Создать задачу</h3>
