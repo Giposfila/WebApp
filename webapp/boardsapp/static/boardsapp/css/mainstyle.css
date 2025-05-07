@@ -39,8 +39,10 @@ header h1 {
 }
 
 .profile-container {
+    display: flex;
     flex: 0.2;
     text-align: right;
+    flex-direction: row-reverse;
 }
 
 .profile-button {

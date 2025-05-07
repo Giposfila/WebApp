@@ -18,14 +18,12 @@
             </button>
         </div>
         <h1>E-Tasks</h1>
-        <div class="search-container">
-            <input type="text" placeholder="Поиск..." class="search-input">
-        </div>
 
 <!--            <button class="about-button" onclick="">-->
 <!--                <i class="fas fa-bell"></i>-->        <!-- КНОПКА УВЕДОМЛЕНИЙ!-->
 <!--            </button>-->
         <div class="profile-container">
+
             <button class="profile-button">
                 <a href="{%url 'profile'%}">
                        {% if user.profile.avatar %}
@@ -35,6 +33,13 @@
         {% endif %}
                 </a>
             </button>
+            <button class="about-button" style="padding: 0 30px 0 0;" onclick="">
+                <i class="fas fa-bell"></i>
+            </button>
+                        <button class="about-button" style="padding: 0 30px 0 0;" onclick="">
+                            <a href="{%url 'users'%}"> <i class="fas fa-search"></i></a>
+            </button>
+
         </div>
     </div>
 </header>
