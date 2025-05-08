@@ -3,7 +3,7 @@
 {% block content %}
 <div class="task-container">
     <h1 class="task-title">{{ task.title }}</h1>
-    <p class="task-description">{{ task.description }}</p>
+    <p class="task-description" id="description">{{ task.description }}</p>
     <h4>Статус:
         <span
             {% if task.status == 'В процессе' %}
@@ -48,7 +48,7 @@
             <h4>Добавить комментарий</h4>
             <form method="post" action="{% url 'add-comment' task.id %}">
                 {% csrf_token %}
-                <textarea name="content" rows="3" required></textarea>
+                <textarea name="content" rows="3" required id="textarea"></textarea>
                 <button type="submit" class="btn-comment">Отправить</button>
             </form>
         </div>
@@ -56,16 +56,16 @@
 
     <!-- Кнопки действий -->
     <div class="task-actions">
-        <a href="{% url 'board-detail' board_id=task.board.id%}"><button>Вернуться к доске</button></a>
+        <a href="{% url 'board-detail' board_id=task.board.id%}"><button class="btn-back"><i class="fas fa-arrow-left"></i>  Вернуться к доске</button></a>
         {% if user in executors and task.status == 'В процессе' %}
-            <a href="{% url 'complete-task' task.id %}"><button class="btn-complete">Отчитаться о выполнении</button></a>
+            <a href="{% url 'complete-task' task.id %}"><button class="btn-complete"><i class="fa fa-check" aria-hidden="true"></i>  Отчитаться о выполнении</button></a>
         {% endif %}
         {% if user == task.created_by and task.status == 'В Ожидании проверки' %}
             <a href="{% url 'confirm-completion' task.id %}"><button class="btn-confirm">Подтвердить выполнение</button></a>
         {% endif %}
         {% if user == task.created_by or user in task.board.members.all %}
-            <a href="{% url 'task-edit' task.id %}"><button>Редактировать</button></a>
-            <a href="{% url 'task-delete' task.id %}"><button class="btn-delete">Удалить</button></a>
+            <a href="{% url 'task-edit' task.id %}"><button class="btn-edit"><i class="fas fa-pencil"></i>   Редактировать</button></a>
+            <a href="{% url 'task-delete' task.id %}"><button class="btn-delete"> <i class="fas fa-trash"></i></button></a>
         {% endif %}
     </div>
 </div>
@@ -109,13 +109,14 @@ h3, p{
 }
 
 .add-comment textarea {
-    width: 100%;
+    width: 95%;
     min-height: 100px;
-    padding: 1px;
+    padding: 12px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
+    border-radius: 12px;
+    resize: none;
+    transition: height 0.3s ease; /* Плавная анимация изменения высоты */
 }
 
 .btn-comment {
@@ -137,13 +138,14 @@ h3, p{
 }
 
 .btn-back {
-    display: inline-block;
-    padding: 10px 20px;
+    padding: 8px 15px;
     background-color: #3498db;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 4px;
     transition: background-color 0.3s;
+    cursor: pointer;
+    border:none;
 }
 
 .btn-back:hover {
@@ -163,6 +165,19 @@ h3, p{
     background-color: #c0392b;
 }
 
+.btn-edit {
+    background-color: #6e6ef9;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-edit:hover {
+    background-color: blue;
+}
+
 .btn-complete {
     background-color: #2ecc71;
     color: white;
@@ -170,7 +185,6 @@ h3, p{
     padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
 }
 
 .btn-complete:hover {
@@ -198,5 +212,55 @@ h3, p{
 .btn-confirm:hover {
     background-color: #e67e22;
 }
+.task-description {
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* Указываем количество строк */
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  border-radius:5px;
+  cursor: pointer; /* Добавляем курсор "рука" */
+}
+.task-description:hover{
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.5s ease;
+}
+.task-description.expanded {
+  overflow: visible;
+  display: block;
+  -webkit-line-clamp: unset;
+  -moz-box-orient: unset;
+  -webkit-box-orient: unset;
+  box-orient: unset;
+  text-overflow: '';
+}
 </style>
+<script>
+document.querySelector('.task-description').addEventListener('click', function() {
+  this.classList.toggle('expanded');
+});
+
+    document.addEventListener('DOMContentLoaded', function () {
+  const textarea = document.getElementById('textarea');
+
+  // Функция для автоматического изменения высоты
+  function autoResize() {
+    // Устанавливаем минимальную высоту
+    textarea.style.height = 'auto';
+    // Устанавливаем высоту равной внутренней высоте содержимого
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  // Вызываем функцию при каждом изменении текста
+  textarea.addEventListener('input', autoResize);
+
+  // Инициализируем высоту при загрузке страницы
+  autoResize();
+});
+</script>
 {% endblock %}

@@ -17,7 +17,7 @@
                 <i class="fas fa-info-circle"></i>
             </button>
         </div>
-        <h1>E-Tasks</h1>
+        <h1 style="cursor:pointer;" onclick="redirectToPage('{% url 'main' %}')">E-Tasks</h1>
 
 <!--            <button class="about-button" onclick="">-->
 <!--                <i class="fas fa-bell"></i>-->        <!-- КНОПКА УВЕДОМЛЕНИЙ!-->
@@ -213,6 +213,9 @@ window.onclick = function(event) {
     if (event.target === modal) {
         modal.style.display = 'none';
     }
+}
+    function redirectToPage(url) {
+    window.location.href = url;
 }
 </script>
 </body>

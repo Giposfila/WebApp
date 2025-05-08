@@ -9,7 +9,7 @@
         {% csrf_token %}
         <div class="form-actions">
             <button type="submit" class="btn btn-danger">Удалить</button>
-            <a href="{% url 'task-detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+            <a href="{{request.META.HTTP_REFERER}}" class="btn btn-secondary">Отмена</a>
         </div>
     </form>
 </div>
