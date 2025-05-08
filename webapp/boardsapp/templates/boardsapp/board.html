@@ -136,11 +136,13 @@
             <a href="{% url 'main' %}" class="back-btn">&#8592; Назад к доскам</a>
             <h2>{{ board.title }}</h2>
             <div class="board-actions">
-                <form class="filter-form">
+                <form class="filter-form" method="get">
                     <select name="filter" id="filter">
-                        <option value="all">Все задачи</option>
-                        <option value="completed">Выполненные</option>
-                        <option value="due">С дедлайном</option>
+                        <option value="all" {% if status == 'all' or not status %}selected{% endif %}>Все задачи</option>
+                        <option value="Выполнено" {% if status == 'Выполнено' %}selected{% endif %}>Выполненные</option>
+                        <option value="В процессе" {% if status == 'В процессе' %}selected{% endif %}>В процессе</option>
+                        <option value="Просрочено" {% if status == 'Просрочено' %}selected{% endif %}>Просрочено</option>
+                        <option value="В Ожидании проверки" {% if status == 'В Ожидании проверки' %}selected{% endif %}>В Ожидании проверки</option>
                     </select>
                 </form>
                 <button class="btn btn-create" onclick="toggleModal()">Создать задачу</button>
@@ -168,16 +170,28 @@
         <div class="task-list">
             {% for task in tasks %}
                 <div class="task-card {% if task.is_completed %}completed{% endif %}" onclick="window.location.href='{% url 'task-detail' task.id %}'" style="cursor: pointer;">
-                    <h3>{{ task.title }}</h3>
+                    <h3>
+                        {% if task.status == 'В процессе' %}
+                            <i class="fas fa-circle" style="color: blue;"></i>
+                          {% elif task.status == 'Выполнено' %}
+                            <i class="fas fa-circle" style="color: green;"></i>
+                            {% elif task.status == 'В Ожидании проверки' %}
+                            <i class="fas fa-circle" style="color: orange;"></i>
+                          {% else %}
+                            <i class="fas fa-circle" style="color: red;"></i>
+                          {% endif %}
+                        {{ task.title }}
+                    </h3>
                     <div class="task-description">
                         {{ task.description|default:"Нет описания"|linebreaksbr }}
                     </div>
                     <div class="task-info">
-                        <span>Дедлайн: {{ task.deadline|default:"—" }}</span>
-                        <span>Статус: {% if task.status == 'Выполнено'%}Выполнено{% elif task.status == 'Просрочено'%}Просрочено{% else %}В работе{% endif %}</span>
+                        <span>Дедлайн<br>{{ task.deadline|default:"—" }}</span>
+                        <span>Статус:<br>{{task.status}}</span>
+                        <span><i class="fas fa-comment"></i><br> {{task.comments.count}}</span>
                     </div>
                     <button class="btn btn-edit">Изменить</button>
-                    <button class="btn btn-delete">Удалить</button>
+                    <a href="{% url 'task-delete' task.id %}"><button class="btn btn-delete">Удалить</button></a>
                 </div>
             {% empty %}
                 <p>Задачи не найдены</p>
@@ -240,5 +254,11 @@ function createTask(e) {
     })
     .catch(error => console.error('Ошибка:', error));
 }
+
+</script>
+<script>
+    document.getElementById('filter').addEventListener('change', function () {
+        this.form.submit();
+    });
 </script>
 {% endblock %}

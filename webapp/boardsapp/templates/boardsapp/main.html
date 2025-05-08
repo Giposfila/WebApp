@@ -1,4 +1,6 @@
 {%extends 'boardsapp/base.html'%}
+{%load static%}
+<link rel="stylesheet" href="{% static 'boardsapp/css/mainstyle.css' %}">
 {%block content%}
 <div class="boards-container">
     {% for el in tasks %}
@@ -10,6 +12,8 @@
     <i class="fas fa-circle" style="color: blue;"></i>
   {% elif el.status == 'Выполнено' %}
     <i class="fas fa-circle" style="color: green;"></i>
+    {% elif el.status == 'В Ожидании проверки' %}
+    <i class="fas fa-circle" style="color: orange;"></i>
   {% else %}
     <i class="fas fa-circle" style="color: red;"></i>
   {% endif %}

@@ -15,11 +15,15 @@ from .models import  *
 def MainMenu(request):
     boards=request.user.boards.all()
     tasks = request.user.tasks_to_do.all()
+    status = request.GET.get('status')
+    if status and status!='all':
+        tasks = tasks.filter(status=status)
     data={'boards':boards,
           'tasks':tasks,
           "profile": request.user.profile,
           'user':request.user,
-          'now':timezone.now()
+          'now':timezone.now(),
+          'status':status
           }
     return render(request,'boardsapp/main.html',data)
 
@@ -70,7 +74,13 @@ class BoardShow(DetailView):
     pk_url_kwarg = 'board_id'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tasks'] = self.object.tasks.all()
+        board = self.get_object()
+        status = self.request.GET.get('filter')
+        tasks = Task.objects.filter(board=board)
+        if status and status!='all':
+            tasks = tasks.filter(status=status)
+        context['tasks'] = tasks
+        context['status'] = status
         context['members'] = self.object.members.all()
         context['form'] = CreateTaskForm(board=self.object)
         return context

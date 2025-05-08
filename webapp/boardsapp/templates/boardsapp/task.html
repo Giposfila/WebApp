@@ -1,5 +1,5 @@
 {% extends 'boardsapp/base.html' %}
-
+{%load static%}
 {% block content %}
 <div class="task-container">
     <h1 class="task-title">{{ task.title }}</h1>
@@ -22,29 +22,36 @@
     <h4>Создана: {{task.created_by}}</h4>
 
     <!-- Секция комментариев -->
-    <div class="comments-section">
-        <h3>Комментарии</h3>
+  <div class="comments-section">
+    <h3>
+        Комментарии {{task.comments.count}}
+        <button type="button" class="toggle-btn" onclick="toggleComments()">▼</button>
+    </h3>
 
+    <div id="commentList" class="comments-list-wrapper">
         {% if task.comments.all %}
             <div class="comments-list">
                 {% for comment in task.comments.all %}
-                <div class="comment">
-                    <div class="comment-header">
-                        <strong>{{ comment.user.username }}</strong>
-                        <span class="comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+                    <div class="comment">
+                        <div class="comment-header">
+                            {% if comment.user.profile.avatar %}
+                                <img src="{{ comment.user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
+                            {% else %}
+                                <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
+                            {% endif %}
+                            <strong>{{ comment.user.username }}</strong>
+                            <span class="comment-date">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+                        </div>
+                        <div class="comment-content">
+                            {{ comment.content }}
+                        </div>
                     </div>
-                    <div class="comment-content">
-                        {{ comment.content }}
-                    </div>
-                </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p>Пока нет комментариев</p>
+            <p>Комментариев ещё нет.</p>
         {% endif %}
-
-        <!-- Форма добавления комментария -->
-        <div class="add-comment">
+          <div class="add-comment">
             <h4>Добавить комментарий</h4>
             <form method="post" action="{% url 'add-comment' task.id %}">
                 {% csrf_token %}
@@ -53,6 +60,7 @@
             </form>
         </div>
     </div>
+</div>
 
     <!-- Кнопки действий -->
     <div class="task-actions">
@@ -71,6 +79,28 @@
 </div>
 
 <style>
+    .comments-list-wrapper {
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    max-height: 500px; /* можно настроить под свой случай */
+}
+
+.comments-list-wrapper.collapsed {
+    max-height: 0;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 10px;
+    transition: transform 0.3s;
+}
+
+.toggle-btn.rotated {
+    transform: rotate(1deg);
+}
 /* Стили для комментариев1 */
 h3, p{
     margin: 0;
@@ -262,5 +292,25 @@ document.querySelector('.task-description').addEventListener('click', function()
   // Инициализируем высоту при загрузке страницы
   autoResize();
 });
+
+     function toggleComments() {
+        const commentList = document.getElementById('commentList');
+        const button = document.querySelector('.toggle-btn');
+
+        // Переключаем класс collapsed
+        commentList.classList.toggle('collapsed');
+
+        // Меняем стрелочку
+        button.classList.toggle('rotated');
+
+        // Меняем текст кнопки (или стрелку)
+        button.textContent = commentList.classList.contains('collapsed') ? '▶' : '▼';
+    }
+
+    // По умолчанию сворачиваем
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('commentList').classList.add('collapsed');
+        document.querySelector('.toggle-btn').textContent = '▶';
+    });
 </script>
 {% endblock %}

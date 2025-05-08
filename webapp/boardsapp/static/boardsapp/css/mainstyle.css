@@ -1,6 +1,9 @@
 /* Header */
 
 header {
+    position: sticky;
+    top: 0; /* Прилипает к верхней части окна */
+    z-index: 1000;
     background: #2c3e50;
     color: white;
     padding: 10px 20px;
