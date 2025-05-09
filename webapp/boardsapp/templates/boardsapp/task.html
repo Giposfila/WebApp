@@ -71,7 +71,7 @@
         {% if user == task.created_by and task.status == 'В Ожидании проверки' %}
             <a href="{% url 'confirm-completion' task.id %}"><button class="btn-confirm">Подтвердить выполнение</button></a>
         {% endif %}
-        {% if user == task.created_by or user in task.board.members.all %}
+        {% if user == task.created_by%}
             <a href="{% url 'task-edit' task.id %}"><button class="btn-edit"><i class="fas fa-pencil"></i>   Редактировать</button></a>
             <a href="{% url 'task-delete' task.id %}"><button class="btn-delete"> <i class="fas fa-trash"></i></button></a>
         {% endif %}

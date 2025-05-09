@@ -153,8 +153,6 @@
         <div class="description-toggle">
             {% if board.description %}
                 <a href="#" onclick="toggleDescription()">Показать описание</a>
-            {% else %}
-                <a href="#" onclick="toggleDescription()">Показать описание</a>
             {% endif %}
         </div>
 
@@ -190,8 +188,10 @@
                         <span>Статус:<br>{{task.status}}</span>
                         <span><i class="fas fa-comment"></i><br> {{task.comments.count}}</span>
                     </div>
+                    {%if user == task.created_by%}
                     <button class="btn btn-edit">Изменить</button>
                     <a href="{% url 'task-delete' task.id %}"><button class="btn btn-delete">Удалить</button></a>
+                    {%endif%}
                 </div>
             {% empty %}
                 <p>Задачи не найдены</p>
