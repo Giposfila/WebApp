@@ -37,7 +37,7 @@ def RegForm_Func(request):
                 fail_silently=False,
             )
 
-            # Сохраняем user_id в сессии для подтверждения
+            # Сохраняем u2ser_id в сессии для подтверждения
             request.session['user_id_to_confirm'] = user.id
             return redirect('email_confirmation')
     else:
