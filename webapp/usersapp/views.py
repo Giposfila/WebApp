@@ -1,26 +1,113 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from .models import EmailConfirmation
+import datetime
 from . import models
 from .forms import *
 from django.contrib.auth.models import User
 
 def BlankFunc(request):
     return redirect('/registration/')
+
+
 def RegForm_Func(request):
     if request.method == 'POST':
         form = UsersForm(request.POST)
         if form.is_valid():
-            # Сохраняем пользователя и получаем объект
-            user = form.save()
-            # Авторизуем пользователя
-            login(request, user)
-            return redirect('main')  # Перенаправляем на главную страницу
+            # Сохраняем пользователя, но не активируем сразу
+            user = form.save(commit=False)
+            user.is_active = False  # Пользователь не активен до подтверждения email
+            user.save()
+
+            # Создаем код подтверждения
+            code = get_random_string(length=6, allowed_chars='0123456789')
+            EmailConfirmation.objects.create(user=user, code=code)
+
+            # Отправляем email с кодом
+            send_mail(
+                'Код подтверждения регистрации',
+                f'Ваш код подтверждения: {code}',
+                'etasks12@mail.ru',
+                [user.email],
+                fail_silently=False,
+            )
+
+            # Сохраняем user_id в сессии для подтверждения
+            request.session['user_id_to_confirm'] = user.id
+            return redirect('email_confirmation')
     else:
         form = UsersForm()
 
     return render(request, 'usersapp/regform.html', {'form': form})
+
+
+def email_confirmation_view(request):
+    user_id = request.session.get('user_id_to_confirm')
+    if not user_id:
+        return redirect('regform')
+
+    user = User.objects.get(id=user_id)
+
+    if request.method == 'POST':
+        form = EmailConfirmationForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            try:
+                confirmation = EmailConfirmation.objects.get(
+                    user=user,
+                    code=code,
+                    is_used=False,
+                    created_at__gte=datetime.datetime.now() - datetime.timedelta(hours=24)
+                )
+                confirmation.is_used = True
+                confirmation.save()
+
+                # Активируем пользователя
+                user.is_active = True
+                user.save()
+
+                # Авторизуем пользователя
+                login(request, user)
+                del request.session['user_id_to_confirm']
+                return redirect('main')
+            except EmailConfirmation.DoesNotExist:
+                form.add_error('code', 'Неверный код подтверждения')
+    else:
+        form = EmailConfirmationForm()
+
+    return render(request, 'usersapp/email_confirmation.html', {'form': form})
+
+
+def resend_code_view(request):
+    user_id = request.session.get('user_id_to_confirm')
+    if not user_id:
+        return redirect('regform')
+
+    user = User.objects.get(id=user_id)
+
+    # Деактивируем старые коды
+    EmailConfirmation.objects.filter(user=user).update(is_used=True)
+
+    # Создаем новый код
+    code = get_random_string(length=6, allowed_chars='0123456789')
+    EmailConfirmation.objects.create(user=user, code=code)
+
+    # Отправляем email с новым кодом
+    send_mail(
+        'Новый код подтверждения регистрации',
+        f'Ваш новый код подтверждения: {code}',
+        'from@example.com',
+        [user.email],
+        fail_silently=False,
+    )
+
+    return redirect('email_confirmation')
+
 
 def login_view(request):
     if request.method == 'POST':

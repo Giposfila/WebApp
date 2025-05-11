@@ -6,14 +6,18 @@ from django.contrib.auth.models import User
 from .models import Profile
 from django.contrib.auth import authenticate
 
+
 class UsersForm(UserCreationForm):
-    username= forms.CharField(widget=forms.TextInput(),label='Имя пользователя', help_text=None)
-    password1 = forms.CharField(widget=forms.PasswordInput(), label='Пароль', help_text='Пароль должен содержать не менее 8 символов\n Пароль не может состоять лишь из цифр')
+    username = forms.CharField(widget=forms.TextInput(), label='Имя пользователя', help_text=None)
+    email = forms.EmailField(required=True, label='Email')
+    password1 = forms.CharField(widget=forms.PasswordInput(), label='Пароль',
+                                help_text='Пароль должен содержать не менее 8 символов\n Пароль не может состоять лишь из цифр')
     password2 = forms.CharField(widget=forms.PasswordInput(), label='Повторите пароль')
     captcha = CaptchaField(label='Введите текст с картинки')
+
     class Meta:
-        model=User
-        fields = ['username','email','password1','password2','captcha']
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'captcha']
         def __init__(self):
             super().__init__()
             self.fields['password1'].help_text=None
@@ -62,3 +66,11 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar']
+
+
+class EmailConfirmationForm(forms.Form):
+    code = forms.CharField(
+        label="Код подтверждения",
+        max_length=6,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
