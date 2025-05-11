@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.BlankFunc),
     path('registration/', views.RegForm_Func, name='regform'),
+    path('email-confirmation/', views.email_confirmation_view, name='email_confirmation'),
+    path('resend-code/', views.resend_code_view, name='resend_code'),
     path('login/', views.login_view, name='login'),
     path('forgotpassword/', views.forgot_password_view, name='forgotpassword'),
     path('main/', include('boardsapp.urls'), name='main'),

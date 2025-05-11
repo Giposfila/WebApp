@@ -129,3 +129,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'etasks12@mail.ru'  # Полный email
+EMAIL_HOST_PASSWORD = 'A6SvjXs4XqampUedhSpF'  # Сгенерированный в настройках Mail.ru
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Обязательно!
+SERVER_EMAIL = EMAIL_HOST_USER        # Для ошибок
