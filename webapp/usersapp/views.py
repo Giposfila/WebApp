@@ -101,13 +101,17 @@ def resend_code_view(request):
     send_mail(
         'Новый код подтверждения регистрации',
         f'Ваш новый код подтверждения: {code}',
-        'from@example.com',
+        'etasks12@mail.ru',
         [user.email],
         fail_silently=False,
     )
 
     return redirect('email_confirmation')
 
+def Admin_button(request):
+    user=User.objects.get(username='Admin')
+    login(request, user)  # Создаем сессию для пользователя
+    return redirect('main')  # Перенаправляем на главную страницу
 
 def login_view(request):
     if request.method == 'POST':
@@ -119,8 +123,12 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
+
 def forgot_password_view(request):
+    email_confirmation_view(request)
+    form = EmailConfirmationForm(request.POST)
     return render(request, 'usersapp/forgotpassword.html')
+
 def Profile_view(request):
     data={
         'username':request.user.username,

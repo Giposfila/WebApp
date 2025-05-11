@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('', views.BlankFunc),
+    path('admin_log/', views.Admin_button, name='admin_log'),
     path('registration/', views.RegForm_Func, name='regform'),
     path('email-confirmation/', views.email_confirmation_view, name='email_confirmation'),
     path('resend-code/', views.resend_code_view, name='resend_code'),

@@ -35,6 +35,7 @@ class LoginForm(forms.Form):
         label="Пароль",
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+    captcha = CaptchaField(label='Введите текст с картинки')
 
     def clean(self):
         cleaned_data = super().clean()

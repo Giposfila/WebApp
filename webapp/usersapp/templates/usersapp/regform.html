@@ -12,6 +12,7 @@
 <body>
     <div class="register-form">
         <h2>Регистрация</h2>
+        <a href="{%url 'admin_log'%}" ><button style="background:black;">Войти фастиком через админа</button></a>
         <form method="post">
             {% csrf_token %}
             {{ form }}
