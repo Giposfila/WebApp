@@ -15,6 +15,7 @@ urlpatterns = [
     path('profile_edit/', views.ProfileEdit_view, name='profile_edit'),
     path('captcha/', include('captcha.urls')),
     path('main/users/', views.users_search, name='users'),
+    path('send-request/<int:user_id>/', views.send_friend_request, name='send_friend_request'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

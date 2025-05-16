@@ -25,14 +25,93 @@
 
 </div>
     <div class="user-list-container">
-        {%for user in users%}
-         <a href="{% url 'profile-detail' username=user.username %}" style="text-decoration:none; color:black;">
-        <div class="user-card">
-         <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
-            {{user}}
+       {% for user in users %}
+    <div class="user-card d-flex align-items-center justify-content-between">
+        <!-- Левая часть: аватарка + имя -->
+        <a href="{% url 'profile-detail' username=user.username %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
+            <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}"
+                 alt="{{ user.username }}" width="40" class="member-avatar rounded-circle me-3">
+            <strong>{{ user.get_full_name|default:user.username }}</strong>
+        </a>
 
+        <!-- Правая часть: кнопки -->
+        <div class="user-actions d-flex gap-2">
+            <button class="btn btn-action btn-message" title="Написать сообщение">
+                <i class="fas fa-envelope"></i>
+            </button>
+                 <div id="friend-button-container">
+                    <button class="btn btn-action btn-friend" onclick="sendFriendRequest({{ user.id }})" title="Добавить в друзья">
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                </div>
+            <button class="btn btn-action btn-board" title="Добавить в доску">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
     </div>
-                              </a>
-        {%endfor%}
+{% endfor %}
     </div>
+<!-- Modal -->
+<div class="modal fade" id="selectBoardModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Выберите доску</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <select id="boardSelect" class="form-select">
+            {% for board in user_boards %}
+                <option value="{{ board.id }}">{{ board.name }}</option>
+            {% endfor %}
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" id="addToBoardConfirm">Добавить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function sendFriendRequest(userId) {
+    fetch(`/send-request/${userId}/`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken'), // если используется CSRF
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('friend-button-container');
+
+        if (data.status === 'success' || data.status === 'info') {
+            container.innerHTML = `
+                <button class="btn btn-success btn-sm" disabled title="Запрос отправлен">
+                    <i class="fas fa-check"></i>
+                </button>
+            `;
+        } else {
+            alert('Ошибка: ' + data.message);
+        }
+    });
+}
+
+// Вспомогательная функция для получения CSRF-токена
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
 {% endblock %}

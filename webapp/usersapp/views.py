@@ -1,17 +1,17 @@
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .models import EmailConfirmation
+from .models import EmailConfirmation, FriendRequest
 import datetime
 from . import models
 from .forms import *
 from django.contrib.auth.models import User
-
 def BlankFunc(request):
     return redirect('/registration/')
 
@@ -184,5 +184,18 @@ def users_search(request):
     data = {
         'users':users,
     }
-
     return render(request, 'boardsapp/users.html', data)
+
+from django.contrib import messages
+@login_required
+def send_friend_request(request, user_id):
+    to_user = get_object_or_404(User, id=user_id)
+
+    if request.user == to_user:
+        return JsonResponse({'status': 'error', 'message': 'Нельзя добавить самого себя'})
+
+    if FriendRequest.objects.filter(from_user=request.user, to_user=to_user).exists():
+        return JsonResponse({'status': 'info', 'sent_request': True})
+
+    FriendRequest.objects.create(from_user=request.user, to_user=to_user)
+    return JsonResponse({'status': 'success', 'sent_request': True})

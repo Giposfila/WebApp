@@ -121,3 +121,68 @@
     margin-left: 20px;
     margin-right:30px;
 }
+.user-card {
+    background-color: #ffffff;
+    border-left: 5px solid #3498db;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px; /* Расстояние между кнопками */
+}
+
+.user-actions .btn-action {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border-width: 2px;
+}
+
+.btn-message {
+    color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-message:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-friend {
+    color: #27ae60;
+    border-color: #27ae60;
+}
+
+.btn-friend:hover {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-board {
+    color: #f39c12;
+    border-color: #f39c12;
+}
+
+.btn-board:hover {
+    background-color: #f39c12;
+    color: white;
+}
