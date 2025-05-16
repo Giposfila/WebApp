@@ -17,7 +17,7 @@
             {{ task.get_status_display }}
         </span>
     </h4>
-    <h4>Дедлайн: {{task.deadline}}</h4>
+    <h4>Дедлайн: {{task.deadline|default:"Отсутствует"}}</h4>
     <h4>Задача для: {%for el in executors%}{{el}}; {%endfor%}</h4>
     <h4>Создана: {{task.created_by}}</h4>
 

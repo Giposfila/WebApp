@@ -1,7 +1,7 @@
 from django.urls import path, include
 from  . import views
 from django.contrib.auth import views as auth_views
-from .views import ChangePasswordView
+from .views import ChangePasswordView, ProfileDetailView
 
 urlpatterns = [
     path('', views.MainMenu, name='main'),
@@ -16,4 +16,5 @@ urlpatterns = [
     path('tasks/<int:pk>/complete/', views.complete_task, name='complete-task'),
     path('tasks/<int:pk>/confirm/', views.confirm_completion, name='confirm-completion'),
     path('board/<int:board_id>/task_create/', views.create_task, name='create-task'),
+    path('/profile/<str:username>/', ProfileDetailView.as_view(), name='profile-detail'),
 ]

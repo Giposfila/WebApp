@@ -33,11 +33,14 @@
         {% endif %}
                 </a>
             </button>
-            <button class="about-button" style="padding: 0 30px 0 0;" onclick="">
+                        <button class="about-button" style="padding: 0 30px 0 0;" onclick="toggleFriendsSidebar()">
+                             <i class="fas fa-user-friends"></i>
+            </button>
+            <button class="about-button" style="padding: 0 30px 0 0;" onclick="toggleNotificationSidebar()">
                 <i class="fas fa-bell"></i>
             </button>
-                        <button class="about-button" style="padding: 0 30px 0 0;" onclick="">
-                            <a href="{%url 'users'%}"> <i class="fas fa-search"></i></a>
+            <button class="about-button" style="padding: 0 30px 0 0;" onclick="">
+                            <a href="{%url 'users'%}?back_url={{ request.get_full_path|urlencode }}"> <i class="fas fa-search"></i></a>
             </button>
 
         </div>
@@ -76,7 +79,64 @@
                 {%endif%}
     </div>
   {%block content%} {%endblock%}
+    <!-- Боковая панель друзей -->
+<!-- Боковая панель друзей -->
+<div id="friends-sidebar" class="friends-sidebar">
+    <div class="search-bar">
+        <input type="text" placeholder="Поиск друга..." oninput="filterFriends(this.value)">
+    </div>
+    <h5 style="margin-top: 0;">Друзья:</h5>
+<ul id="friends-list" class="friends-list">
+    {% for friend in user.profile.friends.all %}
+        <li class="friend-item" data-username="{{ friend.user.username }}">
+            <a href="{% url 'profile-detail' username=friend.user.username %}" class="friend-link">
+                {% if friend.user.profile.avatar %}
+                    <img src="{{ friend.user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
+                {% else %}
+                    <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
+                {% endif %}
+                <span>{{ friend.user.username }}</span>
+            </a>
+        </li>
+    {% empty %}
+        <li style="padding: 10px; color: #888;">Список друзей пуст</li>
+    {% endfor %}
+</ul>
+    </div>
 </div>
+
+<!-- Боковая панель уведомлений -->
+<div id="notifications-sidebar" class="friends-sidebar">
+    <h4>Уведомления</h4>
+    <div class="search-bar">
+        <input type="text" placeholder="Поиск уведомлений..." oninput="filterNotifications(this.value)">
+    </div>
+
+    <ul id="notifications-list" class="friends-list">
+        <!-- Пример уведомления -->
+        <li class="notification-item" data-text="Новое уведомление от Ивана">
+            <div class="friend-link">
+                <img src="{% static 'usersapp/img/notification.png' %}" alt="Уведомление" width="30" class="profile-icon">
+                <span>Новое уведомление от Ивана</span>
+            </div>
+        </li>
+
+        <li class="notification-item" data-text="Вас добавили в проект «Тестирование»">
+            <div class="friend-link">
+                <img src="{% static 'usersapp/img/notification.png' %}" alt="Уведомление" width="30" class="profile-icon">
+                <span>Вас добавили в проект «Тестирование»</span>
+            </div>
+        </li>
+
+        <li class="notification-item" data-text="Задача просрочена">
+            <div class="friend-link">
+                <img src="{% static 'usersapp/img/notification.png' %}" alt="Уведомление" width="30" class="profile-icon">
+                <span>Задача "Подготовить презентацию" просрочена</span>
+            </div>
+        </li>
+    </ul>
+</div>
+
 <!-- Модальное окно "О сайте" -->
 <div id="about-modal" class="modal" style="display: none;">
     <div class="modal-content">
@@ -108,7 +168,139 @@
         </div>
     </div>
 </div>
+<style>
+    .notification-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
 
+.notification-item:hover {
+    background-color: #f7f9fc;
+}
+    .friend-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.friend-link:hover {
+    background-color: #f0f4ff;
+}
+    /* Стили для боковой панели друзей */
+.friends-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Скрываем за экраном */
+    width: 300px;
+    height: 100%;
+    background-color: #fafafa;
+    border-left: 1px solid #ccc;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+    transition: right 0.3s ease-in-out;
+    overflow-y: auto;
+}
+
+.friends-sidebar.active {
+    right: 0; /* Показываем поверх контента */
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+}
+
+.friends-list {
+    list-style: none; /* Убираем маркеры */
+    padding: 0;
+    margin: 0;
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+</style>
+<script>
+    // Функция для открытия/закрытия боковой панели
+    function toggleFriendsSidebar() {
+        const sidebar = document.getElementById('friends-sidebar');
+        sidebar.classList.toggle('active');
+
+        // Опционально: можно закрывать панель при клике вне её области
+        if (sidebar.classList.contains('active')) {
+            window.addEventListener('click', closeOnOutsideClick);
+        } else {
+            window.removeEventListener('click', closeOnOutsideClick);
+        }
+    }
+
+    // Закрытие панели при клике вне её
+    function closeOnOutsideClick(e) {
+        const sidebar = document.getElementById('friends-sidebar');
+        const button = document.querySelector('.profile-container button[onclick="toggleFriendsSidebar()"]');
+        if (!sidebar.contains(e.target) && !button.contains(e.target)) {
+            sidebar.classList.remove('active');
+            window.removeEventListener('click', closeOnOutsideClick);
+        }
+    }
+
+    // Поиск друзей
+    function filterFriends(query) {
+        const items = document.querySelectorAll('.friend-item');
+        query = query.toLowerCase();
+        items.forEach(item => {
+            const username = item.getAttribute('data-username').toLowerCase();
+            item.style.display = username.includes(query) ? 'block' : 'none';
+        });
+    }
+</script>
+
+<script>
+   function toggleNotificationSidebar() {
+    const sidebar = document.getElementById('notifications-sidebar');
+    sidebar.classList.toggle('active');
+
+    if (sidebar.classList.contains('active')) {
+        window.addEventListener('click', closeNotificationOnOutsideClick);
+    } else {
+        window.removeEventListener('click', closeNotificationOnOutsideClick);
+    }
+}
+
+function closeNotificationOnOutsideClick(e) {
+    const sidebar = document.getElementById('notifications-sidebar');
+    const button = document.querySelector('.profile-container button[onclick="toggleNotificationSidebar()"]');
+    if (!sidebar.contains(e.target) && !button.contains(e.target)) {
+        sidebar.classList.remove('active');
+        window.removeEventListener('click', closeNotificationOnOutsideClick);
+    }
+}
+</script>
 <style>
 /* Стили для модального окна */
 .modal {

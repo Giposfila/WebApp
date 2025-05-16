@@ -1,4 +1,6 @@
 from datetime import timezone
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import UpdateView, DeleteView
 from django.urls import reverse
 from django.contrib import messages
@@ -194,3 +196,14 @@ def confirm_completion(request, pk):
         messages.error(request, 'Вы не можете подтвердить выполнение этой задачи')
 
     return redirect('task-detail', pk=task.pk)
+
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'boardsapp/AnotherProfile.html'
+    context_object_name = 'user'  # Чтобы в шаблоне был доступен как {{ user }}
+    slug_field = 'username'       # Используем username в URL
+    slug_url_kwarg = 'username'   # Имя параметра в URL
+
+    def get_object(self, queryset=None):
+        # Получаем пользователя по username или 404
+        return get_object_or_404(User, username=self.kwargs.get('username'))

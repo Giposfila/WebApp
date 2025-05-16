@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
+
 
 class Board(models.Model):
     title=models.CharField("Название", max_length=100)

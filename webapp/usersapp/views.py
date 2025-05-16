@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
@@ -128,14 +129,14 @@ def forgot_password_view(request):
     email_confirmation_view(request)
     form = EmailConfirmationForm(request.POST)
     return render(request, 'usersapp/forgotpassword.html')
-
+@login_required
 def Profile_view(request):
     data={
         'username':request.user.username,
         "email":request.user.email,
         "profile": request.user.profile
           }
-    return render(request, 'boardsapp/profile.html',data)
+    return render(request, 'boardsapp/AnotherProfile.html',data)
 @login_required
 def ProfileEdit_view(request):
     user = request.user
@@ -160,8 +161,28 @@ def ProfileEdit_view(request):
     }
     return render(request, 'boardsapp/profile_edit.html', context)
 def users_search(request):
+    current_user = request.user
+    # Все прямые друзья текущего пользователя
+    direct_friends = current_user.profile.friends.all().values_list('user', flat=True)
+
+    # Список ID'ов друзей друзей
+    friends_of_friends_ids = set()
+
+    for friend in current_user.profile.friends.all():
+        # Друзья этого друга
+        friends = friend.user.profile.friends.all().values_list('user_id', flat=True)
+        for user_id in friends:
+            if user_id != current_user.id and user_id not in direct_friends:
+                friends_of_friends_ids.add(user_id)
+
+    # Получаем сами объекты User
+    users = User.objects.filter(id__in=friends_of_friends_ids)
+    all_users=User.objects.all()
+    query = request.GET.get('q', '')  # Получаем строку поиска
+    if query:
+        users = all_users.filter(Q(username__icontains=query))  # Поиск по username
     data = {
-        'users': User.objects.all()
+        'users':users,
     }
 
     return render(request, 'boardsapp/users.html', data)

@@ -116,14 +116,15 @@
                             {% if  board.created_by == member %}
                                 <i class="fas fa-crown"></i> <!-- Иконка короны -->
                             {% endif %}
-                            {% if  user == member %}
-                                <span class="you-name">Вы</span>
+                            {% if  board.created_by == request.user and member != request.user %}
+                                <a href="/main/tasks/6/delete/"><button class="btn btn-delete" > <i class="fas fa-x"></i></button></a>
                             {% endif %}
+
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <a href="{% url 'users' %}">
+            <a href="{% url 'users' %}?back_url={{ request.get_full_path|urlencode }}">
                 <button class="add-member-btn">Добавить участника</button>
             </a>
         </div>

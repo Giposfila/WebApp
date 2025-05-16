@@ -23,9 +23,9 @@
 </div>
         <h2 class="board-title">{{ el.title }}</h2>
         <p class="board-description">{{ el.description }}</p>
-        {%if el.deadline is not null%}
+        {%if el.deadline is not null and el.status != 'Просрочено' %}
         <p class="board-title" style="margin: 0 0 0;">Осталось:</p>
-        <p class="board-title" style="margin: 0 0 0;">{{ el.deadline|timeuntil }}</p>
+        <p class="board-title" style="margin: 0 0 0;">{{ el.deadline|timeuntil:now }}</p>
         {%endif%}
     </div>
      </a>

@@ -147,6 +147,9 @@ text-align:center;
     margin: 10px 0;
     line-height: 1.4;
     color: #555;
+    min-height:200px;
+    max-height:200px;
+    overflow:hidden;
 }
 
 .task-info {
