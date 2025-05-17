@@ -37,8 +37,7 @@
 
             <!-- Кнопка "Главная" всегда видна -->
               {% if user != request.user %}
-            <button><a href="" class="button">Добавить в друзья</a></button>
-            <button><a href="" class="button">Написать сообщение</a></button>
+            <button id="friendbutton" onclick="sendFriendRequest({{ user.id }})"><a href="" class="button">Добавить в друзья</a></button>
             {%endif%}
             <button><a href="{% url 'main' %}" class="button">Вернуться на главную</a></button>
 
@@ -63,6 +62,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+    function sendFriendRequest(userId) {
+
+    fetch(`/send-request/${userId}/`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken'), // если используется CSRF
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const container = document.getElementById('friend-button-container');
+
+        if (data.status === 'success' || data.status === 'info') {
+            container.innerHTML = `
+                <button class="btn btn-success btn-sm" disabled title="Запрос отправлен">
+                    <i class="fas fa-check"></i>
+                </button>
+            `;
+        } else {
+            alert('Ошибка: ' + data.message);
+        }
+    });
+}
+
+// Вспомогательная функция для получения CSRF-токена
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 </script>
 </body>
 </html>

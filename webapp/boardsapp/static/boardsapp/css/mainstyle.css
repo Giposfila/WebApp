@@ -1,8 +1,18 @@
 /* Header */
 
+:root {
+  /* �仂于舒� �于亠�仂于舒� 仗舒仍亳��舒 亟仍� ��仄仆仂亶 �亠仄� */
+  --dt-bg: #121212;         /* ��仆仂于仆仂亶 �仂仆 */
+  --dt-card: #1e1e1e;       /* �舒��仂�从亳 */
+  --dt-text: #e0e0e0;       /* ��仆仂于仆仂亶 �亠从�� (�亠��亶 于仄亠��仂 弍亠仍仂亞仂) */
+  --dt-text-secondary: #b0b0b0; /* ��仂�亳�仆�亶 �亠从�� */
+  --dt-accent: #bb86fc;     /* �从�亠仆�仆�亶 �于亠� (�亳仂仍亠�仂于�亶) */
+  --dt-border: #383838;     /* ��舒仆亳�� */
+}
+
 header {
     position: sticky;
-    top: 0; /* Прилипает к верхней части окна */
+    top: 0; /* ��亳仍亳仗舒亠� 从 于亠��仆亠亶 �舒��亳 仂从仆舒 */
     z-index: 1000;
     background: #2c3e50;
     color: white;
@@ -46,6 +56,8 @@ header h1 {
     flex: 0.2;
     text-align: right;
     flex-direction: row-reverse;
+    gap: 15px; /* �舒于仆�亠 仗�仂仄亠亢��从亳 仄亠亢亟� 亳从仂仆从舒仄亳 */
+
 }
 
 .profile-button {
@@ -66,13 +78,57 @@ header h1 {
 .profile-icon:hover {
     transform: scale(1.1);
 }
-/* Общие стили */
+/* �弍�亳亠 ��亳仍亳 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     line-height: 1.6;
     color: #333;
+    background-color: #fff;
+}
+
+/* 丐�仄仆舒� �亠仄舒 */
+body.dark-theme {
+    background-color: #121212;
+    color: #f1f1f1;
+}
+body.dark-theme a {
+    color: #90caf9;
+}
+
+body.dark-theme header {
+    background-color: #1e1e1e;
+}
+
+/* 弌�亳仍亳 亟仍� 从仆仂仗从亳 仗亠�亠从仍��亠仆亳� �亠仄� */
+#theme-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0 15px;
+    margin-left: 10px;
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s ease;
+    outline: none;
+}
+
+
+
+#theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* �仍� ��仄仆仂亶 �亠仄� */
+body.dark-theme #theme-toggle {
+    color: #f1f1f1;
+}
+
+/* 丕弍亳�舒亠仄 弍亠仍�亶 从于舒亟�舒� 于仂从��亞 亳从仂仆从亳 */
+#theme-toggle:focus {
+    background: none;
+    box-shadow: none;
 }
 
 .container {
@@ -225,52 +281,52 @@ header h1 {
 .project-info button:hover {
     background: #2980b9;
 }
-/* Общий контейнер для всех досок */
+/* �弍�亳亶 从仂仆�亠亶仆亠� 亟仍� 于�亠� 亟仂�仂从 */
 .boards-container {
     display: flex;
-    flex-wrap: wrap; /* Перенос карточек на новую строку */
-    gap: 15px; /* Меньшее расстояние между карточками */
+    flex-wrap: wrap; /* �亠�亠仆仂� 从舒��仂�亠从 仆舒 仆仂于�� ���仂从� */
+    gap: 15px; /* �亠仆��亠亠 �舒���仂�仆亳亠 仄亠亢亟� 从舒��仂�从舒仄亳 */
     padding: 15px;
-    justify-content: left; /* Центрирование карточек */
+    justify-content: left; /* 丶亠仆��亳�仂于舒仆亳亠 从舒��仂�亠从 */
 }
 
-/* Стиль для каждой карточки доски */
+/* 弌�亳仍� 亟仍� 从舒亢亟仂亶 从舒��仂�从亳 亟仂�从亳 */
 .board-card {
-    background-color: #ffffff; /* Белый фон */
-    border: 1px solid #e0e0e0; /* Тонкая граница */
-    border-radius: 10px; /* Закругленные углы */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
-    padding: 10px; /* Внутренний отступ */
-    width: 200px; /* Фиксированная ширина карточки */
-    text-align: center; /* Выравнивание текста по центру */
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Плавные переходы */
+    background-color: #ffffff; /* �亠仍�亶 �仂仆 */
+    border: 1px solid #e0e0e0; /* 丐仂仆从舒� 亞�舒仆亳�舒 */
+    border-radius: 10px; /* �舒从��亞仍亠仆仆�亠 �亞仍� */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* �亠亞从舒� �亠仆� */
+    padding: 10px; /* �仆���亠仆仆亳亶 仂����仗 */
+    width: 200px; /* 个亳从�亳�仂于舒仆仆舒� �亳�亳仆舒 从舒��仂�从亳 */
+    text-align: center; /* ���舒于仆亳于舒仆亳亠 �亠从��舒 仗仂 �亠仆��� */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* �仍舒于仆�亠 仗亠�亠�仂亟� */
 
-    /* Ограничение высоты и скрытие текста */
+    /* �亞�舒仆亳�亠仆亳亠 于��仂�� 亳 �从���亳亠 �亠从��舒 */
     min-height:200px;
-    max-height: 200px; /* Максимальная высота карточки */
-    overflow: hidden; /* Скрываем всё, что выходит за пределы */
+    max-height: 200px; /* �舒从�亳仄舒仍�仆舒� 于��仂�舒 从舒��仂�从亳 */
+    overflow: hidden; /* 弌从��于舒亠仄 于��, ��仂 于��仂亟亳� 亰舒 仗�亠亟亠仍� */
 }
 
-/* Эффект при наведении на карточку */
+/* 亅��亠从� 仗�亳 仆舒于亠亟亠仆亳亳 仆舒 从舒��仂�从� */
 .board-card:hover {
-    transform: translateY(-5px); /* Поднятие карточки */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Усиление тени */
+    transform: translateY(-5px); /* �仂亟仆��亳亠 从舒��仂�从亳 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 丕�亳仍亠仆亳亠 �亠仆亳 */
 }
 
-/* Анимация при клике */
+/* �仆亳仄舒�亳� 仗�亳 从仍亳从亠 */
 .board-card:active {
-    transform: scale(0.98); /* Небольшое уменьшение размера */
+    transform: scale(0.98); /* �亠弍仂仍��仂亠 �仄亠仆��亠仆亳亠 �舒亰仄亠�舒 */
 }
 
-/* Заголовок карточки */
+/* �舒亞仂仍仂于仂从 从舒��仂�从亳 */
 .board-title {
     max-width: 200px;
-    font-size: 1rem; /* Меньший размер шрифта заголовка */
-    margin-bottom: 5px; /* Меньший отступ под заголовком */
-    color: #333; /* Цвет текста */
-    font-weight: bold; /* Жирный шрифт */
-    overflow: hidden; /* Скрыть текст, который не помещается */
-    text-overflow: ellipsis; /* Добавить многоточие для длинного текста */
+    font-size: 1rem; /* �亠仆��亳亶 �舒亰仄亠� ��亳��舒 亰舒亞仂仍仂于从舒 */
+    margin-bottom: 5px; /* �亠仆��亳亶 仂����仗 仗仂亟 亰舒亞仂仍仂于从仂仄 */
+    color: #333; /* 丶于亠� �亠从��舒 */
+    font-weight: bold; /* �亳�仆�亶 ��亳�� */
+    overflow: hidden; /* 弌从���� �亠从��, 从仂�仂��亶 仆亠 仗仂仄亠�舒亠��� */
+    text-overflow: ellipsis; /* �仂弍舒于亳�� 仄仆仂亞仂�仂�亳亠 亟仍� 亟仍亳仆仆仂亞仂 �亠从��舒 */
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -278,98 +334,98 @@ header h1 {
     word-wrap: break-word;
 }
 
-/* Описание карточки */
+/* �仗亳�舒仆亳亠 从舒��仂�从亳 */
 .board-description {
-    font-size: 0.8rem; /* Меньший размер шрифта описания */
-    color: #666; /* Цвет текста */
-    line-height: 1.2; /* Меньший межстрочный интервал */
-    margin-bottom: 10px; /* Меньший отступ под описанием */
+    font-size: 0.8rem; /* �亠仆��亳亶 �舒亰仄亠� ��亳��舒 仂仗亳�舒仆亳� */
+    color: #666; /* 丶于亠� �亠从��舒 */
+    line-height: 1.2; /* �亠仆��亳亶 仄亠亢���仂�仆�亶 亳仆�亠�于舒仍 */
+    margin-bottom: 10px; /* �亠仆��亳亶 仂����仗 仗仂亟 仂仗亳�舒仆亳亠仄 */
 }
 
-/* Кнопки действий */
+/* �仆仂仗从亳 亟亠亶��于亳亶 */
 .board-actions {
     display: flex;
-    justify-content: center; /* Центрирование кнопки */
+    justify-content: center; /* 丶亠仆��亳�仂于舒仆亳亠 从仆仂仗从亳 */
 }
 
 .btn-view {
-    background-color: #28a745; /* Зеленый цвет фона */
-    color: white; /* Белый текст */
-    border: none; /* Без границ */
-    border-radius: 5px; /* Закругленные углы */
-    padding: 5px 10px; /* Меньший внутренний отступ */
-    cursor: pointer; /* Курсор "рука" */
-    text-decoration: none; /* Убрать подчеркивание ссылок */
-    font-size: 0.8rem; /* Меньший размер шрифта */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавные переходы */
+    background-color: #28a745; /* �亠仍亠仆�亶 �于亠� �仂仆舒 */
+    color: white; /* �亠仍�亶 �亠从�� */
+    border: none; /* �亠亰 亞�舒仆亳� */
+    border-radius: 5px; /* �舒从��亞仍亠仆仆�亠 �亞仍� */
+    padding: 5px 10px; /* �亠仆��亳亶 于仆���亠仆仆亳亶 仂����仗 */
+    cursor: pointer; /* ����仂� "��从舒" */
+    text-decoration: none; /* 丕弍�舒�� 仗仂亟�亠�从亳于舒仆亳亠 ���仍仂从 */
+    font-size: 0.8rem; /* �亠仆��亳亶 �舒亰仄亠� ��亳��舒 */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* �仍舒于仆�亠 仗亠�亠�仂亟� */
 }
 
 .btn-view:hover {
-    background-color: #218838; /* Темнее при наведении */
-    transform: scale(1.05); /* Небольшое увеличение */
+    background-color: #218838; /* 丐亠仄仆亠亠 仗�亳 仆舒于亠亟亠仆亳亳 */
+    transform: scale(1.05); /* �亠弍仂仍��仂亠 �于亠仍亳�亠仆亳亠 */
 }
 
 .btn-view:active {
-    transform: scale(0.98); /* Небольшое уменьшение при клике */
+    transform: scale(0.98); /* �亠弍仂仍��仂亠 �仄亠仆��亠仆亳亠 仗�亳 从仍亳从亠 */
 }
-/* Стиль для контейнера задачи */
+/* 弌�亳仍� 亟仍� 从仂仆�亠亶仆亠�舒 亰舒亟舒�亳 */
 .task-container {
-    background-color: #ffffff; /* Белый фон */
-    border: 1px solid #e0e0e0; /* Легкая граница */
-    border-radius: 10px; /* Закругленные углы */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
-    padding: 20px; /* Внутренний отступ */
-    margin: 20px 0; /* Отступы сверху и снизу */
-    width: 80%; /* Ширина контейнера */
-    max-width: 600px; /* Максимальная ширина */
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+    background-color: #ffffff; /* �亠仍�亶 �仂仆 */
+    border: 1px solid #e0e0e0; /* �亠亞从舒� 亞�舒仆亳�舒 */
+    border-radius: 10px; /* �舒从��亞仍亠仆仆�亠 �亞仍� */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* �亠亞从舒� �亠仆� */
+    padding: 20px; /* �仆���亠仆仆亳亶 仂����仗 */
+    margin: 20px 0; /* �����仗� �于亠��� 亳 �仆亳亰� */
+    width: 80%; /* 丿亳�亳仆舒 从仂仆�亠亶仆亠�舒 */
+    max-width: 600px; /* �舒从�亳仄舒仍�仆舒� �亳�亳仆舒 */
+    margin-left: auto; /* 丶亠仆��亳�仂于舒仆亳亠 */
+    margin-right: auto; /* 丶亠仆��亳�仂于舒仆亳亠 */
 }
 
-/* Стиль для заголовка задачи */
+/* 弌�亳仍� 亟仍� 亰舒亞仂仍仂于从舒 亰舒亟舒�亳 */
 .task-title {
-    font-size: 24px; /* Размер шрифта */
-    font-weight: bold; /* Жирный текст */
-    margin-bottom: 10px; /* Отступ под заголовком */
-    color: #333333; /* Темно-серый цвет текста */
-    text-align: center; /* Выравнивание по центру */
+    font-size: 24px; /* �舒亰仄亠� ��亳��舒 */
+    font-weight: bold; /* �亳�仆�亶 �亠从�� */
+    margin-bottom: 10px; /* �����仗 仗仂亟 亰舒亞仂仍仂于从仂仄 */
+    color: #333333; /* 丐亠仄仆仂-�亠��亶 �于亠� �亠从��舒 */
+    text-align: center; /* ���舒于仆亳于舒仆亳亠 仗仂 �亠仆��� */
 }
 
-/* Стиль для описания задачи */
+/* 弌�亳仍� 亟仍� 仂仗亳�舒仆亳� 亰舒亟舒�亳 */
 .task-description {
-    font-size: 16px; /* Размер шрифта */
-    color: #555555; /* Серый цвет текста */
-    line-height: 1.5; /* Интервал между строк */
-    text-align: justify; /* Выравнивание текста по ширине */
-    overflow: hidden; /* Скр
+    font-size: 16px; /* �舒亰仄亠� ��亳��舒 */
+    color: #555555; /* 弌亠��亶 �于亠� �亠从��舒 */
+    line-height: 1.5; /* �仆�亠�于舒仍 仄亠亢亟� ���仂从 */
+    text-align: justify; /* ���舒于仆亳于舒仆亳亠 �亠从��舒 仗仂 �亳�亳仆亠 */
+    overflow: hidden; /* 弌从�
 
-/* Более специфичный селектор */
+/* �仂仍亠亠 �仗亠�亳�亳�仆�亶 �亠仍亠从�仂� */
 .header-container h1 a.header-title-link {
     text-decoration: none !important;
     color: inherit !important;
     font-weight: inherit !important;
 }
         .avatar {
-            border-radius: 50%; /* Делает изображение круглым */
-            width: 150px;       /* Ширина аватарки */
-            height: 150px;      /* Высота аватарки */
-            object-fit: cover;  /* Обрезает изображение, чтобы оно заполнило контейнер */
+            border-radius: 50%; /* �亠仍舒亠� 亳亰仂弍�舒亢亠仆亳亠 从��亞仍�仄 */
+            width: 150px;       /* 丿亳�亳仆舒 舒于舒�舒�从亳 */
+            height: 150px;      /* ���仂�舒 舒于舒�舒�从亳 */
+            object-fit: cover;  /* �弍�亠亰舒亠� 亳亰仂弍�舒亢亠仆亳亠, ��仂弍� 仂仆仂 亰舒仗仂仍仆亳仍仂 从仂仆�亠亶仆亠� */
         }
 .btn-back {
     display: inline-block;
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #e74c3c; /* Красный цвет фона */
-    color: white; /* Белый текст */
-    text-decoration: none; /* Убрать подчеркивание */
-    border-radius: 4px; /* Закругленные углы */
-    transition: background-color 0.3s; /* Плавный переход */
+    background-color: #e74c3c; /* ��舒�仆�亶 �于亠� �仂仆舒 */
+    color: white; /* �亠仍�亶 �亠从�� */
+    text-decoration: none; /* 丕弍�舒�� 仗仂亟�亠�从亳于舒仆亳亠 */
+    border-radius: 4px; /* �舒从��亞仍亠仆仆�亠 �亞仍� */
+    transition: background-color 0.3s; /* �仍舒于仆�亶 仗亠�亠�仂亟 */
 }
 
 .btn-back:hover {
-    background-color: #c0392b; /* Темнее при наведении */
+    background-color: #c0392b; /* 丐亠仄仆亠亠 仗�亳 仆舒于亠亟亠仆亳亳 */
 }
-/* Добавьте это в ваши CSS-файлы */
+/* �仂弍舒于��亠 ��仂 于 于舒�亳 CSS-�舒亶仍� */
 .back-btn {
     display: inline-block;
     margin-right: 20px;
@@ -394,4 +450,3 @@ header h1 {
     margin: 10px 0 0;
     color: #666;
 }
-

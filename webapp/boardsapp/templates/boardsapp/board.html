@@ -111,14 +111,13 @@
                 {% for member in members %}
                     <div class="member-item">
                         <div class="board-title">
+                            <a href="{% url 'profile-detail' username=member.username %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
                             <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
                             <span class="member-name">{{ member.username }}</span>
                             {% if  board.created_by == member %}
                                 <i class="fas fa-crown"></i> <!-- Иконка короны -->
                             {% endif %}
-                            {% if  board.created_by == request.user and member != request.user %}
-                                <a href="/main/tasks/6/delete/"><button class="btn btn-delete" > <i class="fas fa-x"></i></button></a>
-                            {% endif %}
+                            </a>
 
                         </div>
                     </div>

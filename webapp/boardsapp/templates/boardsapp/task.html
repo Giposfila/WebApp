@@ -19,7 +19,7 @@
     </h4>
     <h4>Дедлайн: {{task.deadline|default:"Отсутствует"}}</h4>
     <h4>Задача для: {%for el in executors%}{{el}}; {%endfor%}</h4>
-    <h4>Создана: {{task.created_by}}</h4>
+    <h4>Создана:  <a href="{% url 'profile-detail' username=task.created_by %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">{{task.created_by}}</a></h4>
 
     <!-- Секция комментариев -->
   <div class="comments-section">
@@ -32,6 +32,7 @@
         {% if task.comments.all %}
             <div class="comments-list">
                 {% for comment in task.comments.all %}
+                 <a href="{% url 'profile-detail' username=comment.user.username %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
                     <div class="comment">
                         <div class="comment-header">
                             {% if comment.user.profile.avatar %}
@@ -46,6 +47,7 @@
                             {{ comment.content }}
                         </div>
                     </div>
+                 </a>
                 {% endfor %}
             </div>
         {% else %}
