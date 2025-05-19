@@ -490,3 +490,28 @@ color:white;
     margin: 10px 0 0;
     color: #666;
 }
+.friend-link-content {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Расстояние между аватаром и текстом */
+    overflow: hidden; /* Скрываем переполнение */
+    white-space: nowrap; /* Запрещаем перенос текста */
+    width: 100%; /* Занимает всю ширину контейнера */
+}
+
+.username,
+.notification-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.username {
+    max-width: 150px; /* Ограничьте ширину под свой дизайн */
+    font-weight: bold;
+}
+
+.notification-text {
+    max-width: 120px; /* Ограничьте ширину под свой дизайн */
+    color: #666;
+}

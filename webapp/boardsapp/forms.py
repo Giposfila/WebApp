@@ -38,56 +38,66 @@ class CreateBoardForm(forms.ModelForm):
             instance.save()
         return instance
 
+from django import forms
+from .models import Task
+
 class CreateTaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['title', 'description', 'deadline', 'created_to']  # Поля формы
+        fields = ['title', 'description', 'deadline', 'created_to']
 
         widgets = {
             'title': forms.TextInput(attrs={
-                'placeholder': 'Введите название доски',
-                'class': 'form-control'  # Добавляем класс для стилизации
+                'placeholder': 'Введите название задачи',
+                'class': 'form-control'
             }),
             'description': forms.Textarea(attrs={
-                'placeholder': 'Введите описание доски',
-                'rows': 4,  # Количество строк
-                'class': 'form-control'  # Добавляем класс для стилизации
+                'placeholder': 'Введите описание задачи',
+                'rows': 4,
+                'class': 'form-control'
             }),
             'deadline': forms.DateTimeInput(
                 attrs={
-                    'placeholder': 'Выберите дату и время',
-                    'type': 'datetime-local',  # активирует нативный календарь браузера
-                    'class': 'form-control',  # для стилизации через Bootstrap
-                    'required': False,  # обязательное поле
-                    'autocomplete': 'off',  # отключает автозаполнение
-                    'style': 'max-width: 300px;',  # ограничение ширины
+                    'type': 'datetime-local',
+                    'class': 'form-control',
+                    'style': 'max-width: 300px;',
                     'min': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M'),
                 }
             ),
-            'created_to': forms.CheckboxSelectMultiple(attrs={'overflow':''})
+            'created_to': forms.CheckboxSelectMultiple(attrs={
+                'class': 'scrollable-checkbox-list'  # <-- класс для стилизации
+            }),
         }
+
     def __init__(self, *args, **kwargs):
-        board = kwargs.pop('board', None)  # Получаем доску из kwargs
+        board = kwargs.pop('board', None)
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+
         if board is not None:
-            # Ограничиваем выбор пользователей — только участники доски
             self.fields['created_to'].queryset = board.members.all()
+
+        # Применяем стиль к списку чекбоксов через обёртку
+        self.fields['created_to'].widget.attrs.update({
+            'style': (
+                'max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;'
+            )
+        })
+
     def clean_title(self):
-        """Проверка уникальности названия задачи."""
         title = self.cleaned_data.get('title')
         if self.user and Task.objects.filter(title=title, created_by=self.user).exists():
             raise forms.ValidationError("Задача с таким названием уже существует.")
         return title
+
     def save(self, commit=True, user=None):
         instance = super().save(commit=False)
         if user:
-            instance.created_by = user  # Присваиваем текущего пользователя
+            instance.created_by = user
         if commit:
             instance.save()
             self.save_m2m()
         return instance
-
 
 class EditTaskForm(forms.ModelForm):
     class Meta:

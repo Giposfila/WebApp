@@ -142,6 +142,63 @@
     background-color: #1e1e1e;
 }
 
+.user-actions .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    color:white;
+}
+
+.btn-friend {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.a{
+color:black;
+text-decoration:none;
+}
+.a.dark-theme{
+color:white;
+}
+
+.btn-friend:hover {
+    background-color: #0056b3;
+}
+
+.btn-board {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-board:hover {
+    background-color: #1e7e34;
+}
+
+.btn-success {
+    background-color: #28a745 !important;
+}
+
+.btn-secondary {
+    background-color: #6c757d !important;
+}
+
+.btn-info {
+    background-color: #17a2b8 !important;
+}
+
+.btn-danger {
+    background-color: #dc3545 !important;
+}
+
+.btn-sm {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+}
 
 .user-card:hover {
     transform: translateY(-2px);

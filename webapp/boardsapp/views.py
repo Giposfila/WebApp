@@ -1,11 +1,14 @@
 from datetime import timezone
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.views.generic import UpdateView, DeleteView
 from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
+
+from usersapp.models import FriendRequest, Profile
 from .forms import *
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
@@ -202,7 +205,60 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'user'  # Чтобы в шаблоне был доступен как {{ user }}
     slug_field = 'username'       # Используем username в URL
     slug_url_kwarg = 'username'   # Имя параметра в URL
-
     def get_object(self, queryset=None):
         # Получаем пользователя по username или 404
         return get_object_or_404(User, username=self.kwargs.get('username'))
+
+    # views.py
+
+    # views.py
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile_user = self.object
+        current_user = self.request.user
+
+        # Проверяем исходящий запрос (visible=True)
+        out_friend_request = FriendRequest.objects.filter(
+            from_user=current_user,
+            to_user=profile_user,
+            visible=True
+        ).exists()
+
+        # Проверяем входящий запрос (visible=True)
+        in_friend_request = FriendRequest.objects.filter(
+            from_user=profile_user,
+            to_user=current_user,
+            visible=True
+        ).exists()
+
+        # Проверяем, был ли запрос отклонён (visible=False)
+        declined_request = FriendRequest.objects.filter(
+            from_user=current_user,
+            to_user=profile_user,
+            visible=False
+        ).exists()
+
+        # Проверяем, есть ли отклонённый входящий запрос, который можно восстановить
+        can_restore_request = FriendRequest.objects.filter(
+            from_user=profile_user,
+            to_user=current_user,
+            visible=False
+        ).exists()
+
+        # Проверяем, являются ли друзьями
+        is_friend = False
+        try:
+            is_friend = current_user.profile.friends.filter(user=profile_user).exists()
+        except:
+            pass
+
+        context.update({
+            'out_friend_request': out_friend_request,
+            'in_friend_request': in_friend_request,
+            'is_friend': is_friend,
+            'declined_request': declined_request,
+            'can_restore_request': can_restore_request,  # Новое поле
+        })
+
+        return context

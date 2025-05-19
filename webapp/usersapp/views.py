@@ -162,30 +162,60 @@ def ProfileEdit_view(request):
     return render(request, 'boardsapp/profile_edit.html', context)
 def users_search(request):
     current_user = request.user
-    # Все прямые друзья текущего пользователя
-    direct_friends = current_user.profile.friends.all().values_list('user', flat=True)
-
-    # Список ID'ов друзей друзей
-    friends_of_friends_ids = set()
-
-    for friend in current_user.profile.friends.all():
-        # Друзья этого друга
-        friends = friend.user.profile.friends.all().values_list('user_id', flat=True)
-        for user_id in friends:
-            if user_id != current_user.id and user_id not in direct_friends:
-                friends_of_friends_ids.add(user_id)
-
-    # Получаем сами объекты User
-    users = User.objects.filter(id__in=friends_of_friends_ids)
-    all_users=User.objects.all()
     query = request.GET.get('q', '')  # Получаем строку поиска
-    if query:
-        users = all_users.filter(Q(username__icontains=query))  # Поиск по username
-    data = {
-        'users':users,
-    }
-    return render(request, 'boardsapp/users.html', data)
 
+    # Получаем список ID прямых друзей текущего пользователя
+    direct_friends = list(
+        current_user.profile.friends.values_list('user_id', flat=True)
+    )
+
+    # Получаем пользователей
+    if query:
+        users = User.objects.filter(username__icontains=query)
+    else:
+        # Список ID друзей друзей
+        friends_of_friends_ids = set()
+        for friend in current_user.profile.friends.all():
+            friends = friend.friends.values_list('user_id', flat=True)
+            for fid in friends:
+                if fid != current_user.id and fid not in direct_friends:
+                    friends_of_friends_ids.add(fid)
+        users = User.objects.filter(id__in=friends_of_friends_ids)
+
+    # Получаем все исходящие запросы
+    out_requests = FriendRequest.objects.filter(
+        from_user=current_user,
+        visible=True
+    ).values_list('to_user', flat=True)
+    out_request_ids = set(out_requests)
+
+    # Получаем все входящие запросы
+    in_requests = FriendRequest.objects.filter(
+        to_user=current_user,
+        visible=True
+    ).values_list('from_user', flat=True)
+    in_request_ids = set(in_requests)
+
+    # Получаем все отклонённые запросы
+    declined_requests = FriendRequest.objects.filter(
+        to_user=current_user,
+        visible=False
+    ).values_list('from_user', flat=True)
+    declined_request_ids = set(declined_requests)
+
+    # Добавляем статусы дружбы для каждого пользователя
+    users_list = []
+    for user in users:
+        user.is_friend = user.id in direct_friends
+        user.out_friend_request = user.id in out_request_ids
+        user.in_friend_request = user.id in in_request_ids
+        user.declined_request = user.id in declined_request_ids
+        users_list.append(user)
+
+    return render(request, 'boardsapp/users.html', {
+        'users': users_list,
+        'query': query
+    })
 from django.contrib import messages
 @login_required
 def send_friend_request(request, user_id):
@@ -199,3 +229,74 @@ def send_friend_request(request, user_id):
 
     FriendRequest.objects.create(from_user=request.user, to_user=to_user)
     return JsonResponse({'status': 'success', 'sent_request': True})
+
+
+@login_required
+def accept_friend_request(request, username):
+    from_user = get_object_or_404(User, username=username)
+
+    # Находим запрос
+    friend_request = FriendRequest.objects.filter(
+        from_user=from_user,
+        to_user=request.user
+    ).first()
+
+    if friend_request:
+        # Добавляем друг друга в друзья
+        request_profile, _ = Profile.objects.get_or_create(user=request.user)
+        from_profile, _ = Profile.objects.get_or_create(user=from_user)
+
+        request_profile.friends.add(from_profile)
+        from_profile.friends.add(request_profile)
+
+        # Удаляем запрос
+        friend_request.delete()
+
+    return redirect('profile-detail', username=username)
+
+@login_required
+def remove_friend(request, username):
+    friend_user = get_object_or_404(User, username=username)
+
+    try:
+        current_profile = request.user.profile
+        friend_profile = friend_user.profile
+
+        # Удаляем друг друга из списков друзей
+        current_profile.friends.remove(friend_profile)
+        friend_profile.friends.remove(current_profile)
+    except Exception as e:
+        pass  # Можно добавить логику обработки ошибок
+
+    return redirect('profile-detail', username=username)
+
+@login_required
+def decline_friend_request(request, username):
+    from_user = get_object_or_404(User, username=username)
+
+    friend_request = FriendRequest.objects.filter(
+        from_user=from_user,
+        to_user=request.user
+    ).first()
+
+    if friend_request:
+        friend_request.visible = False  # Скрываем, но не удаляем
+        friend_request.save()
+
+    return redirect('profile-detail', username=username)
+
+@login_required
+def restore_friend_request(request, username):
+    from_user = get_object_or_404(User, username=username)
+
+    friend_request = FriendRequest.objects.filter(
+        from_user=from_user,
+        to_user=request.user,
+        visible=False  # Только отклонённые запросы
+    ).first()
+
+    if friend_request:
+        friend_request.visible = True
+        friend_request.save()
+
+    return redirect('profile-detail', username=username)

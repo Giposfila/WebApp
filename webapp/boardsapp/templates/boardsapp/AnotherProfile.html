@@ -37,8 +37,27 @@
             {% endif %}
 
             <!-- Кнопка "Главная" всегда видна -->
-              {% if user != request.user %}
-            <button id="friendbutton" onclick="sendFriendRequest({{ user.id }})"><a href="" class="button">Добавить в друзья</a></button>
+            {% if user != request.user%}
+            {% if is_friend %}
+            <button style="background-color:green;">В друзьях</button>
+            <button style="background-color:red;">
+                 <a href="{% url 'remove_friend' username=user.username %}" style="text-decoration:none; color:white;" >Удалить из друзей</a></button>
+            {% elif out_friend_request %}
+            <button style="background-color:green;">Приглашение отправлено</button>
+            {%elif can_restore_request%}
+             <button style="background-color:red;">
+                  <a href="{% url 'restore_friend_request' username=user.username%}" style="text-decoration:none; color:white;">Приглашение отклонено</a></button>
+            {% elif declined_request %}
+            <button style="background-color:red;">Приглашение отклонено</button>
+            {% elif in_friend_request and not in_friend%}
+                 <button style="background-color:#1e9e1e;">
+                     <a href="{% url 'accept_friend_request' username=user.username %}" style="text-decoration:none; color:white;">Принять приглашение</a></button>
+            <button style="background-color:red;">
+                <a href="{% url 'decline_friend_request' username=user.username %}" style="text-decoration:none; color:white;">Отклонить приглашение</a></button>
+            {% else %}
+            <button id="friendbutton" onclick="sendFriendRequest({{ user.id }})" style="text-decoration:none; color:white;"><a href="" class="button">Добавить в друзья</a></button>
+            {% endif %}
+            {%else%}
             {%endif%}
             <button><a href="{% url 'main' %}" class="button">Вернуться на главную</a></button>
 

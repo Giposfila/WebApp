@@ -118,26 +118,23 @@
 
     <ul id="notifications-list" class="friends-list">
         <!-- Пример уведомления -->
-        <li class="notification-item" data-text="Новое уведомление от Ивана">
-            <div class="friend-link">
-                <img src="{% static 'usersapp/img/notification.png' %}" alt="Уведомление" width="30" class="profile-icon">
-                <span>Новое уведомление от Ивана</span>
-            </div>
+        {%for el in user.get_requests.all%}
+        {%if el.visible%}
+               <li class="notification-item" data-text="Новое уведомление от Ивана">
+            <a href="{% url 'profile-detail' username=el.from_user.username %}" class="friend-link">
+                <div class="friend-link-content">
+                    {% if el.from_user.profile.avatar %}
+                        <img src="{{ el.from_user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
+                    {% else %}
+                        <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
+                    {% endif %}
+                    <span class="username">{{ el.from_user.username }}</span>
+                    <span class="notification-text">Запрос в друзья</span>
+                </div>
+            </a>
         </li>
-
-        <li class="notification-item" data-text="Вас добавили в проект «Тестирование»">
-            <div class="friend-link">
-                <img src="{% static 'usersapp/img/notification.png' %}" alt="Уведомление" width="30" class="profile-icon">
-                <span>Вас добавили в проект «Тестирование»</span>
-            </div>
-        </li>
-
-        <li class="notification-item" data-text="Задача просрочена">
-            <div class="friend-link">
-                <img src="{% static 'usersapp/img/notification.png' %}" alt="Уведомление" width="30" class="profile-icon">
-                <span>Задача "Подготовить презентацию" просрочена</span>
-            </div>
-        </li>
+        {%endif%}
+               {%endfor%}
     </ul>
 </div>
 

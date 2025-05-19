@@ -25,27 +25,53 @@
 
 </div>
     <div class="user-list-container">
-       {% for user in users %}
-    <div class="user-card d-flex align-items-center justify-content-between">
-        <!-- Левая часть: аватарка + имя -->
-        <a href="{% url 'profile-detail' username=user.username %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
-            <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}"
-                 alt="{{ user.username }}" width="40" class="member-avatar rounded-circle me-3">
-            <strong>{{ user.get_full_name|default:user.username }}</strong>
-        </a>
+      {% for user in users %}
+<div class="user-card d-flex align-items-center justify-content-between">
+    <!-- Левая часть: аватарка + имя -->
+    <a href="{% url 'profile-detail' username=user.username %}"  class="a">
+        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}"
+              width="40" class="member-avatar rounded-circle me-3">
+        <strong>{{ user.get_full_name|default:user.username }}</strong>
+    </a>
 
-        <!-- Правая часть: кнопки -->
-        <div class="user-actions d-flex gap-2">
-                 <div id="friend-button-container">
-                    <button class="btn btn-action btn-friend" onclick="sendFriendRequest({{ user.id }})" title="Добавить в друзья">
-                        <i class="fas fa-user-plus"></i>
-                    </button>
-                </div>
-            <button class="btn btn-action btn-board" title="Добавить в доску">
-                <i class="fas fa-plus"></i>
+    <!-- Правая часть: кнопки -->
+    <div class="user-actions d-flex gap-2" id="friend-button-container-{{ user.id }}">
+        {% if user.is_friend %}
+            <button class="btn btn-success btn-sm" disabled title="Вы уже друзья">
+                <i class="fas fa-user-check"></i> В друзьях
             </button>
-        </div>
+
+        {% elif user.out_friend_request %}
+            <button class="btn btn-secondary btn-sm" disabled title="Запрос отправлен">
+                <i class="fas fa-clock"></i> Запрос отправлен
+            </button>
+
+        {% elif user.in_friend_request %}
+            <button class="btn btn-success btn-sm accept-request" onclick="acceptFriendRequest({{ user.id }})" title="Принять запрос">
+                 <a href="{% url 'accept_friend_request' username=user.username %}">
+                <i class="fas fa-check"></i> Принять
+                </a>
+            </button>
+            <button class="btn btn-danger btn-sm decline-request" onclick="declineFriendRequest({{ user.id }})" title="Отклонить запрос">
+                  <a href="{% url 'decline_friend_request' username=user.username %}" style="text-decoration:none; color:white;">
+                <i class="fas fa-times"></i> Отклонить
+                  </a>
+            </button>
+
+        {% elif user.declined_request %}
+            <button class="btn btn-info btn-sm" onclick="restoreFriendRequest({{ user.id }})" title="Восстановить запрос">
+                  <a href="{% url 'restore_friend_request' username=user.username%}" style="text-decoration:none; color:white;">
+                <i class="fas fa-undo"></i> Восстановить
+                  </a>
+            </button>
+
+        {% else %}
+            <button class="btn btn-success btn-sm" onclick="sendFriendRequest({{ user.id }})" title="Добавить в друзья">
+                <i class="fas fa-user-plus"></i> Добавить
+            </button>
+        {% endif %}
     </div>
+</div>
 {% endfor %}
     </div>
 <!-- Modal -->
