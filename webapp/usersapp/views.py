@@ -46,6 +46,20 @@ def RegForm_Func(request):
 
     return render(request, 'usersapp/regform.html', {'form': form})
 
+def check_email(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def check_username(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        exists = User.objects.filter(username=username).exists()
+        return JsonResponse({'exists': exists})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 def email_confirmation_view(request):
     user_id = request.session.get('user_id_to_confirm')

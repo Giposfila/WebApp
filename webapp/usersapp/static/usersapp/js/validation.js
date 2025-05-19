@@ -1,85 +1,121 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Элементы формы
-    const password1 = document.querySelector('#id_password1');
-    const password2 = document.querySelector('#id_password2');
-    const username = document.querySelector('#id_username');
-    const email = document.querySelector('#id_email');
-    const form = document.querySelector('form');
+// Функция для отображения подсказок
+function showHint(element, message, isError = false) {
+    const hintId = `${element.id}-hint`;
+    let hint = document.getElementById(hintId);
+    if (!hint) {
+        hint = document.createElement('div');
+        hint.id = hintId;
+        hint.className = 'hint';
+        element.parentNode.appendChild(hint);
+    }
+    hint.textContent = message;
+    hint.style.color = isError ? '#e74c3c' : '#2ecc71';
+    return hint;
+}
 
-    // Создаем контейнеры для подсказок
-    const createHint = (field, text = '', isError = false) => {
-        let hint = field.nextElementSibling;
-        if (!hint || !hint.classList.contains('hint')) {
-            hint = document.createElement('div');
-            hint.className = 'hint';
-            field.parentNode.insertBefore(hint, field.nextSibling);
-        }
-        hint.textContent = text;
-        hint.style.color = isError ? '#e74c3c' : '#2ecc71';
-        return hint;
-    };
+// Валидация пароля
+function validatePassword(password) {
+    if (password.length < 8) {
+        return { valid: false, message: 'Пароль слишком короткий (минимум 8 символов)' };
+    }
+    if (/^\d+$/.test(password)) {
+        return { valid: false, message: 'Пароль не может состоять только из цифр' };
+    }
+    if (!/[A-Za-z]/.test(password)) {
+        return { valid: false, message: 'Добавьте буквы для надежности' };
+    }
+    return { valid: true, message: 'Пароль надежный' };
+}
 
-    // Валидация пароля
-    password1.addEventListener('input', function() {
-        const value = this.value;
-        let hint = '';
-        let isError = false;
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('register-form');
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const username = document.getElementById('id_username');
+    const email = document.getElementById('id_email');
+    const captchaInput = document.querySelector('input[name="captcha_1"]');
 
-        if (value.length < 8) {
-            hint = 'Пароль слишком короткий (минимум 8 символов)';
-            isError = true;
-        } else if (/^\d+$/.test(value)) {
-            hint = 'Пароль не может состоять только из цифр';
-            isError = true;
-        } else if (!/[A-Za-z]/.test(value)) {
-            hint = 'Добавьте буквы для надежности';
-            isError = true;
-        }
-
-        createHint(this, hint, isError);
+    // Динамическая валидация пароля
+    password1.addEventListener('input', function () {
+        const validation = validatePassword(this.value);
+        showHint(this, validation.message, !validation.valid);
     });
 
     // Проверка совпадения паролей
-    password2.addEventListener('input', function() {
-        const hint = createHint(this);
-        if (password1.value !== this.value) {
-            hint.textContent = 'Пароли не совпадают';
-            hint.style.color = '#e74c3c';
+    password2.addEventListener('input', function () {
+        if (this.value === '') {
+            showHint(this, '');
+            return;
+        }
+        if (password1.value === '') {
+            showHint(this, 'Введите пароль выше', true);
+            return;
+        }
+        if (this.value !== password1.value) {
+            showHint(this, 'Пароли не совпадают', true);
         } else {
-            hint.textContent = 'Пароли совпадают';
-            hint.style.color = '#2ecc71';
+            showHint(this, 'Пароли совпадают');
         }
     });
 
-    // Проверка уникальности email/username (после отправки формы)
-    form.addEventListener('submit', async function(e) {
+    // AJAX-проверка username и email
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        let isError = false;
+        let isValid = true;
 
-        // Проверка email через AJAX
-        const emailCheck = await fetch('/check-email/', {
+        // Проверка email
+        const emailResponse = await fetch('/check-email/', {
             method: 'POST',
-            headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
-            body: new URLSearchParams({ email: email.value })
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `email=${encodeURIComponent(email.value)}`
         });
-        const emailResult = await emailCheck.json();
-        if (emailResult.exists) {
-            createHint(email, 'Этот email уже занят', true);
-            isError = true;
+        const emailData = await emailResponse.json();
+        if (emailData.exists) {
+            showHint(email, 'Этот email уже занят', true);
+            isValid = false;
         }
 
         // Проверка username
-        const usernameCheck = await fetch('/check-username/', {
+        const usernameResponse = await fetch('/check-username/', {
             method: 'POST',
-            headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
-            body: new URLSearchParams({ username: username.value })
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `username=${encodeURIComponent(username.value)}`
         });
-        const usernameResult = await usernameCheck.json();
-        if (usernameResult.exists) {
-            createHint(username, 'Это имя пользователя уже занято', true);
-            isError = true;
+        const usernameData = await usernameResponse.json();
+        if (usernameData.exists) {
+            showHint(username, 'Это имя пользователя уже занято', true);
+            isValid = false;
         }
 
-        if (!isError) this.submit();
+        // Проверка капчи
+        if (captchaInput && captchaInput.value.trim().length === 0) {
+            showHint(captchaInput, 'Капча введена неверно', true);
+            isValid = false;
+        }
+
+        if (isValid) this.submit();
+    });
+
+    // Показываем ошибку капчи при загрузке, если она была до этого
+    window.addEventListener('load', function () {
+        const captchaInput = document.querySelector('input[name="captcha_1"]');
+        if (captchaInput && captchaInput.dataset.error === 'true') {
+            showHint(captchaInput, 'Капча введена неверно', true);
+        }
     });
 });
+
+// Очистка ошибки капчи при вводе
+const captchaInput = document.querySelector('input[name="captcha_1"]');
+if (captchaInput) {
+    captchaInput.addEventListener('input', function () {
+        const hint = document.getElementById('captcha-hint');
+        if (hint) hint.textContent = '';
+    });
+}

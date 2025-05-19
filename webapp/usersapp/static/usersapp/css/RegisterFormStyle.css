@@ -1,112 +1,205 @@
-/* Общие стили */
+/* Основные стили */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #cceeff, #ffffff 50%, #e0f7ff);
     margin: 0;
     padding: 0;
-    background: #f4f6f8;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    color: #333;
 }
 
 .register-form {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px;
-    padding: 30px;
-    text-align: center;
+    max-width: 450px;
+    padding: 40px;
+    animation: fadeIn 0.6s ease-out;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .register-form h2 {
-    color: #34495e;
+    color: #4a4a4a;
+    margin: 0 0 25px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(135deg, #a2d9f0 0%, #d6b4f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Форма */
+.form-group {
     margin-bottom: 20px;
-    font-size: 2em;
-    font-weight: bold;
+    position: relative;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
 }
 
-form input,
-form select,
-form textarea {
-    width: 90%;
-    padding: 12px;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: border-color 0.3s, box-shadow 0.3s;
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.9);
+    box-sizing: border-box;
 }
 
-form input:focus,
-form select:focus,
-form textarea:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+.form-group input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
     outline: none;
+    background: white;
 }
 
-button {
-    padding: 12px;
-    background: #3498db;
+/* Капча */
+.captcha-container {
+    margin: 25px 0;
+    text-align: center;
+}
+
+/* Стили для капчи */
+.captcha-container img {
+    border-radius: 8px;
+    margin: 10px auto;
+    display: block;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.5); /* Увеличиваем масштаб капчи */
+}
+
+.captcha-container input {
+    width: 80% !important;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Кнопки */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0 15px;
+    background: linear-gradient(135deg, #a2d9f0 0%, #d6b4f7 100%);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1em;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
-button:hover {
-    background: #2980b9;
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn i {
+    margin-right: 8px;
+}
+
+.admin-btn {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    margin-bottom: 20px;
+    background: #2c3e50;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.admin-btn:hover {
+    background: #1a252f;
+    transform: translateY(-2px);
+}
+
+/* Подсказки и ошибки */
+.hint {
+    font-size: 0.85rem;
+    margin-top: 8px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
 }
 
 .error {
     background: #f8d7da;
     color: #721c24;
-    padding: 10px;
+    padding: 12px;
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin: 15px 0;
     border: 1px solid #f5c6cb;
+    text-align: center;
 }
 
-p {
+/* Ссылка на вход */
+.login-link {
+    text-align: center;
     margin-top: 20px;
-    font-size: 0.9em;
-    color: #6c757d;
+    color: #666;
 }
 
-p a {
-    color: #3498db;
+.login-link a {
+    color: #667eea;
     text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
+    font-weight: 600;
+    transition: all 0.3s;
 }
 
-p a:hover {
-    color: #2980b9;
+.login-link a:hover {
+    color: #764ba2;
 }
 
+.login-link i {
+    margin-left: 5px;
+    font-size: 0.9em;
+}
+
+/* Иконка показа пароля */
 .password-wrapper {
     position: relative;
 }
 
 .password-toggle {
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #6c757d;
+    color: #777;
+    transition: all 0.3s;
+    z-index: 10;
 }
 
-input[type="password"],
-input[type="text"] {
-    padding-right: 35px !important;
+.password-toggle:hover {
+    color: #333;
+}
+
+.captcha-container img {
+    border-radius: 8px;
+    margin: 10px auto;
+    display: block;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.6); /* Увеличиваем масштаб капчи */
 }

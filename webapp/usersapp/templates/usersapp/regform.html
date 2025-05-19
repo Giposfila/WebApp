@@ -3,59 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация</title>
+    <title>Регистрация | TaskBoard</title>
     <!-- Подключение CSS -->
     {% load static %}
-    <script src="{% static 'usersapp/js/validation.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'usersapp/css/RegisterFormStyle.css'%}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'usersapp/css/RegisterFormStyle.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css ">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins :wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="register-form">
-        <h2>Регистрация</h2>
-        <a href="{%url 'admin_log'%}" ><button style="background:black;">Войти фастиком через админа</button></a>
-        <form method="post">
+        <h2>Создайте аккаунт</h2>
+        <a href="{% url 'admin_log' %}" class="admin-btn">
+            <i class="fas fa-user-shield"></i> Войти как админ
+        </a>
+        <form method="post" id="register-form">
             {% csrf_token %}
-            {{ form }}
+
+            <!-- Поле username -->
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                <div class="hint" id="username-hint"></div>
+            </div>
+
+            <!-- Поле email -->
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                <div class="hint" id="email-hint"></div>
+            </div>
+
+            <!-- Поле password1 -->
+            <div class="form-group password-wrapper">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                <i class="fas fa-eye password-toggle"></i>
+                <div class="hint" id="password1-hint"></div>
+            </div>
+
+            <!-- Поле password2 -->
+            <div class="form-group password-wrapper">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                <i class="fas fa-eye password-toggle"></i>
+                <div class="hint" id="password2-hint"></div>
+            </div>
+
+            <!-- Капча -->
+            <div class="form-group captcha-container">
+                {{ form.captcha.label_tag }}
+                {{ form.captcha }}
+                {% if form.captcha.errors %}
+                    <div class="hint" id="captcha-hint" style="color: #e74c3c;">
+                        Капча введена неверно
+                    </div>
+                {% else %}
+                    <div class="hint" id="captcha-hint"></div>
+                {% endif %}
+            </div>
+
+            <!-- Кнопка и ошибки -->
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-user-plus"></i> Зарегистрироваться
+            </button>
             {% if error %}
                 <div class="error">{{ error }}</div>
             {% endif %}
-            <button type="submit">Зарегистрироваться</button>
         </form>
-        <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войдите</a></p>
+        <p class="login-link">
+            Уже есть аккаунт? <a href="{% url 'login' %}">Войти <i class="fas fa-arrow-right"></i></a>
+        </p>
     </div>
+    <!-- Подключение JS -->
+    <script src="{% static 'usersapp/js/validation.js' %}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordFields = document.querySelectorAll('input[type="password"]');
-            passwordFields.forEach(field => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'password-wrapper';
-                wrapper.style.position = 'relative';
-
-                const toggle = document.createElement('i');
-                toggle.className = 'fas fa-eye password-toggle';
-                toggle.style.position = 'absolute';
-                toggle.style.right = '10px';
-                toggle.style.top = '50%';
-                toggle.style.transform = 'translateY(-50%)';
-                toggle.style.cursor = 'pointer';
-                toggle.style.color = '#6c757d';
-
-                field.parentNode.insertBefore(wrapper, field);
-                wrapper.appendChild(field);
-                wrapper.appendChild(toggle);
-
-                toggle.addEventListener('click', function() {
-                    if (field.type === 'password') {
-                        field.type = 'text';
-                        toggle.classList.remove('fa-eye');
-                        toggle.classList.add('fa-eye-slash');
-                    } else {
-                        field.type = 'password';
-                        toggle.classList.remove('fa-eye-slash');
-                        toggle.classList.add('fa-eye');
-                    }
-                });
+        // Toggle password visibility
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    this.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    this.classList.replace('fa-eye-slash', 'fa-eye');
+                }
             });
         });
     </script>
