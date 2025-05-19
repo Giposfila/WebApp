@@ -27,7 +27,7 @@ class UsersForm(UserCreationForm):
 
 class LoginForm(forms.Form):
     username = forms.CharField(
-        label="Имя пользователя",
+        label="Логин / Email",
         max_length=150,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
@@ -39,19 +39,19 @@ class LoginForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username')
+        username_or_email = cleaned_data.get('username')
         password = cleaned_data.get('password')
 
-        if username and password:
-            # Проверяем, существует ли пользователь с таким именем и паролем
-            user = authenticate(username=username, password=password)
-            if user is None:
-                raise forms.ValidationError("Неверное имя пользователя или пароль")
-            elif not user.is_active:
-                raise forms.ValidationError("Пользователь не активен")
-            else:
-                # Сохраняем пользователя в cleaned_data для дальнейшего использования
-                cleaned_data['user'] = user
+        if username_or_email and password:
+            try:
+                user = User.objects.get(Q(username=username_or_email) | Q(email=username_or_email))
+                if not user.check_password(password):
+                    raise forms.ValidationError("Неверный пароль")
+                elif not user.is_active:
+                    raise forms.ValidationError("Пользователь не активен")
+                self.cleaned_data['user'] = user
+            except User.DoesNotExist:
+                raise forms.ValidationError("Пользователь не найден")
         return cleaned_data
 
 class ChangeUserForm(forms.ModelForm):

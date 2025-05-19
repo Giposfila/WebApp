@@ -12,6 +12,8 @@ import datetime
 from . import models
 from .forms import *
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+
 def BlankFunc(request):
     return redirect('/registration/')
 
@@ -139,6 +141,31 @@ def login_view(request):
     else:
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
+
+@csrf_exempt
+def login_check_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        errors = {}
+
+        if not user:
+            errors['username'] = 'Неверное имя пользователя или пароль'
+
+        if not username:
+            errors['username'] = 'Введите логин или email'
+        if not password:
+            errors['password'] = 'Введите пароль'
+
+        if errors:
+            return JsonResponse({'success': False, 'errors': errors})
+
+        login(request, user)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'errors': {'general': 'Ошибка запроса'}})
 
 def forgot_password_view(request):
     email_confirmation_view(request)

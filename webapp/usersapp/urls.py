@@ -2,6 +2,7 @@ from django.urls import path, include
 from  . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import login_check_view
 urlpatterns = [
     path('', views.BlankFunc),
     path('admin_log/', views.Admin_button, name='admin_log'),
@@ -9,6 +10,7 @@ urlpatterns = [
     path('email-confirmation/', views.email_confirmation_view, name='email_confirmation'),
     path('resend-code/', views.resend_code_view, name='resend_code'),
     path('login/', views.login_view, name='login'),
+    path('check-login/', login_check_view, name='check_login'),
     path('forgotpassword/', views.forgot_password_view, name='forgotpassword'),
     path('check-email/', views.check_email, name='check_email'),
     path('check-username/', views.check_username, name='check_username'),
