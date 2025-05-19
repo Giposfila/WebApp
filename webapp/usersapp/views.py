@@ -58,6 +58,7 @@ def email_confirmation_view(request):
         form = EmailConfirmationForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data['code']
+            request.session['user_id_to_confirm'] = user.id
             try:
                 confirmation = EmailConfirmation.objects.get(
                     user=user,
