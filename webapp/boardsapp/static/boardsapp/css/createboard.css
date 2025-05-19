@@ -9,12 +9,21 @@
     max-width: 600px;
 }
 
+.form-card.dark-theme {
+    background: #1e1e1e;
+}
+
 .form-title {
     color: #2c3e50;
     text-align: center;
     margin-bottom: 25px;
     font-size: 24px;
     font-weight: 600;
+}
+
+.form-title.dark-theme {
+    color: white;
+
 }
 
 /* Стили для полей формы */
@@ -34,6 +43,10 @@
     font-weight: 500;
     color: #4a5568;
     font-size: 14px;
+}
+
+.form-field label.dark-theme {
+    color: white;
 }
 
 .form-field input,

@@ -94,6 +94,10 @@
     padding: 20px;
 }
 
+.user-list-container.dark-theme {
+    background: #121212;
+}
+
 /* Адаптация для мобильных устройств */
 @media (max-width: 768px) {
     .input-group {
@@ -133,6 +137,11 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.user-card.dark-theme {
+    background-color: #1e1e1e;
+}
+
 
 .user-card:hover {
     transform: translateY(-2px);

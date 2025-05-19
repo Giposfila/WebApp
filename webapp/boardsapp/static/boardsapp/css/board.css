@@ -101,6 +101,10 @@ text-align:center;
     display: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
+.board-description.dark-theme {
+background:#1e1e1e;
+}
+
 
 .description-text {
     white-space: pre-line;
@@ -124,6 +128,9 @@ text-align:center;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.task-card.dark-theme {
+    background: #1e1e1e;
+}
 .task-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -150,12 +157,20 @@ text-align:center;
     overflow:hidden;
 }
 
+.task-description.dark-theme {
+    color: white;
+}
+
 .task-info {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
     font-size: 0.9em;
     color: #777;
+}
+
+.task-info.dark-theme {
+    color: white;
 }
 
 .btn-edit {

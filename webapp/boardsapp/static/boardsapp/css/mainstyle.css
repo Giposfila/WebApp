@@ -160,12 +160,18 @@ header h1 {
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
+.sidebar.dark-theme {
+    background: #1e1e1e;
+}
 .sidebar h3 {
     color: #34495e;
     border-bottom: 2px solid #bdc3c7;
     padding-bottom: 10px;
     margin: 0 0 15px;
+}
+
+.sidebar h3.dark-theme {
+    color: white;
 }
 
 .group-item, .filter-item {
@@ -174,6 +180,10 @@ header h1 {
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.3s;
+}
+
+.group-item, .filter-item.dark-theme{
+color:white;
 }
 
 .group-item:hover {
@@ -307,6 +317,11 @@ header h1 {
     overflow: hidden; /* 弌从��于舒亠仄 于��, ��仂 于��仂亟亳� 亰舒 仗�亠亟亠仍� */
 }
 
+.board-card.dark-theme{
+    background-color:#1e1e1e;
+     border:none;
+}
+
 /* 亅��亠从� 仗�亳 仆舒于亠亟亠仆亳亳 仆舒 从舒��仂�从� */
 .board-card:hover {
     transform: translateY(-5px); /* �仂亟仆��亳亠 从舒��仂�从亳 */
@@ -334,12 +349,23 @@ header h1 {
     word-wrap: break-word;
 }
 
+.board-title.dark-theme {
+    color: white;
+}
+
+.board-title.dark-theme:hover {
+    color: black;
+}
+
 /* �仗亳�舒仆亳亠 从舒��仂�从亳 */
 .board-description {
     font-size: 0.8rem; /* �亠仆��亳亶 �舒亰仄亠� ��亳��舒 仂仗亳�舒仆亳� */
     color: #666; /* 丶于亠� �亠从��舒 */
     line-height: 1.2; /* �亠仆��亳亶 仄亠亢���仂�仆�亶 亳仆�亠�于舒仍 */
     margin-bottom: 10px; /* �亠仆��亳亶 仂����仗 仗仂亟 仂仗亳�舒仆亳亠仄 */
+}
+.board-description.dark-theme {
+    color: white;
 }
 
 /* �仆仂仗从亳 亟亠亶��于亳亶 */
@@ -381,6 +407,10 @@ header h1 {
     margin-left: auto; /* 丶亠仆��亳�仂于舒仆亳亠 */
     margin-right: auto; /* 丶亠仆��亳�仂于舒仆亳亠 */
 }
+.task-container.dark-theme{
+    background-color:#1e1e1e;
+    }
+
 
 /* 弌�亳仍� 亟仍� 亰舒亞仂仍仂于从舒 亰舒亟舒�亳 */
 .task-title {
@@ -391,13 +421,23 @@ header h1 {
     text-align: center; /* ���舒于仆亳于舒仆亳亠 仗仂 �亠仆��� */
 }
 
+.task-title.dark-theme{
+    color: white;
+    }
+
+
 /* 弌�亳仍� 亟仍� 仂仗亳�舒仆亳� 亰舒亟舒�亳 */
 .task-description {
     font-size: 16px; /* �舒亰仄亠� ��亳��舒 */
     color: #555555; /* 弌亠��亶 �于亠� �亠从��舒 */
     line-height: 1.5; /* �仆�亠�于舒仍 仄亠亢亟� ���仂从 */
     text-align: justify; /* ���舒于仆亳于舒仆亳亠 �亠从��舒 仗仂 �亳�亳仆亠 */
-    overflow: hidden; /* 弌从�
+    overflow: hidden;
+
+.task-description.dark-theme{
+    text-color: white;
+    }
+
 
 /* �仂仍亠亠 �仗亠�亳�亳�仆�亶 �亠仍亠从�仂� */
 .header-container h1 a.header-title-link {

@@ -329,6 +329,11 @@ function closeNotificationOnOutsideClick(e) {
     position: relative;
 }
 
+.modal-content.dark-theme {
+    background-color: #1e1e1e;
+}
+
+
 .close {
     position: absolute;
     right: 20px;
@@ -347,6 +352,9 @@ function closeNotificationOnOutsideClick(e) {
 .about-content h3 {
     margin-top: 20px;
     color: #2c3e50;
+}
+h3.dark-theme{
+color:white;
 }
 
 .about-content ul {
@@ -415,19 +423,33 @@ window.onclick = function(event) {
     function redirectToPage(url) {
     window.location.href = url;
 }
+</script>
+<script>
   const toggleButton = document.getElementById('theme-toggle');
   const body = document.body;
+  const allElements = document.querySelectorAll('*');
+  // Функция для применения темы ко всем элементам
+  function setThemeForAllElements(darkMode) {
+    allElements.forEach(element => {
+      if (darkMode) {
+        element.classList.add('dark-theme');
+      } else {
+        element.classList.remove('dark-theme');
+      }
+    });
+  }
 
   // Проверка сохранённой темы
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
-    body.classList.add('dark-theme');
+    setThemeForAllElements(true);
   }
 
   toggleButton.addEventListener('click', () => {
-    body.classList.toggle('dark-theme');
+    const isDarkNow = !document.documentElement.classList.contains('dark-theme');
+    setThemeForAllElements(isDarkNow);
 
-    if (body.classList.contains('dark-theme')) {
+    if (isDarkNow) {
       localStorage.setItem('theme', 'dark');
     } else {
       localStorage.setItem('theme', 'light');
