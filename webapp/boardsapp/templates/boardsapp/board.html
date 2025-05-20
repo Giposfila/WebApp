@@ -111,7 +111,7 @@
                 {% for member in members %}
                     <div class="member-item">
                         <div class="board-title">
-                            <a href="{% url 'profile-detail' username=member.username %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
+                            <a href="{% url 'profile-detail' username=member.username %}?back_url={{ request.get_full_path|urlencode }}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
                             <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
                             <span class="member-name">{{ member.username }}</span>
                             {% if  board.created_by == member %}

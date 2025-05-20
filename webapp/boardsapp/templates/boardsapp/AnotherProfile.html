@@ -59,8 +59,11 @@
             {% endif %}
             {%else%}
             {%endif%}
-            <button><a href="{% url 'main' %}" class="button">Вернуться на главную</a></button>
-
+            {%if request.GET.back_url%}
+            <button><a href="{{ request.GET.back_url }}" class="button">Вернуться</a></button>
+            {%else%}
+            <button><a href="{% url 'main' %}" class="button">Вернуться</a></button>
+            {%endif%}
             <!-- Выход — только если это профиль текущего пользователя -->
             {% if user == request.user %}
                 <form method="post" action="{% url 'logout' %}">

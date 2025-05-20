@@ -18,30 +18,66 @@
         </span>
     </h4>
     <h4>Дедлайн: {{task.deadline|default:"Отсутствует"}}</h4>
-    <h4>Задача для: {%for el in executors%}{{el}}; {%endfor%}</h4>
-    <h4>Создана:  <a href="{% url 'profile-detail' username=task.created_by %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">{{task.created_by}}</a></h4>
-<!-- Вывод файлов -->
-<h4>Файлы:</h4>
-<div class="attachments">
-    {% for file in task.attachments.all %}
-        <div class="attachment-card">
-            <a href="{{ file.file.url }}" download class="attachment-link">
-                <i class="fas fa-paperclip"></i>
-                <span class="attachment-name">{{ file.get_filename }}</span>
+   <div class="executors-section">
+    <h4>
+        Исполнители {{executors.count}}
+        <button type="button" class="toggle-btn" onclick="toggleSection('executorsList')">▶</button>
+    </h4>
+    <div id="executorsList" class="executors-list-wrapper collapsed">
+        {% for el in executors %}
+            <a href="{% url 'profile-detail' username=el.username %}?back_url={{ request.get_full_path|urlencode }}"  class="a">
+            <div class="attachment-card">
+                {% if el.profile.avatar %}
+                    <img src="{{ el.profile.avatar.url }}" alt="Аватар" class="profile-icon">
+                {% else %}
+                    <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
+                {% endif %}
+                {{el}}
+            </div>
             </a>
-
-            {% if user == file.uploaded_by or user == file.task.created_by %}
-                <form action="{% url 'delete-attachment' file.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-delete-file" onclick="return confirm('Вы уверены, что хотите удалить этот файл?')">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </form>
-            {% endif %}
+        {% empty %}
+            <p>Нет исполнителей.</p>
+        {% endfor %}
+    </div>
+</div>
+    <h4>Создана:</h4>
+                <a href="{% url 'profile-detail' username=task.created_by.username %}?back_url={{ request.get_full_path|urlencode }}"  class="a">
+        <div class="attachment-card">
+         {% if task.created_by.profile.avatar %}
+                                <img src="{{ task.created_by.profile.avatar.url }}" alt="Аватар" class="profile-icon">
+                            {% else %}
+                                <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
+                            {% endif %}
+        {{task.created_by.username}}
         </div>
-    {% empty %}
-        <p>Нет прикреплённых файлов.</p>
-    {% endfor %}
+        </a>
+  <div class="files-section">
+    <h4>
+        Файлы
+        <button type="button" class="toggle-btn" onclick="toggleSection('fileList')">▶</button>
+    </h4>
+    <div id="fileList" class="files-list-wrapper collapsed">
+        <div class="attachments">
+            {% for file in task.attachments.all %}
+                <div class="attachment-card">
+                    <a href="{{ file.file.url }}" download class="attachment-link">
+                        <i class="fas fa-paperclip"></i>
+                        <span class="attachment-name">{{ file.get_filename }}</span>
+                    </a>
+                    {% if user == file.uploaded_by or user == file.task.created_by %}
+                        <form action="{% url 'delete-attachment' file.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-delete-file" onclick="return confirm('Вы уверены, что хотите удалить этот файл?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>Нет прикреплённых файлов.</p>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 <!-- Форма загрузки файла -->
@@ -60,14 +96,13 @@
   <div class="comments-section">
     <h3>
         Комментарии {{task.comments.count}}
-        <button type="button" class="toggle-btn" onclick="toggleComments()">▼</button>
+        <button type="button" class="toggle-btn" onclick="toggleComments(this)">▶</button>
     </h3>
-
     <div id="commentList" class="comments-list-wrapper">
         {% if task.comments.all %}
             <div class="comments-list">
                 {% for comment in task.comments.all %}
-                 <a href="{% url 'profile-detail' username=comment.user.username %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
+                 <a href="{% url 'profile-detail' username=comment.user.username %}?back_url={{ request.get_full_path|urlencode }}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
                     <div class="comment">
                         <div class="comment-header">
                             {% if comment.user.profile.avatar %}
@@ -114,8 +149,43 @@
         {% endif %}
     </div>
 </div>
-
+</div>
 <style>
+
+    .a{
+    text-decoration:none;
+    color:black;
+    }
+
+    .executors-section,
+.files-section {
+    margin-top: 20px;
+}
+
+.executors-list-wrapper,
+.files-list-wrapper {
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    max-height: 500px; /* Высота до сворачивания */
+}
+
+.executors-list-wrapper.collapsed,
+.files-list-wrapper.collapsed {
+    max-height: 0;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 10px;
+    transition: transform 0.3s;
+}
+
+.toggle-btn.rotated {
+    transform: rotate(90deg);
+}
 
     .attachments {
     margin-top: 15px;
@@ -417,6 +487,22 @@ h3, p{
 }
 </style>
 <script>
+    function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const button = section.previousElementSibling.querySelector('.toggle-btn');
+    section.classList.toggle('collapsed');
+    button.classList.toggle('rotated');
+    button.textContent = section.classList.contains('collapsed') ? '▶' : '▼';
+}
+
+// По умолчанию скрыть все новые секции
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('executorsList').classList.add('collapsed');
+    document.getElementById('fileList').classList.add('collapsed');
+    document.querySelector('.toggle-btn[onclick="toggleSection(\'executorsList\')"]').textContent = '▶';
+    document.querySelector('.toggle-btn[onclick="toggleSection(\'fileList\')"]').textContent = '▶';
+});
+
 document.querySelector('.task-description').addEventListener('click', function() {
   this.classList.toggle('expanded');
 });
@@ -438,20 +524,18 @@ document.querySelector('.task-description').addEventListener('click', function()
   // Инициализируем высоту при загрузке страницы
   autoResize();
 });
+function toggleComments(button) {
+    const commentList = document.getElementById('commentList');
 
-     function toggleComments() {
-        const commentList = document.getElementById('commentList');
-        const button = document.querySelector('.toggle-btn');
+    // Переключаем класс collapsed
+    commentList.classList.toggle('collapsed');
 
-        // Переключаем класс collapsed
-        commentList.classList.toggle('collapsed');
+    // Меняем класс поворота
+    button.classList.toggle('rotated');
 
-        // Меняем стрелочку
-        button.classList.toggle('rotated');
-
-        // Меняем текст кнопки (или стрелку)
-        button.textContent = commentList.classList.contains('collapsed') ? '▶' : '▼';
-    }
+    // Меняем текст кнопки
+    button.textContent = commentList.classList.contains('collapsed') ? '▶' : '▼';
+}
 
     // По умолчанию сворачиваем
     document.addEventListener("DOMContentLoaded", function () {

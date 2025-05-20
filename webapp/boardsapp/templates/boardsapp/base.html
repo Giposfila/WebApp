@@ -26,7 +26,7 @@
         <div class="profile-container">
 
             <button class="profile-button">
-                <a href="{%url 'profile'%}">
+                <a href="{%url 'profile'%}?back_url={{ request.get_full_path|urlencode }}">
                        {% if user.profile.avatar %}
             <img src="{{ user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
         {% else %}
@@ -93,7 +93,7 @@
 <ul id="friends-list" class="friends-list">
     {% for friend in user.profile.friends.all %}
         <li class="friend-item" data-username="{{ friend.user.username }}">
-            <a href="{% url 'profile-detail' username=friend.user.username %}" class="friend-link">
+            <a href="{% url 'profile-detail' username=friend.user.username %}?back_url={{ request.get_full_path|urlencode }}" class="friend-link">
                 {% if friend.user.profile.avatar %}
                     <img src="{{ friend.user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
                 {% else %}
@@ -118,23 +118,23 @@
 
     <ul id="notifications-list" class="friends-list">
         <!-- Пример уведомления -->
-        {%for el in user.get_requests.all%}
-        {%if el.visible%}
-               <li class="notification-item" data-text="Новое уведомление от Ивана">
-            <a href="{% url 'profile-detail' username=el.from_user.username %}" class="friend-link">
-                <div class="friend-link-content">
-                    {% if el.from_user.profile.avatar %}
-                        <img src="{{ el.from_user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
-                    {% else %}
-                        <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
-                    {% endif %}
-                    <span class="username">{{ el.from_user.username }}</span>
-                    <span class="notification-text">Запрос в друзья</span>
-                </div>
-            </a>
-        </li>
-        {%endif%}
-               {%endfor%}
+       {%for el in user.get_requests.all%}
+{%if el.visible%}
+<li class="notification-item" data-username="{{ el.from_user.username }}">
+    <a href="{% url 'profile-detail' username=el.from_user.username %}?back_url={{ request.get_full_path|urlencode }}" class="friend-link">
+        <div class="friend-link-content">
+            {% if el.from_user.profile.avatar %}
+                <img src="{{ el.from_user.profile.avatar.url }}" alt="Аватар" class="profile-icon">
+            {% else %}
+                <img src="{% static 'usersapp/img/profileicon.png' %}" alt="Аватар" class="profile-icon">
+            {% endif %}
+            <span class="username">{{ el.from_user.username }}</span>
+            <span class="notification-text">Запрос в друзья</span>
+        </div>
+    </a>
+</li>
+{%endif%}
+{%endfor%}
     </ul>
 </div>
 
@@ -299,6 +299,16 @@
             item.style.display = username.includes(query) ? 'block' : 'none';
         });
     }
+
+        // Поиск уведомлений
+function filterNotifications(query) {
+    const items = document.querySelectorAll('.notification-item');
+    query = query.toLowerCase();
+    items.forEach(item => {
+        const username = item.getAttribute('data-username').toLowerCase();
+        item.style.display = username.includes(query) ? 'block' : 'none';
+    });
+}
 </script>
 
 <script>

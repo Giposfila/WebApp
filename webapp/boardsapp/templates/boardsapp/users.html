@@ -28,7 +28,7 @@
       {% for user in users %}
 <div class="user-card d-flex align-items-center justify-content-between">
     <!-- Левая часть: аватарка + имя -->
-    <a href="{% url 'profile-detail' username=user.username %}"  class="a">
+    <a href="{% url 'profile-detail' username=user.username %}?back_url={{ request.get_full_path|urlencode }}"  class="a">
         <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}"
               width="40" class="member-avatar rounded-circle me-3">
         <strong>{{ user.get_full_name|default:user.username }}</strong>
