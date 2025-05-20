@@ -262,3 +262,36 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         })
 
         return context
+
+def upload_attachment(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    # Проверка прав
+    if request.user != task.created_by and request.user != task.board.created_by:
+        messages.error(request, 'У вас нет прав прикреплять файлы к этой задаче.')
+        return redirect('task-detail', task_id=task.id)
+
+    if request.method == 'POST':
+        form = AttachmentForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = request.FILES['file']
+            # Указываем пользователя, который загрузил файл
+            Attachment.objects.create(task=task, file=uploaded_file, uploaded_by=request.user)
+            messages.success(request, 'Файл успешно загружен.')
+            return redirect('task-detail', pk=task.id)
+    else:
+        form = AttachmentForm()
+
+    return redirect('task-detail', pk=task.id)
+def delete_attachment(request, file_id):
+    file = get_object_or_404(Attachment, id=file_id)
+
+    # Проверка: только автор файла или создатель задачи может удалить
+    if request.user != file.uploaded_by and request.user != file.task.created_by:
+        messages.error(request, 'У вас нет прав удалить этот файл.')
+        return redirect('task-detail', pk=file.task.id)
+
+    task_id = file.task.id
+    file.delete()
+    messages.success(request, 'Файл успешно удален.')
+    return redirect('task-detail', pk=task_id)

@@ -406,6 +406,7 @@ color:white;
     max-width: 600px; /* �舒从�亳仄舒仍�仆舒� �亳�亳仆舒 */
     margin-left: auto; /* 丶亠仆��亳�仂于舒仆亳亠 */
     margin-right: auto; /* 丶亠仆��亳�仂于舒仆亳亠 */
+    overflow:hidden;
 }
 .task-container.dark-theme{
     background-color:#1e1e1e;
@@ -461,6 +462,7 @@ color:white;
     border-radius: 4px; /* �舒从��亞仍亠仆仆�亠 �亞仍� */
     transition: background-color 0.3s; /* �仍舒于仆�亶 仗亠�亠�仂亟 */
 }
+
 
 .btn-back:hover {
     background-color: #c0392b; /* 丐亠仄仆亠亠 仗�亳 仆舒于亠亟亠仆亳亳 */

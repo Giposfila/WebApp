@@ -20,6 +20,41 @@
     <h4>Дедлайн: {{task.deadline|default:"Отсутствует"}}</h4>
     <h4>Задача для: {%for el in executors%}{{el}}; {%endfor%}</h4>
     <h4>Создана:  <a href="{% url 'profile-detail' username=task.created_by %}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">{{task.created_by}}</a></h4>
+<!-- Вывод файлов -->
+<h4>Файлы:</h4>
+<div class="attachments">
+    {% for file in task.attachments.all %}
+        <div class="attachment-card">
+            <a href="{{ file.file.url }}" download class="attachment-link">
+                <i class="fas fa-paperclip"></i>
+                <span class="attachment-name">{{ file.get_filename }}</span>
+            </a>
+
+            {% if user == file.uploaded_by or user == file.task.created_by %}
+                <form action="{% url 'delete-attachment' file.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-delete-file" onclick="return confirm('Вы уверены, что хотите удалить этот файл?')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Нет прикреплённых файлов.</p>
+    {% endfor %}
+</div>
+
+<!-- Форма загрузки файла -->
+{% if user == task.created_by or user == task.board.created_by %}
+    <div class="upload-section">
+        <h4>Загрузить файл</h4>
+        <form method="post" action="{% url 'upload-attachment' task.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="file" required>
+            <button type="submit" class="btn-upload"><i class="fas fa-upload"></i> Загрузить</button>
+        </form>
+    </div>
+{% endif %}
 
     <!-- Секция комментариев -->
   <div class="comments-section">
@@ -81,6 +116,103 @@
 </div>
 
 <style>
+
+    .attachments {
+    margin-top: 15px;
+}
+
+.upload-section {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+.upload-section.dark-theme {
+    background-color: #1e1e1e;
+}
+
+.btn-upload {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-upload:hover {
+    background-color: #2980b9;
+}
+
+.attachment-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    max-width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.attachment-card.dark-theme {
+    background-color: #2e2e2e;
+}
+
+.attachment-card:hover {
+    transform: scale(1.02);
+    background-color: #f1f1f1;
+}
+
+.attachment-link {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.attachment-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Ограничь ширину */
+    display: inline-block;
+}
+
+.btn-delete-file {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.btn-delete-file:hover {
+    color: #c0392b;
+}
+
+.attachment-card.dark-theme:hover {
+ background-color: gray;
+}
+
+.attachment-card a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.attachment-card i {
+    margin-right: 8px;
+    color: #555;
+}
+
     .comments-list-wrapper {
     overflow: hidden;
     transition: max-height 0.4s ease-out;

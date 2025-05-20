@@ -181,10 +181,24 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
+  .notification-item.dark-theme {
+        background-color: #2e2e2e;
+
+    }
+
+  .friend-item.dark-theme {
+        background-color: #2e2e2e;
+
+    }
 
 .notification-item:hover {
     background-color: #f7f9fc;
 }
+
+.notification-item.dark-theme:hover {
+    background-color: #2e2e2e;
+}
+
     .friend-link {
     display: flex;
     align-items: center;
@@ -216,6 +230,11 @@
     overflow-y: auto;
 }
 
+.friends-sidebar.dark-theme {
+    background-color: #1e1e1e;
+
+}
+
 .friends-sidebar.active {
     right: 0; /* Показываем поверх контента */
 }
@@ -244,6 +263,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     cursor: pointer;
+    overflow:hidden;
 }
 </style>
 <script>

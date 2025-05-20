@@ -17,4 +17,6 @@ urlpatterns = [
     path('tasks/<int:pk>/confirm/', views.confirm_completion, name='confirm-completion'),
     path('board/<int:board_id>/task_create/', views.create_task, name='create-task'),
     path('/profile/<str:username>/', ProfileDetailView.as_view(), name='profile-detail'),
+    path('task/<int:task_id>/upload/', views.upload_attachment, name='upload-attachment'),
+    path('attachment/<int:file_id>/delete/', views.delete_attachment, name='delete-attachment'),
 ]

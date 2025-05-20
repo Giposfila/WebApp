@@ -7,6 +7,8 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+
+from boardsapp.models import Attachment, Task
 from .models import EmailConfirmation, FriendRequest
 import datetime
 from . import models

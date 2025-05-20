@@ -119,3 +119,6 @@ class EditTaskForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if board is not None:
             self.fields['created_to'].queryset = board.members.all()
+
+class AttachmentForm(forms.Form):
+    file = forms.FileField(label='Выберите файл')

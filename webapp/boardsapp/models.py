@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+import os
 
 
 
@@ -31,10 +32,21 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 class Attachment(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Название файла', blank=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='attachments')
-    file_url = models.URLField()
+    file = models.FileField(upload_to='uploads/%Y/%m/%d/', verbose_name='Файл', null=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='attachments')
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    def save(self, *args, **kwargs):
+        # Получаем имя файла без пути и расширения
+        if not self.name:
+            filename = os.path.splitext(os.path.basename(self.file.name))[0]
+            self.name = filename
+        super().save(*args, **kwargs)
+    def get_filename(self):
+        return os.path.basename(self.file.name)
+    def __str__(self):
+        return self.name
 
 class Comment(models.Model):
     content = models.TextField("Содержание", null=True)
