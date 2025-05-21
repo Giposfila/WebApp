@@ -8,6 +8,10 @@ body {
     line-height: 1.6;
 }
 
+body.dark-theme {
+    background-color: #121212;
+}
+
 h2 {
     margin-bottom: 20px;
     font-size: 24px;
@@ -15,10 +19,16 @@ h2 {
     text-align: center;
 }
 
+h2.dark-theme {
+color:white;
+}
+
 .form-group {
     margin-bottom: 15px;
     text-align: left;
+    border:none;
 }
+
 
 /* Контейнер формы */
 form {
@@ -28,6 +38,9 @@ form {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.forma.dark-theme {
+    background-color: #1e1e1e;
 }
 
 /* Стиль для аватара */
@@ -48,6 +61,11 @@ label {
     display: block;
     margin-bottom: 5px;
 }
+label.dark-theme {
+    color: white;
+
+}
+
 
 /* Стиль для полей ввода */
 input[type="text"],
@@ -55,10 +73,12 @@ input[type="email"],
 input[type="file"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
     transition: border-color 0.3s ease;
+}
+input[type="file"] {
+color:white;
 }
 
 input[type="text"]:focus,
@@ -99,3 +119,46 @@ button[type="submit"]:hover {
         padding: 8px;
     }
 }
+.profile-edit-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+.profile-edit-container.dark-theme {
+        background: #1e1e1e;
+}
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn-save {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-back {
+        background-color: #2196F3;
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .profile-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }

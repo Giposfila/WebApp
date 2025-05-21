@@ -75,6 +75,16 @@
     </div>
 
 <script>
+     document.addEventListener('DOMContentLoaded', function () {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      // Добавьте класс 'dark-theme' всем необходимым элементам
+      document.querySelectorAll('*').forEach(el => el.classList.add('dark-theme'));
+    }
+  });
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const logoutForm = document.querySelector('form[action="{% url 'logout' %}"]');
     if (logoutForm) {

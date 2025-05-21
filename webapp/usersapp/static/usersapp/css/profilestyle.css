@@ -8,6 +8,10 @@ body {
     line-height: 1.6;
 }
 
+body.dark-theme {
+        background-color: #121212;
+}
+
 .profile-container {
     max-width: 600px;
     margin: 50px auto;
@@ -17,11 +21,20 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
+
+.profile-container.dark-theme {
+        background-color: #1e1e1e;
+}
+
 h2 {
     margin-bottom: 20px;
     font-size: 24px;
     color: #444;
 }
+h2.dark-theme {
+color:white;
+}
+
 
 .profile-avatar {
     width: 100px;
@@ -36,6 +49,10 @@ h2 {
     font-size: 16px;
     color: #666;
     margin-bottom: 20px;
+}
+
+.profile-email.dark-theme {
+color:white;
 }
 
 /* Информация о пользователе */
@@ -54,10 +71,18 @@ h2 {
     font-weight: bold;
     color: #555;
 }
+.info-label.dark-theme {
+color:white;
+}
+
 
 .info-value {
     color: #777;
 }
+.info-value.dark-theme {
+color:white;
+}
+
 
 /* Кнопки действий */
 .profile-actions {
