@@ -6,30 +6,31 @@
     <!-- Подключение CSS -->
     {% load static %}
     <link rel="stylesheet" href="{% static 'usersapp/css/loginstyle.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css ">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins :wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="register-form">
     <h2>Войдите в аккаунт</h2>
-    <form method="post" id="login-form">
+    <form method="post" id="login-form" action="{% url 'login' %}">
         {% csrf_token %}
         <div class="form-group">
             {{ form.username.label_tag }}
             {{ form.username }}
-            <div class="hint" id="username-hint"></div>
+            <div class="hint" id="id_username-hint"></div>
         </div>
         <div class="form-group password-wrapper">
             {{ form.password.label_tag }}
             {{ form.password }}
             <i class="fas fa-eye password-toggle"></i>
-            <div class="hint" id="password-hint"></div>
+            <div class="hint" id="id_password-hint"></div>
         </div>
         <!-- Капча -->
         <div class="form-group captcha-container">
             {{ form.captcha.label_tag }}
             {{ form.captcha }}
+            <div class="hint" id="captcha-hint"></div>
         </div>
         <button type="submit" class="submit-btn">
             <i class="fas fa-sign-in-alt"></i> Войти
@@ -46,23 +47,21 @@
     </p>
 </div>
 
-
 <!-- Подключение JS -->
 <script src="{% static 'usersapp/js/login_validation.js' %}"></script>
-<script src="{% static 'usersapp/js/password_toggle.js' %}"></script>
 <script>
     document.querySelectorAll('.password-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function () {
-        const input = this.previousElementSibling;
-        if (input.type === 'password') {
-            input.type = 'text';
-            this.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-            input.type = 'password';
-            this.classList.replace('fa-eye-slash', 'fa-eye');
-        }
+        toggle.addEventListener('click', function () {
+            const input = this.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                this.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
     });
-   });
 </script>
 
 </body>

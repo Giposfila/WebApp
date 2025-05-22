@@ -144,30 +144,34 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'usersapp/login.html', {'form': form})
 
-@csrf_exempt
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth import authenticate
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
+
+@require_http_methods(["POST"])
 def login_check_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+    errors = {}
+    username = request.POST.get('username')
+    password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+    if not username:
+        errors['username'] = 'Введите логин или email'
+    if not password:
+        errors['password'] = 'Введите пароль'
 
-        errors = {}
+    if errors:
+        return JsonResponse({'success': False, 'errors': errors})
 
-        if not user:
-            errors['username'] = 'Неверное имя пользователя или пароль'
+    user = authenticate(request, username=username, password=password)
+    if not user:
+        errors['username'] = 'Неверное имя пользователя или пароль'
+        return JsonResponse({'success': False, 'errors': errors})
 
-        if not username:
-            errors['username'] = 'Введите логин или email'
-        if not password:
-            errors['password'] = 'Введите пароль'
-
-        if errors:
-            return JsonResponse({'success': False, 'errors': errors})
-
-        login(request, user)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'errors': {'general': 'Ошибка запроса'}})
+    return JsonResponse({
+        'success': True,
+        'csrf_token': get_token(request)  # Возвращаем новый CSRF токен
+    })
 
 def forgot_password_view(request):
     email_confirmation_view(request)
