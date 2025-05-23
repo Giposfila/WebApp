@@ -23,7 +23,8 @@ urlpatterns = [
     path('profile/accept/<str:username>/', views.accept_friend_request, name='accept_friend_request'),
     path('profile/decline/<str:username>/', views.decline_friend_request, name='decline_friend_request'),
     path('profile/remove/<str:username>/', views.remove_friend, name='remove_friend'),
-    path('friend/restore/<str:username>/', views.restore_friend_request, name='restore_friend_request')
+    path('friend/restore/<str:username>/', views.restore_friend_request, name='restore_friend_request'),
+    path('boards/<int:board_id>/add-member/<int:user_id>/', views.add_member_to_board, name='add-member-to-board'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
