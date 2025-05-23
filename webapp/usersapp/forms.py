@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate
 from django.db.models import Q  # Добавляем этот импорт
 
 
+
 class UsersForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(), label='Имя пользователя', help_text=None)
     email = forms.EmailField(required=True, label='Email')
