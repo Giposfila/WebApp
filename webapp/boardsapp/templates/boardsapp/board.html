@@ -123,7 +123,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <a href="{% url 'users' %}?back_url={{ request.get_full_path|urlencode }}">
+            <a href="{% url 'users' %}?back_url={{ request.get_full_path|urlencode }}&board_id={{ board.id }}">
                 <button class="add-member-btn">Добавить участника</button>
             </a>
         </div>

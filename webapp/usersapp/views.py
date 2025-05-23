@@ -8,7 +8,7 @@ from django.utils.crypto import get_random_string
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 
-from boardsapp.models import Attachment, Task
+from boardsapp.models import Attachment, Task, Board
 from .models import EmailConfirmation, FriendRequest
 import datetime
 from . import models
@@ -208,9 +208,11 @@ def ProfileEdit_view(request):
         'profile':user.profile
     }
     return render(request, 'boardsapp/profile_edit.html', context)
+@login_required
 def users_search(request):
     current_user = request.user
-    query = request.GET.get('q', '')  # Получаем строку поиска
+    query = request.GET.get('q', '')
+    board_id = request.GET.get('board_id')  # Получаем ID доски из параметров
 
     # Получаем список ID прямых друзей текущего пользователя
     direct_friends = list(
@@ -251,6 +253,15 @@ def users_search(request):
     ).values_list('from_user', flat=True)
     declined_request_ids = set(declined_requests)
 
+    # Получаем участников доски, если board_id указан
+    board_members = []
+    if board_id:
+        try:
+            board = Board.objects.get(id=board_id)
+            board_members = board.members.all()
+        except Board.DoesNotExist:
+            pass
+
     # Добавляем статусы дружбы для каждого пользователя
     users_list = []
     for user in users:
@@ -262,7 +273,9 @@ def users_search(request):
 
     return render(request, 'boardsapp/users.html', {
         'users': users_list,
-        'query': query
+        'query': query,
+        'board_id': board_id,
+        'board_members': board_members
     })
 from django.contrib import messages
 @login_required

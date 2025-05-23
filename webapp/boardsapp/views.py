@@ -295,3 +295,22 @@ def delete_attachment(request, file_id):
     file.delete()
     messages.success(request, 'Файл успешно удален.')
     return redirect('task-detail', pk=task_id)
+
+
+@login_required
+def add_member_to_board(request, board_id, user_id):
+    board = get_object_or_404(Board, id=board_id)
+    user_to_add = get_object_or_404(User, id=user_id)
+
+    # Проверяем, что текущий пользователь - создатель доски
+    if request.user != board.created_by:
+        return JsonResponse({'status': 'error', 'message': 'Только создатель доски может добавлять участников'})
+
+    # Проверяем, не является ли пользователь уже участником
+    if board.members.filter(id=user_id).exists():
+        return JsonResponse({'status': 'error', 'message': 'Пользователь уже является участником доски'})
+
+    # Добавляем пользователя в доску
+    board.members.add(user_to_add)
+
+    return JsonResponse({'status': 'success', 'message': 'Пользователь успешно добавлен в доску'})

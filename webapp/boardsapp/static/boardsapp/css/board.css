@@ -10,9 +10,54 @@ h2{
 white-space: normal;
 word-wrap: break-word;
 text-align:center;
+  display: inline-block;
+    /* Для старых версий Safari и iOS */
+  -webkit-line-clamp: 3;    /* Ограничиваем до 3 строк */
+  -webkit-box-orient: vertical; /* Содержимое внутри блока ориентируется вертикально */
+  overflow: hidden;         /* Скрываем переполнение */
+  text-overflow: ellipsis;  /* Добавляем многоточие в конце, если текст обрезается */
+  line-clamp: 3;            /* Современный стандарт (работает не везде без вендорных префиксов) */
+max-width:20%
 }
 .board-container {
     padding: 20px;
+    width: 80%;
+}
+
+
+.scrollable-checkbox-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 0px;
+}
+
+.scrollable-checkbox-list label {
+    display: block;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.2s ease;
+}
+.scrollable-checkbox-list.dark-theme {
+background-color: #1e1e1e
+}
+
+
+.scrollable-checkbox-list label:hover {
+    background-color: #e9ecef;
+}
+
+
+.scrollable-checkbox-list label.dark-theme:hover {
+    background-color: #2e2e2e;
+}
+
+.scrollable-checkbox-list input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 /* Верхняя панель */
@@ -22,7 +67,7 @@ text-align:center;
     justify-content: space-between;
     padding: 15px 0;
     border-bottom: 1px solid #e0e0e0;
-    width: auto;
+    width: 100%;
 }
 
 .back-btn {
@@ -222,7 +267,6 @@ background:#1e1e1e;
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
-    resize: vertical;
 }
 
 .modal textarea {
