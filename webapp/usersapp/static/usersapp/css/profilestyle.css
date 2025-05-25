@@ -12,6 +12,19 @@ body.dark-theme {
         background-color: #121212;
 }
 
+.info-value {
+  white-space: normal;            /* Разрешаем переносы строк */
+  word-wrap: break-word;          /* Переносим длинные слова */
+  text-align: center;             /* Центрируем текст */
+  display: -webkit-box;           /* Используем старый Flexbox для line-clamp */
+  -webkit-line-clamp: 3;          /* Ограничиваем до 3 строк */
+  -webkit-box-orient: vertical;   /* Вертикальная ориентация содержимого */
+  overflow: hidden;               /* Скрываем переполнение */
+  text-overflow: ellipsis;        /* Добавляем многоточие */
+  line-clamp: 3;                  /* Современный стандарт (для поддерживаемых браузеров) */
+  max-width: 90%;                 /* Максимальная ширина блока */
+  box-sizing: border-box;         /* Учитываем padding и border в ширине */
+}
 .profile-container {
     max-width: 600px;
     margin: 50px auto;
@@ -76,9 +89,7 @@ color:white;
 }
 
 
-.info-value {
-    color: #777;
-}
+
 .info-value.dark-theme {
 color:white;
 }
