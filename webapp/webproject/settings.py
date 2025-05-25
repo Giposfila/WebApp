@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS=["https://vladislavduraa.cloudpub.ru"]
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,7 +58,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'webproject.urls'
-
+LOGIN_URL = 'login'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

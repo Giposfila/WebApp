@@ -17,7 +17,10 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
 def BlankFunc(request):
-    return redirect('/registration/')
+    if request.user.is_authenticated:
+        return redirect('main')
+    else:
+        return redirect('login')
 
 
 def RegForm_Func(request):

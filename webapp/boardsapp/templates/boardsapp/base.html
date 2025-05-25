@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="{% if theme == 'dark' %}dark-theme{% endif %}">
 <head>
     {% load static %}
     <link rel="stylesheet" href="{% static 'boardsapp/css/mainstyle.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% if theme == 'dark' %}dark.css{% else %}light.css{% endif %}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Tasks</title>
@@ -452,36 +453,65 @@ window.onclick = function(event) {
 }
 </script>
 <script>
-  const toggleButton = document.getElementById('theme-toggle');
-  const body = document.body;
-  const allElements = document.querySelectorAll('*');
-  // Функция для применения темы ко всем элементам
-  function setThemeForAllElements(darkMode) {
+    // Функция для установки куки
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Strict; Secure";
+}
+
+// Функция для чтения куки
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+const toggleButton = document.getElementById('theme-toggle');
+const body = document.body;
+const allElements = document.querySelectorAll('*');
+
+// Функция для применения темы ко всем элементам
+function setThemeForAllElements(darkMode) {
     allElements.forEach(element => {
-      if (darkMode) {
-        element.classList.add('dark-theme');
-      } else {
-        element.classList.remove('dark-theme');
-      }
+        if (darkMode) {
+            element.classList.add('dark-theme');
+        } else {
+            element.classList.remove('dark-theme');
+        }
     });
-  }
+}
 
-  // Проверка сохранённой темы
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
+// Проверка сохранённой темы (сначала куки, потом localStorage)
+const savedThemeFromCookie = getCookie('theme');
+const savedThemeFromLocalStorage = localStorage.getItem('theme');
+const savedTheme = savedThemeFromCookie || savedThemeFromLocalStorage;
+
+if (savedTheme === 'dark') {
     setThemeForAllElements(true);
-  }
+    // Для единообразия обновляем и localStorage
+    localStorage.setItem('theme', 'dark');
+    setCookie('theme', 'dark', 365); // Сохраняем куку на год
+}
 
-  toggleButton.addEventListener('click', () => {
-    const isDarkNow = !document.documentElement.classList.contains('dark-theme');
+// Обработчик клика на кнопку переключения
+toggleButton.addEventListener('click', () => {
+    const isDarkNow = !document.body.classList.contains('dark-theme');
     setThemeForAllElements(isDarkNow);
 
-    if (isDarkNow) {
-      localStorage.setItem('theme', 'dark');
-    } else {
-      localStorage.setItem('theme', 'light');
-    }
-  });
+    const theme = isDarkNow ? 'dark' : 'light';
+    localStorage.setItem('theme', theme);
+    setCookie('theme', theme, 365); // Обновляем куку
+});
 </script>
 </body>
 </html>
