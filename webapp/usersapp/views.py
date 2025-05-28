@@ -1,3 +1,5 @@
+import time
+
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -287,6 +289,7 @@ from django.contrib import messages
 
 @login_required
 def add_member_to_board(request, board_id, user_id):
+    time.sleep(2)
     board = get_object_or_404(Board, id=board_id)
     user_to_add = get_object_or_404(User, id=user_id)
 
