@@ -4,6 +4,25 @@
 <link rel="stylesheet" href="{% static 'boardsapp/css/board.css' %}">
 
 <style>
+
+.sidebar button.btn-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color:red;
+}
+.sidebar button.btn-danger {
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.sidebar button.btn-danger:hover {
+    background-color: #c82333;
+}
     .member-item {
         display: flex;
         align-items: center;
@@ -112,19 +131,33 @@
                     <div class="member-item">
                         <div class="board-title">
                             <a href="{% url 'profile-detail' username=member.username %}?back_url={{ request.get_full_path|urlencode }}" style="text-decoration:none; color:inherit;" class="d-flex align-items-center text-decoration-none text-dark">
-                            <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
-                            <span class="member-name">{{ member.username }}</span>
-                            {% if  board.created_by == member %}
-                                <i class="fas fa-crown"></i> <!-- Иконка короны -->
-                            {% endif %}
+                                <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'usersapp/img/profileicon.png' %}{% endif %}" alt="{{ member.username }}" width="30" class="member-avatar">
+                                <span class="member-name">{{ member.username }}</span>
+                                {% if board.created_by == member %}
+                                    <i class="fas fa-crown"></i> <!-- Иконка короны -->
+                                {% endif %}
                             </a>
                         </div>
+
+                        <!-- Кнопка удаления участника -->
+                        {% if board.created_by == request.user and member != board.created_by %}
+                            <form action="{% url 'remove-member' board.id member.id %}" method="POST" style="margin-left: auto;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Вы уверены, что хотите удалить этого участника?')">Удалить</button>
+                            </form>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
             <a href="{% url 'users' %}?back_url={{ request.get_full_path|urlencode }}&board_id={{ board.id }}">
                 <button class="add-member-btn">Добавить участника</button>
             </a>
+                    {% if board.created_by == request.user %}
+            <form action="{% url 'delete-board' board.id %}" method="POST" style="margin-top: 20px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-block" onclick="return confirm('Вы уверены, что хотите удалить эту доску?')">Удалить доску</button>
+            </form>
+        {% endif %}
         </div>
     </div>
 

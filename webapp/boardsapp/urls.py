@@ -19,4 +19,6 @@ urlpatterns = [
     path('/profile/<str:username>/', ProfileDetailView.as_view(), name='profile-detail'),
     path('task/<int:task_id>/upload/', views.upload_attachment, name='upload-attachment'),
     path('attachment/<int:file_id>/delete/', views.delete_attachment, name='delete-attachment'),
+    path('board/<int:board_id>/remove-member/<int:user_id>/', views.remove_member, name='remove-member'),
+    path('board/<int:board_id>/delete/', views.delete_board, name='delete-board'),
 ]

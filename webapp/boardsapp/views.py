@@ -71,6 +71,42 @@ def create_task(request, board_id):
         'user':request.user
     })
 
+@login_required
+def delete_board(request, board_id):
+    board = get_object_or_404(Board, id=board_id)
+
+    # Проверяем, является ли пользователь создателем доски
+    if request.user != board.created_by:
+        messages.error(request, "Только создатель доски может удалить её.")
+        return redirect('board-detail', board_id=board_id)
+
+    # Удаляем доску (все задачи и связи будут удалены каскадно)
+    board.delete()
+    messages.success(request, "Доска успешно удалена.")
+    return redirect('main')  # Перенаправление на главную страницу
+
+@login_required
+def remove_member(request, board_id, user_id):
+    board = get_object_or_404(Board, id=board_id)
+
+    # Проверяем, является ли пользователь создателем доски
+    if request.user != board.created_by:
+        messages.error(request, "Только создатель доски может удалять участников.")
+        return redirect('board-detail', board_id=board_id)
+
+    # Находим пользователя, которого нужно удалить
+    user_to_remove = get_object_or_404(board.members, id=user_id)
+
+    # Убедимся, что нельзя удалить самого себя
+    if user_to_remove == request.user:
+        messages.error(request, "Нельзя удалить самого себя из доски.")
+        return redirect('board-detail', board_id=board_id)
+
+    # Удаляем пользователя из доски
+    board.members.remove(user_to_remove)
+    messages.success(request, f"Пользователь {user_to_remove.username} удален из доски.")
+    return redirect('board-detail', board_id=board_id)
+
 class BoardShow(DetailView):
     model = Board
     template_name = 'boardsapp/board.html'

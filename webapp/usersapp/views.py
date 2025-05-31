@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.contrib.auth import login
 from django.contrib.auth.models import User
@@ -74,7 +76,10 @@ def email_confirmation_view(request):
         return redirect('regform')
 
     user = User.objects.get(id=user_id)
-
+    last_code_sent_time = request.session.get('last_code_sent_time', None)
+    if last_code_sent_time:
+        # Переводим в миллисекунды для JS
+        last_code_sent_time = int(last_code_sent_time * 1000)
     if request.method == 'POST':
         form = EmailConfirmationForm(request.POST)
         if form.is_valid():
@@ -103,7 +108,7 @@ def email_confirmation_view(request):
     else:
         form = EmailConfirmationForm()
 
-    return render(request, 'usersapp/email_confirmation.html', {'form': form})
+    return render(request, 'usersapp/email_confirmation.html', {'form': form, 'last_code_sent_time': last_code_sent_time})
 
 
 def resend_code_view(request):
@@ -111,24 +116,47 @@ def resend_code_view(request):
     if not user_id:
         return redirect('regform')
 
-    user = User.objects.get(id=user_id)
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return redirect('regform')
+
+    now = timezone.now()
+
+    # Получаем время последней отправки как timestamp
+    last_sent_time = request.session.get('last_code_sent_time', None)
+
+    cooldown_seconds = 60
+    if last_sent_time:
+        time_since_last = (now - timezone.datetime.fromtimestamp(last_sent_time, tz=timezone.get_current_timezone())).total_seconds()
+        if time_since_last < cooldown_seconds:
+            messages.error(
+                request,
+                f"Повторный код можно отправить через {int(cooldown_seconds - time_since_last)} секунд."
+            )
+            return redirect('email_confirmation')
 
     # Деактивируем старые коды
     EmailConfirmation.objects.filter(user=user).update(is_used=True)
 
-    # Создаем новый код
+    # Генерируем новый код
     code = get_random_string(length=6, allowed_chars='0123456789')
     EmailConfirmation.objects.create(user=user, code=code)
 
-    # Отправляем email с новым кодом
+    # Отправляем email
     send_mail(
         'Новый код подтверждения регистрации',
         f'Ваш новый код подтверждения: {code}',
-        'etasks12@mail.ru',
+        settings.DEFAULT_FROM_EMAIL,
         [user.email],
         fail_silently=False,
     )
 
+    # Сохраняем время отправки как timestamp (число)
+    request.session['last_code_sent_time'] = now.timestamp()
+    request.session.modified = True
+
+    messages.success(request, "Новый код подтверждения отправлен.")
     return redirect('email_confirmation')
 
 def Admin_button(request):
