@@ -164,9 +164,9 @@
     <!-- Main Content -->
     <div class="board-container">
         <!-- Верхнее меню -->
+                    <h2>{{ board.title }}</h2>
         <div class="board-header">
             <a href="{% url 'main' %}" class="back-btn">&#8592; Назад к доскам</a>
-            <h2>{{ board.title }}</h2>
             <div class="board-actions">
                 <form class="filter-form" method="get">
                     <select name="filter" id="filter">

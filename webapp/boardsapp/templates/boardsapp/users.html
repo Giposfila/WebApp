@@ -43,8 +43,8 @@
                             <i class="fas fa-check"></i> В доске
                         </button>
                     {% else %}
-                        <button class="btn btn-primary btn-sm" onclick="addToBoard({{ user.id }}, {{ board_id }})">
-                            <i class="fas fa-plus"></i> В доску
+                        <button class="btn btn-primary btn-sm" data-user-id="{{ user.id }}">
+                        <i class="fas fa-plus"></i> В доску
                         </button>
                     {% endif %}
                 {% endif %}
@@ -85,32 +85,13 @@
         {% endfor %}
     </div>
 </div>
-
+<div id="preloader" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; padding:15px; border:1px solid #ccc; z-index:1000;">
+    <div>Добавление пользователя...</div>
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+    </div>
+</div>
 <script>
-function addToBoard(userId, boardId) {
-    fetch(`/boards/${boardId}/add-member/${userId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}',  // Шаблонный тег
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',  // Для передачи кук
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            // Обновляем кнопку
-            const btn = document.querySelector(`#user-actions-${userId} button:first-child`);
-            btn.innerHTML = '<i class="fas fa-check"></i> В доске';
-            btn.className = 'btn btn-success btn-sm';
-            btn.disabled = true;
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => console.error('Ошибка:', error));
-}
-
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -125,5 +106,57 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js "></script>
+<script>
+$(document).ready(function() {
+    $('.user-actions button.btn-primary').click(function(e) {
+        e.preventDefault();
+
+        const $btn = $(this);
+        const userId = $btn.data('user-id');
+        const boardId = {{ board_id }};
+        const $container = $btn.closest('.user-actions');
+
+        console.log('userId:', userId);
+        console.log('boardId:', boardId);
+
+        if (!userId || !boardId) {
+            console.error('Неверные параметры');
+            return;
+        }
+
+        // Показываем прелоадер
+        $('#preloader').show();
+
+        // Отправляем AJAX-запрос
+        $.ajax({
+            url: `/boards/${boardId}/add-member/${userId}/`,
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .done(function(data) {
+            if (data.status === 'success') {
+                // Обновляем только кнопку добавления
+                $container.html(`
+                    <button class="btn btn-success btn-sm" disabled>
+                        <i class="fas fa-check"></i> В доске
+                    </button>
+                `);
+            } else {
+                alert(`Ошибка: ${data.message}`);
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            alert(`Ошибка добавления: ${textStatus}`);
+            console.error('AJAX ошибка:', textStatus, errorThrown);
+        })
+        .always(function() {
+            $('#preloader').hide();
+        });
+    });
+});
 </script>
 {% endblock %}
