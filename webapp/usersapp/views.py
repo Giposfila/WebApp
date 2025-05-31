@@ -414,3 +414,147 @@ def restore_friend_request(request, username):
         friend_request.save()
 
     return redirect('profile-detail', username=username)
+
+
+from django.contrib.auth.hashers import make_password
+from django.contrib import messages
+
+
+def forgot_password_view(request):
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+
+            # Генерируем код подтверждения
+            code = get_random_string(length=6, allowed_chars='0123456789')
+            EmailConfirmation.objects.create(user=user, code=code)
+
+            # Отправляем email
+            send_mail(
+                'Восстановление пароля',
+                f'Ваш код для восстановления пароля: {code}',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            # Сохраняем данные в сессии
+            request.session['password_reset_user_id'] = user.id
+            request.session['last_code_sent_time'] = timezone.now().timestamp()
+
+            return redirect('password_reset_confirm')
+    else:
+        form = ForgotPasswordForm()
+
+    return render(request, 'usersapp/forgotpassword.html', {'form': form})
+
+
+def password_reset_confirm_view(request):
+    user_id = request.session.get('password_reset_user_id')
+    if not user_id:
+        return redirect('forgotpassword')
+
+    user = get_object_or_404(User, id=user_id)
+    last_code_sent_time = request.session.get('last_code_sent_time', None)
+
+    if request.method == 'POST':
+        form = EmailConfirmationForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+
+            try:
+                confirmation = EmailConfirmation.objects.get(
+                    user=user,
+                    code=code,
+                    is_used=False,
+                    created_at__gte=timezone.now() - datetime.timedelta(hours=1)
+                )
+                confirmation.is_used = True
+                confirmation.save()
+
+                request.session['code_confirmed'] = True
+                return redirect('password_reset_new')
+
+            except EmailConfirmation.DoesNotExist:
+                form.add_error('code', 'Неверный или устаревший код')
+    else:
+        form = EmailConfirmationForm()
+
+    return render(request, 'usersapp/password_reset_confirm.html', {
+        'form': form,
+        'last_code_sent_time': last_code_sent_time
+    })
+
+
+def password_reset_new_view(request):
+    if not request.session.get('code_confirmed'):
+        return redirect('forgotpassword')
+
+    user_id = request.session.get('password_reset_user_id')
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            # Обновляем пароль
+            user.password = make_password(form.cleaned_data['new_password1'])
+            user.save()
+
+            # Очищаем сессию
+            del request.session['password_reset_user_id']
+            del request.session['code_confirmed']
+
+            messages.success(request, 'Пароль успешно изменен. Теперь вы можете войти.')
+            return redirect('login')
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, 'usersapp/password_reset_new.html', {'form': form})
+
+def resend_password_code_view(request):
+    user_id = request.session.get('password_reset_user_id')
+    if not user_id:
+        return redirect('forgotpassword')
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return redirect('forgotpassword')
+
+    now = timezone.now()
+    last_sent_time = request.session.get('last_code_sent_time', None)
+
+    cooldown_seconds = 60
+    if last_sent_time:
+        time_since_last = (now - timezone.datetime.fromtimestamp(last_sent_time, tz=timezone.get_current_timezone())).total_seconds()
+        if time_since_last < cooldown_seconds:
+            messages.error(
+                request,
+                f"Повторный код можно отправить через {int(cooldown_seconds - time_since_last)} секунд."
+            )
+            return redirect('password_reset_confirm')
+
+    # Деактивируем старые коды
+    EmailConfirmation.objects.filter(user=user).update(is_used=True)
+
+    # Генерируем новый код
+    code = get_random_string(length=6, allowed_chars='0123456789')
+    EmailConfirmation.objects.create(user=user, code=code)
+
+    # Отправляем email
+    send_mail(
+        'Новый код для сброса пароля',
+        f'Ваш новый код: {code}',
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False,
+    )
+
+    # Сохраняем время отправки
+    request.session['last_code_sent_time'] = now.timestamp()
+    request.session.modified = True
+
+    messages.success(request, "Новый код подтверждения отправлен.")
+    return redirect('password_reset_confirm')

@@ -25,6 +25,10 @@ urlpatterns = [
     path('profile/remove/<str:username>/', views.remove_friend, name='remove_friend'),
     path('friend/restore/<str:username>/', views.restore_friend_request, name='restore_friend_request'),
     path('boards/<int:board_id>/add-member/<int:user_id>/', views.add_member_to_board, name='add-member-to-board'),
+    path('forgotpassword/', views.forgot_password_view, name='forgotpassword'),
+    path('password-reset-confirm/', views.password_reset_confirm_view, name='password_reset_confirm'),
+    path('password-reset-new/', views.password_reset_new_view, name='password_reset_new'),
+    path('resend-password-code/', views.resend_password_code_view, name='resend_password_code'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
